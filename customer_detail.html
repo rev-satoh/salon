@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>電子カルテシステム</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* customer_detail.html固有のスタイル */
+        .customer-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* 画面幅に応じて1列または2列に */
+            gap: 0 16px; /* 列間のギャップ */
+        }
+        .customer-info p {
+            margin: 6px 0; /* 少しマージンを調整 */
+            font-size: 15px;
+            line-height: 1.5; /* 少し行間を広げる */
+            display: flex; /* ラベルと値を横並びにするため */
+            /* justify-content: space-between; */ /* これを削除またはコメントアウト */
+            border-bottom: 1px solid #f0f2f5; /* 各項目の下に薄い線 */
+            padding-bottom: 6px;
+        }
+        .customer-info p strong {
+            font-weight: 500;
+            color: #6c6c70; /* ラベルの色を少し薄く */
+            margin-right: 8px;
+            flex-shrink: 0; /* ラベルが縮まないように */
+            min-width: 90px; /* ラベルの最小幅を指定して、値の開始位置を揃える */
+        }
+
+        .photos .photo-placeholder {
+            width: 150px; height: 150px; background-color: #eee;
+            display: inline-block; margin: 5px; text-align: center; line-height: 150px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .treatment-history table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .treatment-history th, .treatment-history td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        .treatment-history th { background-color: #f8f8f8; font-weight: 500; }
+        .treatment-history td:nth-child(3) { text-align: right; } /* 金額を右寄せ */
+    </style>
+    <script src="common.js" defer></script>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div id="nav-placeholder"></div>
+
+    <main>
+        <h2 style="font-weight: 600; margin-bottom: 16px;">顧客詳細情報</h2>
+
+        <div id="customerDetailArea" class="card">
+            <p>顧客情報を読み込み中です...</p>
+        </div>
+
+        <div class="treatment-history card">
+            <h3>施術履歴</h3>
+            <div id="treatmentHistoryArea">
+                <p>施術履歴を読み込み中です...</p>
+            </div>
+        </div>
+
+        <div class="photos card">
+            <h3>関連写真</h3>
+            <div id="photosArea">
+                <!-- ここに写真が動的に表示されます -->
+                <div class="photo-placeholder">写真1</div>
+                <div class="photo-placeholder">写真2</div>
+                <p>（デモ表示）</p>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        // customer_search.html と同じデモ顧客データを使用（本来は共有する仕組みが必要）
+        // 各顧客に施術履歴のサンプルデータを追加
+        const customers = [
+            {
+                id: "001", name: "山田 花子", kana: "ヤマダ ハナコ", phone: "090-1234-5678", birthdate: "1990-04-15", address: "東京都渋谷区神宮前1-1-1", email: "hanako.yamada@example.com", occupation: "会社員", lineName: "hanako_yamada", notes: "アレルギー体質（特に金属）", memo1: "前回はパーマのかかりが少し弱かった", memo2: "次回提案：カラートリートメント", lastVisit: "2023-10-26", totalSpent: 20000,
+                treatmentHistory: [
+                    { date: "2023-10-26", courseName: "まつ毛パーマ 上下", price: 7000, staff: "佐藤" },
+                    { date: "2023-09-10", courseName: "眉毛スタイリング", price: 5000, staff: "田中" },
+                    { date: "2023-08-01", courseName: "まつ毛エクステ 100本", price: 8000, staff: "佐藤" }
+                ]
+            },
+            {
+                id: "002", name: "佐藤 太郎", kana: "サトウ タロウ", phone: "080-9876-5432", birthdate: "1985-08-22", address: "神奈川県横浜市中区桜木町2-2-2", email: "taro.sato@example.com", occupation: "自営業", lineName: "taro_sato123", notes: "前回施術後、少し赤みが出たとのこと。保湿をしっかり。", memo1: "眉の形について相談あり", memo2: "", lastVisit: "2023-11-01", totalSpent: 12000,
+                treatmentHistory: [
+                    { date: "2023-11-01", courseName: "メンズ眉毛カット", price: 6000, staff: "鈴木" },
+                    { date: "2023-10-05", courseName: "ヘッドスパ", price: 6000, staff: "鈴木" }
+                ]
+            },
+            {
+                id: "003", name: "鈴木 一郎", kana: "スズキ イチロウ", phone: "070-1111-2222", birthdate: "1995-12-01", address: "埼玉県さいたま市大宮区吉敷町3-3-3", email: "ichiro.suzuki@example.com", occupation: "学生", lineName: "ichiro_s", notes: "", memo1: "", memo2: "", lastVisit: "2023-10-15", totalSpent: 5500,
+                treatmentHistory: [
+                    { date: "2023-10-15", courseName: "眉カラー", price: 5500, staff: "高橋" }
+                ]
+            },
+            // 他の顧客データも同様に treatmentHistory を追加できます (以下は簡略化)
+            { id: "004", name: "田中 さくら", kana: "タナカ サクラ", phone: "090-5555-7777", birthdate: "1988-07-07", address: "千葉県千葉市中央区新町4-4-4", email: "sakura.tanaka@example.com", occupation: "主婦", lineName: "sakura_t", notes: "特になし", memo1: "", memo2: "お子様連れOKか確認", lastVisit: "2023-11-05", totalSpent: 30000, treatmentHistory: [] },
+            { id: "005", name: "高橋 大輔", kana: "タカハシ ダイスケ", phone: "080-3333-4444", birthdate: "1992-02-29", address: "東京都新宿区西新宿5-5-5", email: "daisuke.takahashi@example.com", occupation: "フリーランス", lineName: "", notes: "敏感肌用の商材を希望", memo1: "デザインの好みが明確", memo2: "", lastVisit: "2023-09-20", totalSpent: 12500, treatmentHistory: [] },
+            { id: "006", name: "伊藤 美咲", kana: "イトウ ミサキ", phone: "090-2222-1111", birthdate: "1998-11-10", address: "東京都港区赤坂6-6-6", email: "misaki.ito@example.com", occupation: "専門学生", lineName: "misa_ito", notes: "", memo1: "紹介で来店", memo2: "", lastVisit: "2023-11-10", totalSpent: 18000, treatmentHistory: [] },
+            { id: "007", name: "渡辺 健太", kana: "ワタナベ ケンタ", phone: "070-4444-5555", birthdate: "1980-06-20", address: "神奈川県川崎市高津区溝口7-7-7", email: "kenta.watanabe@example.com", occupation: "公務員", lineName: "ken_w", notes: "時間に正確な来店を心がけている", memo1: "", memo2: "", lastVisit: "2023-10-30", totalSpent: 9500, treatmentHistory: [] },
+            { id: "008", name: "山本 恵子", kana: "ヤマモト ケイコ", phone: "080-6666-7777", birthdate: "1993-09-03", address: "埼玉県川口市並木8-8-8", email: "keiko.yamamoto@example.com", occupation: "パート", lineName: "keiko.y", notes: "子供のお迎え時間があるため、施術時間に制約あり", memo1: "静かに過ごしたいタイプ", memo2: "ドリンクは白湯を希望", lastVisit: "2023-11-08", totalSpent: 25000, treatmentHistory: [] },
+            { id: "009", name: "中村 慎吾", kana: "ナカムラ シンゴ", phone: "090-8888-9999", birthdate: "1987-01-25", address: "千葉県船橋市本町9-9-9", email: "shingo.nakamura@example.com", occupation: "経営者", lineName: "shingo_nkmr", notes: "", memo1: "", memo2: "", lastVisit: "2023-10-28", totalSpent: 16000, treatmentHistory: [] },
+            { id: "010", name: "小林 由紀", kana: "コバヤシ ユキ", phone: "070-0000-1111", birthdate: "1996-03-12", address: "東京都世田谷区経堂0-0-0", email: "yuki.kobayashi@example.com", occupation: "美容師", lineName: "yuki.koba", notes: "同業者なので技術的な話が好き", memo1: "最新のトレンドに敏感", memo2: "SNSでの発信も積極的", lastVisit: "2023-11-12", totalSpent: 11000, treatmentHistory: [] }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const customerId = params.get('id');
+            const customerDetailArea = document.getElementById('customerDetailArea');
+            const treatmentHistoryArea = document.getElementById('treatmentHistoryArea');
+
+            if (customerId) {
+                const customer = customers.find(c => c.id === customerId);
+                if (customer) {
+                    // 顧客基本情報の表示
+                    customerDetailArea.innerHTML = `
+                        <h3>${customer.name} 様 <span style="font-size:0.8em; color: #8e8e93;">(ID: ${customer.id} / ${customer.kana})</span></h3>
+                        <div class="customer-info-grid">
+                            <div class="customer-info">
+                                <p><strong>電話番号:</strong> <span>${customer.phone}</span></p>
+                                <p><strong>メール:</strong> <span>${customer.email || '未登録'}</span></p>
+                                <p><strong>生年月日:</strong> <span>${customer.birthdate}</span></p>
+                                <p><strong>LINE名:</strong> <span>${customer.lineName || '未登録'}</span></p>
+                                <p><strong>住所:</strong> <span>${customer.address || '未登録'}</span></p>
+                                <p><strong>職業:</strong> <span>${customer.occupation || '未登録'}</span></p>
+                            </div>
+                            <div class="customer-info">
+                                <p><strong>最終来店日:</strong> <span>${customer.lastVisit}</span></p>
+                                <p><strong>累計利用金額:</strong> <span>${customer.totalSpent.toLocaleString()} 円</span></p>
+                                <p><strong>注意事項:</strong> <span style="white-space: pre-wrap;">${customer.notes || '特になし'}</span></p>
+                                <p><strong>メモ1:</strong> <span style="white-space: pre-wrap;">${customer.memo1 || ''}</span></p>
+                                <p><strong>メモ2:</strong> <span style="white-space: pre-wrap;">${customer.memo2 || ''}</span></p>
+                            </div>
+                        </div>`;
+
+                    // 施術履歴の表示
+                    treatmentHistoryArea.innerHTML = ''; // 前の表示をクリア
+                    if (customer.treatmentHistory && customer.treatmentHistory.length > 0) {
+                        const table = document.createElement('table');
+                        const thead = document.createElement('thead');
+                        const tbody = document.createElement('tbody');
+
+                        const headerRow = document.createElement('tr');
+                        ['日付', 'コース名', '金額(円)', '担当者'].forEach(text => {
+                            const th = document.createElement('th');
+                            th.textContent = text;
+                            headerRow.appendChild(th);
+                        });
+                        thead.appendChild(headerRow);
+                        table.appendChild(thead);
+
+                        customer.treatmentHistory.forEach(history => {
+                            const row = document.createElement('tr');
+                            [history.date, history.courseName, history.price.toLocaleString(), history.staff].forEach(cellData => {
+                                const td = document.createElement('td');
+                                td.textContent = cellData;
+                                row.appendChild(td);
+                            });
+                            tbody.appendChild(row);
+                        });
+                        table.appendChild(tbody);
+                        treatmentHistoryArea.appendChild(table);
+                    } else {
+                        treatmentHistoryArea.innerHTML = '<p>施術履歴はありません。</p>';
+                    }
+
+                } else {
+                    customerDetailArea.innerHTML = '<p>指定された顧客は見つかりませんでした。</p>';
+                    treatmentHistoryArea.innerHTML = '';
+                }
+            } else {
+                customerDetailArea.innerHTML = '<p>顧客IDが指定されていません。</p>';
+                treatmentHistoryArea.innerHTML = '';
+            }
+        });
+    </script>
+</body>
+</html>

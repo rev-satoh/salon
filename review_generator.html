@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>お客様の声 自動作成ツール - 電子カルテシステム</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* review_generator.html固有のスタイル */
+        .review-form .form-group {
+            margin-bottom: 20px;
+        }
+        .review-form label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        .review-form input[type="text"],
+        .review-form select,
+        .review-form textarea  {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #c8c7cc;
+            border-radius: 8px;
+            font-size: 15px;
+            box-sizing: border-box; /* paddingを含めてwidth 100%にする */
+        }
+        .review-form textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .result-container {
+            margin-top: 30px;
+        }
+        .result-container textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 12px;
+            border: 1px solid #c8c7cc;
+            border-radius: 8px;
+            font-size: 15px;
+            line-height: 1.6;
+            background-color: #f8f9fa;
+            resize: vertical;
+        }
+        .copy-button {
+            margin-top: 10px;
+            float: right; /* 右寄せ */
+        }
+        .copy-feedback {
+            display: inline-block;
+            margin-left: 10px;
+            color: green;
+            font-weight: bold;
+            visibility: hidden; /* 最初は非表示 */
+        }
+        /* --- ボタン風選択肢のスタイル --- */
+        .radio-group, .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 15px;
+        }
+
+        /* 元のinputを画面外に隠す（アクセシビリティのためdisplay:noneは避ける） */
+        .radio-group input,
+        .checkbox-group input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .radio-group label, .checkbox-group label {
+            display: inline-block;
+            padding: 8px 16px;
+            border: 1px solid #c8c7cc;
+            border-radius: 20px; /* 角を丸くしてピル形状に */
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            font-weight: 500;
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        /* 未選択のボタンをホバーした時のスタイル */
+        .radio-group label:hover, .checkbox-group label:hover {
+            border-color: #8e8e93;
+            background-color: #f8f9fa;
+        }
+
+        /* 選択された時のスタイル */
+        .radio-group input:checked + label,
+        .checkbox-group input:checked + label {
+            background-color: #007aff; /* iOSのアクセントカラー */
+            color: #ffffff;
+            border-color: #007aff;
+        }
+
+        /* 選択済みのボタンをホバーした時のスタイル */
+        .radio-group input:checked + label:hover,
+        .checkbox-group input:checked + label:hover {
+            background-color: #005ecb; /* 少し濃い青 */
+            border-color: #005ecb;
+        }
+    </style>
+    <script src="common.js" defer></script>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div id="nav-placeholder"></div>
+
+    <main>
+        <h2 style="font-weight: 600; margin-bottom: 16px;">お客様の声 自動作成ツール</h2>
+        <p style="margin-bottom: 24px; color: #6c6c70;">アンケートに答えるだけで、簡単にお客様の声を文章として作成できます。</p>
+
+        <div class="card">
+            <form id="reviewForm" class="review-form">
+                <div class="form-group">
+                    <label>ご来店は初めてですか？</label>
+                    <div class="radio-group">
+                        <input type="radio" name="visitType" value="初来店" id="visitTypeFirst">
+                        <label for="visitTypeFirst">初来店</label>
+                        <input type="radio" name="visitType" value="再来店" id="visitTypeSecond">
+                        <label for="visitTypeSecond">再来店</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>受けた施術は何ですか？（複数選択可）</label>
+                    <div class="checkbox-group">
+                        <input type="checkbox" name="service" value="まつ毛パーマ" id="serviceMatsuP">
+                        <label for="serviceMatsuP">まつ毛パーマ</label>
+                        <input type="checkbox" name="service" value="眉毛パーマ" id="serviceMayuP">
+                        <label for="serviceMayuP">眉毛パーマ</label>
+                        <input type="checkbox" name="service" value="眉毛WAX" id="serviceMayuW">
+                        <label for="serviceMayuW">眉毛WAX</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>仕上がりの満足度はいかがでしたか？</label>
+                    <div class="radio-group">
+                        <input type="radio" name="satisfaction" value="とても満足" id="satis5">
+                        <label for="satis5">★★★★★ とても満足</label>
+                        <input type="radio" name="satisfaction" value="満足" id="satis4">
+                        <label for="satis4">★★★★☆ 満足</label>
+                        <input type="radio" name="satisfaction" value="普通" id="satis3">
+                        <label for="satis3">★★★☆☆ 普通</label>
+                        <input type="radio" name="satisfaction" value="不満" id="satis2">
+                        <label for="satis2">★★☆☆☆ 不満</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="atmosphere">お店の雰囲気はどうでしたか？（複数選択可）</label>
+                    <div class="checkbox-group" id="atmosphere">
+                        <input type="checkbox" name="atmosphere" value="とてもリラックスできた" id="atm1">
+                        <label for="atm1">とてもリラックスできた</label>
+                        <input type="checkbox" name="atmosphere" value="清潔感があった" id="atm2">
+                        <label for="atm2">清潔感があった</label>
+                        <input type="checkbox" name="atmosphere" value="おしゃれだった" id="atm3">
+                        <label for="atm3">おしゃれだった</label>
+                        <input type="checkbox" name="atmosphere" value="静かで落ち着いていた" id="atm4">
+                        <label for="atm4">静かで落ち着いていた</label>
+                        <input type="checkbox" name="atmosphere" value="高級感があった" id="atm5">
+                        <label for="atm5">高級感があった</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="staff">接客態度はいかがでしたか？（複数選択可）</label>
+                    <div class="checkbox-group" id="staff">
+                        <input type="checkbox" name="staff" value="とても丁寧だった" id="staff1">
+                        <label for="staff1">とても丁寧だった</label>
+                        <input type="checkbox" name="staff" value="カウンセリングが親切だった" id="staff2">
+                        <label for="staff2">カウンセリングが親切だった</label>
+                        <input type="checkbox" name="staff" value="気さくに話してくれた" id="staff3">
+                        <label for="staff3">気さくに話してくれた</label>
+                        <input type="checkbox" name="staff" value="知識が豊富で頼りになった" id="staff4">
+                        <label for="staff4">知識が豊富で頼りになった</label>
+                        <input type="checkbox" name="staff" value="提案が的確だった" id="staff5">
+                        <label for="staff5">提案が的確だった</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>お声のトーンを選択してください</label>
+                    <div class="radio-group">
+                        <input type="radio" name="tone" value="丁寧" id="tonePolite">
+                        <label for="tonePolite">丁寧</label>
+                        <input type="radio" name="tone" value="カジュアル" id="toneCasual">
+                        <label for="toneCasual">カジュアル</label>
+                        <input type="radio" name="tone" value="感謝を伝える" id="toneGrateful">
+                        <label for="toneGrateful">感謝を伝える</label>
+                        <input type="radio" name="tone" value="具体的・分析的" id="toneAnalytical">
+                        <label for="toneAnalytical">具体的・分析的</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="goodPoint">特に良かった点を教えてください（任意）</label>
+                    <input type="text" id="goodPoint" name="goodPoint" placeholder="例：こちらの要望を細かく聞いてくれた、施術がスピーディーだった">
+                </div>
+
+                <div class="form-group">
+                    <label for="badPoint">悪かった点・改善点があれば教えて下さい（任意）</label>
+                    <input type="text" id="badPoint" name="badPoint" placeholder="例：待ち時間が少し長かった、室内の温度が少し寒かった">
+                </div>
+                <button type="button" id="generateButton" class="button-primary">お声を作成する</button>
+            </form>
+        </div>
+
+        <div id="resultContainer" class="result-container card" style="display: none;">
+            <h3>生成されたお客様の声</h3>
+            <textarea id="reviewResult" readonly></textarea>
+            <button type="button" id="copyButton" class="copy-button">クリップボードにコピー</button>
+            <span id="copyFeedback" class="copy-feedback">コピーしました！</span>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const generateButton = document.getElementById('generateButton');
+            const resultContainer = document.getElementById('resultContainer');
+            const reviewResult = document.getElementById('reviewResult');
+            const copyButton = document.getElementById('copyButton');
+            const copyFeedback = document.getElementById('copyFeedback');
+
+            generateButton.addEventListener('click', async () => {
+                // フォームからデータを収集
+                const serviceCheckboxes = document.querySelectorAll('input[name="service"]:checked');
+                const serviceValues = Array.from(serviceCheckboxes).map(cb => cb.value);
+
+                const atmosphereCheckboxes = document.querySelectorAll('input[name="atmosphere"]:checked');
+                const atmosphereValues = Array.from(atmosphereCheckboxes).map(cb => cb.value);
+
+                const staffCheckboxes = document.querySelectorAll('input[name="staff"]:checked');
+                const staffValues = Array.from(staffCheckboxes).map(cb => cb.value);
+
+                const reviewData = {
+                    service: serviceValues,
+                    visitType: document.querySelector('input[name="visitType"]:checked')?.value ?? '',
+                    satisfaction: document.querySelector('input[name="satisfaction"]:checked')?.value ?? '',
+                    tone: document.querySelector('input[name="tone"]:checked')?.value ?? '',
+                    atmosphere: atmosphereValues,
+                    staff: staffValues,
+                    goodPoint: document.getElementById('goodPoint').value.trim(),
+                    badPoint: document.getElementById('badPoint').value.trim()
+                };
+
+                // 選択・入力された項目の数をカウント
+                let answerCount = 0;
+                answerCount += reviewData.service.length;
+                answerCount += reviewData.atmosphere.length;
+                answerCount += reviewData.staff.length;
+                if (reviewData.visitType) answerCount++;
+                if (reviewData.satisfaction) answerCount++;
+                if (reviewData.tone) answerCount++;
+                if (reviewData.goodPoint) answerCount++;
+                if (reviewData.badPoint) answerCount++;
+
+                if (answerCount < 3) {
+                    alert('３つ以上選択回答して下さい。');
+                    return; // 3つ未満の場合は処理を中断
+                }
+
+                // ボタンを無効化し、ローディング表示
+                generateButton.disabled = true;
+                generateButton.textContent = 'AIが生成中...';
+                resultContainer.style.display = 'none'; // 前回の結果を隠す
+
+                try {
+                    // バックエンドのAPIにリクエストを送信
+                    const response = await fetch('http://localhost:5001/generate-review', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(reviewData),
+                    });
+
+                    if (!response.ok) {
+                        // サーバーからの詳細なエラーメッセージを取得試行
+                        let errorMessage = `サーバーエラー: ${response.status} (${response.statusText})`;
+                        try {
+                            const errorResult = await response.json();
+                            if (errorResult && errorResult.error) {
+                                errorMessage = errorResult.error; // サーバーからの詳細エラーで上書き
+                            }
+                        } catch (e) {
+                            // レスポンスがJSONでない場合は何もしない
+                        }
+                        throw new Error(errorMessage);
+                    }
+
+                    const result = await response.json();
+
+                    if (result.review) {
+                        // 結果を表示
+                        reviewResult.value = result.review.trim();
+                        resultContainer.style.display = 'block';
+                    } else if (result.error) {
+                        throw new Error(result.error);
+                    } else {
+                        throw new Error('AIからの応答が予期しない形式です。');
+                    }
+
+                } catch (error) {
+                    console.error('お声の生成に失敗しました:', error.message);
+                    reviewResult.value = `エラーが発生しました:\n\n${error.message}`;
+                    resultContainer.style.display = 'block';
+                } finally {
+                    // ボタンを元に戻す
+                    generateButton.disabled = false;
+                    generateButton.textContent = 'お声を作成する';
+                }
+            });
+
+            copyButton.addEventListener('click', () => {
+                // モダンなClipboard APIを使用
+                navigator.clipboard.writeText(reviewResult.value).then(() => {
+                    // コピー完了のフィードバックを表示
+                    copyFeedback.style.visibility = 'visible';
+                    setTimeout(() => {
+                        copyFeedback.style.visibility = 'hidden';
+                    }, 2000); // 2秒後に非表示
+                }).catch(err => {
+                    console.error('クリップボードへのコピーに失敗しました: ', err);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
