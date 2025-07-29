@@ -1,0 +1,5 @@
+RewriteEngine On
+RewriteBase /salon/
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^generate-review$ run.cgi [L]
