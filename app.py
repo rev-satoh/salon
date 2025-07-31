@@ -21,6 +21,7 @@ PROMPT_TEMPLATE = """
 
 # 作成ルール
 - **最重要ルール**: アンケート結果に記載されている情報のみを使い、文章を作成してください。結果に記載がない項目（例：売却した品物、来店回数など）については、絶対に言及しないでください。
+- **禁止事項**: 「〇〇で検索して見つけました」のような、検索行動を直接的に記述する表現は使わないでください。
 - アンケート結果の「tone」で指定された雰囲気を文章全体で表現してください。例えば「感謝を伝える」なら感謝の気持ちが前面に出るように、「カジュアル」なら親しみやすい言葉遣いになるようにしてください。
 - 「visitType」に回答がある場合、その情報を文章中に**一度だけ**含めてください。配置は冒頭、文中、文末など自然な形で構いませんが、繰り返し使用しないでください。
 - 「badPoint」に記述がある場合、その内容を「今後の期待を込めて」というニュアンスで、丁寧かつ簡潔に文章に含めてください。「強いて言えば」のような前置きは不要です。
@@ -30,9 +31,12 @@ PROMPT_TEMPLATE = """
 - 毎回少しずつ表現を変えて、より自然な文章にしてください。
 """
 
-app = Flask(__name__)
+# app.pyと同じ階層にある静的ファイル(css, js, html)を読み込めるように設定
+app = Flask(__name__, static_folder='.', static_url_path='')
 # CORS(Cross-Origin Resource Sharing)を有効化
 CORS(app)
+
+# --- サーバー起動時の設定 ---
 
 # Google AI APIキー設定
 try:
@@ -45,6 +49,12 @@ try:
 except Exception as e:
     app.logger.critical(f"サーバー起動エラー: {e}")
     sys.exit(1)
+
+# --- エンドポイント定義 ---
+
+@app.route('/')
+def index():
+    return app.send_static_file('review_generator.html')
 
 # お声生成API
 @app.route('/generate-review', methods=['POST'])

@@ -7,7 +7,10 @@ const configs = {
     description: "選んでいくだけで、簡単にお客様の声の案を作成できます。",
     submitButtonText: "お声を作成する",
     resultTitle: "生成されたお客様の声(案)",
-    promptContext: "あなたは人気サロンの顧客です。", // AIへの役割指示
+    promptContext: "あなたは、これからお店を探す人の役に立つ、具体的で魅力的なレビューを書くのが得意な顧客です。以下の点を意識して文章を作成してください。\n\n- **検索で見つかりやすく**: 他の人が「〇〇（地名） まつ毛パーマ」のように検索することを想定し、アンケート結果にあるサービス名やお店の立地に関する情報（例：「交通の便が良い」）を、具体的で魅力的な表現で文章に含めてください。\n- **体験の具体化**: 「満足」や「丁寧だった」という言葉だけでなく、アンケート結果の「特に良かった点」などを元に、なぜそう感じたのかが伝わるような、生き生きとした文章を作成してください。", // AIへの役割指示
+    storeNames: ['ケイトステージラッシュ広島八丁堀店', 'KATE stage LASH', 'ケイトステージラッシュ'], // 例: ['Eyelash Salon Bijou', 'ビジューさん', 'Bijou']
+    locations: ['広島', '広島市', '八丁堀', 'バスセンター近く', '福屋近く'],
+    keywords: ['まつぱ', 'まつ毛', 'まつげ', '眉毛', 'マツパ', 'まつ毛パーマ', 'まつげパーマ', 'アイラッシュ', 'アイブロウ', 'パリジェンヌラッシュ', 'ハリウッドブロウ'],
     questions: [
       { id: 'visitType', label: 'ご来店は初めてですか？', type: 'radio', options: ['初来店', '再来店'] },
       { id: 'service', label: '受けた施術は何ですか？（複数選択可）', type: 'checkbox', options: ['まつ毛パーマ', '眉毛パーマ', '眉毛WAX'] },
@@ -29,7 +32,7 @@ const configs = {
     description: "選んでいくだけで、簡単にお客様の声の案を作成できます。",
     submitButtonText: "感想を作成する",
     resultTitle: "生成されたお客様の声(案)",
-    promptContext: "あなたは人気レストランで食事をした顧客です。", // AIへの役割指示
+    promptContext: "あなたは、これからお店を探す人の役に立つ、具体的で魅力的なレビューを書くのが得意な顧客です。以下の点を意識して文章を作成してください。\n\n- **検索で見つかりやすく**: 他の人が「〇〇（地名） 記念日 ディナー」のように検索することを想定し、アンケート結果にある利用シーンやお店の立地に関する情報（例：「景色が良い」）を、具体的で魅力的な表現で文章に含めてください。\n- **体験の具体化**: 「美味しかった」や「雰囲気が良かった」という言葉だけでなく、アンケート結果の「特に良かった料理」などを元に、なぜそう感じたのかが伝わるような、五感を刺激する文章を作成してください。", // AIへの役割指示
     questions: [
       { id: 'visitType', label: 'ご来店は初めてですか？', type: 'radio', options: ['初来店', '再来店'] },
       { id: 'occasion', label: 'どのような目的で利用しましたか？', type: 'radio', options: ['ランチ', 'ディナー', '記念日', '友人・知人と'] },
@@ -52,7 +55,7 @@ const configs = {
     description: "選んでいくだけで、簡単にお客様の声の案を作成できます。",
     submitButtonText: "お声を作成する",
     resultTitle: "生成されたお客様の声(案)",
-    promptContext: "あなたは買取専門店で品物を売却した顧客です。", // AIへの役割指示
+    promptContext: "あなたは、これからお店を探す人の役に立つ、具体的で魅力的なレビューを書くのが得意な顧客です。以下の点を意識して文章を作成してください。\n\n- **検索で見つかりやすく**: 他の人が「〇〇（地名） ブランド品 買取」のように検索することを想定し、アンケート結果にある売却品目やお店の立地に関する情報（例：「駐車場が便利」）を、具体的で魅力的な表現で文章に含めてください。\n- **体験の具体化**: 「満足」や「丁寧だった」という言葉だけでなく、アンケート結果の「特に良かった点」などを元に、なぜそう感じたのかが伝わるような、信頼感が伝わる文章を作成してください。", // AIへの役割指示
     questions: [
       { id: 'visitType', label: 'ご来店は初めてですか？', type: 'radio', options: ['初来店', '再来店'] },
       { id: 'soldItems', label: '売却したお品物は何ですか？（複数選択可）', type: 'checkbox', options: ['ブランド品', 'バッグ', '財布', '時計', '貴金属', '金', 'プラチナ', 'ジュエリー', '指輪', 'ネックレス', 'カメラ', 'お酒', '骨董品', '切手', '古銭', 'テレカ', 'スマホ', '金券', '株主優待券', 'その他'] },
@@ -126,8 +129,8 @@ function buildForm(questions, formContainer) {
 
       const valueDisplay = document.createElement('span');
       valueDisplay.className = 'slider-value';
-      valueDisplay.textContent = `${Math.round(input.value / 2)}文字`;
-      input.oninput = () => { valueDisplay.textContent = `${Math.round(input.value / 2)}文字`; };
+      valueDisplay.textContent = `${input.value}文字`;
+      input.oninput = () => { valueDisplay.textContent = `${input.value}文字`; };
 
       sliderContainer.appendChild(input);
       sliderContainer.appendChild(valueDisplay);

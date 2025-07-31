@@ -278,11 +278,41 @@
             generateButton.addEventListener('click', async () => {
                 const formData = collectFormData(currentConfig.questions);
 
-                // バックエンドに送信するデータを作成
+                // バックエンドに送信する基本データを作成
                 const requestData = {
-                    promptContext: currentConfig.promptContext,
                     formData: formData
                 };
+
+                // AIへの役割指示を動的に組み立てる
+                let dynamicPromptContext = currentConfig.promptContext;
+                const additionalInstructions = [];
+
+                // 店名が設定されている場合、ランダムに選択
+                if (currentConfig.storeNames && currentConfig.storeNames.length > 0) {
+                    const randomStoreName = currentConfig.storeNames[Math.floor(Math.random() * currentConfig.storeNames.length)];
+                    additionalInstructions.push(`- **店名の使用**: 文章のどこかで ${randomStoreName} という店名を自然な形で一度だけ使用してください。`);
+                }
+
+                // 地名とキーワードのリストが設定されている場合、ランダムに選択
+                if (currentConfig.locations && currentConfig.locations.length > 0 &&
+                    currentConfig.keywords && currentConfig.keywords.length > 0) {
+
+                    // 地名リストからランダムに1つ選択
+                    const randomLocation = currentConfig.locations[Math.floor(Math.random() * currentConfig.locations.length)];
+
+                    // キーワードリストをシャッフルし、先頭から1つまたは2つ取得（50%の確率で数を変える）
+                    const shuffledKeywords = [...currentConfig.keywords].sort(() => 0.5 - Math.random());
+                    const keywordCount = Math.random() < 0.5 ? 1 : 2;
+                    const randomKeywords = shuffledKeywords.slice(0, keywordCount);
+
+                    // AIへの追加指示を作成（より自然な表現を促すように変更）
+                    additionalInstructions.push(`- **地名とキーワードの活用**: 文章のどこかに ${randomLocation} という地名と、${randomKeywords.join('や')} といったキーワードを、それぞれ最低1回は含めてください。ただし、いかにも宣伝のような不自然な文章にならないよう、あくまで顧客自身の言葉として自然に聞こえるように工夫してください。`);
+                }
+
+                if (additionalInstructions.length > 0) {
+                    dynamicPromptContext += "\n\n" + additionalInstructions.join('\n');
+                }
+                requestData.promptContext = dynamicPromptContext;
 
                 // 選択・入力された項目の数をカウント
                 let answerCount = 0;
