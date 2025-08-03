@@ -163,7 +163,7 @@
         }
         .result-actions {
             display: flex;
-            justify-content: flex-end;
+            justify-content: flex-start; /* ボタンを左寄せに変更 */
             align-items: center;
             gap: 10px;
             margin-top: 10px;
@@ -205,9 +205,7 @@
         <div id="resultContainer" class="result-container card" style="display: none;">
             <h3>生成されたお客様の声(案)</h3>
             <textarea id="reviewResult" readonly></textarea>
-            <div class="result-actions">
-                <button type="button" id="copyButton" class="button-secondary">クリップボードにコピー</button>
-            </div>
+            <div class="result-actions"></div>
         </div>
     </main>
 
@@ -219,7 +217,6 @@
             const generateButton = document.getElementById('generateButton');
             const resultContainer = document.getElementById('resultContainer');
             const reviewResult = document.getElementById('reviewResult');
-            const copyButton = document.getElementById('copyButton');
 
             // --- APIエンドポイントの設定 ---
             // 本番環境のURL（ご自身のサーバーのURLに合わせてください）
@@ -365,6 +362,43 @@
                         reviewResult.value = result.review.trim();
                         resultContainer.style.display = 'block';
                         autoResizeTextarea(reviewResult); // テキスト量に応じて高さを調整
+
+                        // --- ボタンの動的生成 ---
+                        const resultActionsDiv = document.querySelector('.result-actions');
+                        resultActionsDiv.innerHTML = ''; // 既存のボタンをクリア
+
+                        // 1. 「クリップボードにコピー」ボタンを作成
+                        const newCopyButton = document.createElement('button');
+                        newCopyButton.type = 'button';
+                        newCopyButton.className = 'button-secondary';
+                        newCopyButton.textContent = 'クリップボードにコピー';
+
+                        // 2. コピーボタンのクリックイベントを設定
+                        newCopyButton.onclick = () => {
+                            navigator.clipboard.writeText(result.review.trim()).then(() => {
+                                // コピー成功時の処理
+                                newCopyButton.textContent = 'コピーしました！';
+                                newCopyButton.disabled = true;
+                                newCopyButton.classList.add('copied');
+
+                                // 3. 口コミ投稿用のリンクボタンを作成して表示
+                                // 設定ファイルにURLがあればボタンを生成
+                                if (currentConfig.reviewPostUrl) {
+                                    const postLink = document.createElement('a');
+                                    postLink.className = 'button-primary';
+                                    postLink.target = '_blank';
+                                    postLink.textContent = '投稿画面に移動する';
+                                    postLink.href = currentConfig.reviewPostUrl;
+                                    resultActionsDiv.appendChild(postLink);
+                                }
+
+                            }).catch(err => {
+                                console.error('クリップボードへのコピーに失敗しました:', err);
+                                alert('コピーに失敗しました。');
+                            });
+                        };
+                        resultActionsDiv.appendChild(newCopyButton);
+
                     } else if (result.error) {
                         throw new Error(result.error);
                     } else {
@@ -383,39 +417,6 @@
                 }
             });
 
-            copyButton.addEventListener('click', async () => {
-                if (!reviewResult.value) return; // テキストが空なら何もしない
-
-                // navigator.clipboardが利用可能かチェック (HTTPS/localhostでのみ利用可能)
-                if (!navigator.clipboard) {
-                    alert('この機能は安全な接続(HTTPS)でのみ利用可能です。お手数ですが、手動でコピーしてください。');
-                    // ユーザーが手動でコピーしやすいようにテキストを選択状態にする
-                    reviewResult.select();
-                    return;
-                }
-
-                const originalText = copyButton.textContent;
-
-                try {
-                    // モダンなClipboard APIを使用 (非同期)
-                    await navigator.clipboard.writeText(reviewResult.value);
-
-                    // 成功時のフィードバック
-                    copyButton.textContent = 'コピーしました！';
-                    copyButton.classList.add('copied');
-                    copyButton.disabled = true;
-
-                    // 2秒後にボタンの状態を元に戻す
-                    setTimeout(() => {
-                        copyButton.textContent = originalText;
-                        copyButton.classList.remove('copied');
-                        copyButton.disabled = false;
-                    }, 2000);
-                } catch (err) {
-                    console.error('クリップボードへのコピーに失敗しました: ', err);
-                    alert('コピーに失敗しました。ブラウザの権限などを確認してください。');
-                }
-            });
         });
     </script>
 </body>

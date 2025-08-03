@@ -98,3 +98,58 @@ footer {
     border-top: 0.5px solid #d1d1d6;
     flex-shrink: 0;
 }
+
+/* --- 結果表示エリアのスタイル --- */
+.result-content {
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 16px;
+    white-space: pre-wrap; /* 改行をそのまま表示 */
+    word-wrap: break-word; /* 長い単語を折り返す */
+}
+
+/* 結果表示エリアのアクションボタン用コンテナ */
+#result-actions {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap; /* 画面幅が狭い時に折り返す */
+    gap: 10px; /* ボタン間の隙間 */
+    align-items: center;
+}
+
+/* GBP移動ボタンのスタイル (プライマリボタン) */
+.button-primary {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.button-primary:hover {
+    background-color: #0056b3;
+}
+
+/* コピーボタンのスタイル (セカンダリボタン) */
+.button-secondary {
+    background-color: #6c757d;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.button-secondary:hover {
+    background-color: #5a6268;
+}
+.button-secondary:disabled {
+    background-color: #a9a9a9;
+    cursor: not-allowed;
+}

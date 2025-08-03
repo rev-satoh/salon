@@ -4,12 +4,13 @@ const configs = {
     typeName: "サロン",
     pageTitle: "サロン向け お客様の声 自動作成ツール",
     mainTitle: "サロン向け お客様の声 自動作成ツール",
-    description: "選んでいくだけで、簡単にお客様の声の案を作成できます。",
+    description: "選んでいくだけで、簡単にお客様の声(案)を作成できます。",
     submitButtonText: "お声を作成する",
     resultTitle: "生成されたお客様の声(案)",
     promptContext: "あなたは、これからお店を探す人の役に立つ、具体的で魅力的なレビューを書くのが得意な顧客です。以下の点を意識して文章を作成してください。\n\n- **検索で見つかりやすく**: 他の人が「〇〇（地名） まつ毛パーマ」のように検索することを想定し、アンケート結果にあるサービス名やお店の立地に関する情報（例：「交通の便が良い」）を、具体的で魅力的な表現で文章に含めてください。\n- **体験の具体化**: 「満足」や「丁寧だった」という言葉だけでなく、アンケート結果の「特に良かった点」などを元に、なぜそう感じたのかが伝わるような、生き生きとした文章を作成してください。", // AIへの役割指示
     storeNames: ['ケイトステージラッシュ広島八丁堀店', 'KATE stage LASH', 'ケイトステージラッシュ'], // 例: ['Eyelash Salon Bijou', 'ビジューさん', 'Bijou']
     locations: ['広島', '広島市', '八丁堀', 'バスセンター近く', '福屋近く'],
+    reviewPostUrl: 'https://g.page/r/CTsbt_6yNcWAEBM/review', // 口コミ投稿ページのURL
     keywords: ['まつぱ', 'まつ毛', 'まつげ', '眉毛', 'マツパ', 'まつ毛パーマ', 'まつげパーマ', 'アイラッシュ', 'アイブロウ', 'パリジェンヌラッシュ', 'ハリウッドブロウ'],
     questions: [
       { id: 'visitType', label: 'ご来店は初めてですか？', type: 'radio', options: ['初来店', '再来店'] },
@@ -29,10 +30,11 @@ const configs = {
     typeName: "レストラン",
     pageTitle: "レストラン向け お客様の声 自動作成ツール",
     mainTitle: "レストラン向け お客様の声 自動作成ツール",
-    description: "選んでいくだけで、簡単にお客様の声の案を作成できます。",
+    description: "選んでいくだけで、簡単にお客様の声(案)を作成できます。",
     submitButtonText: "感想を作成する",
     resultTitle: "生成されたお客様の声(案)",
     promptContext: "あなたは、これからお店を探す人の役に立つ、具体的で魅力的なレビューを書くのが得意な顧客です。以下の点を意識して文章を作成してください。\n\n- **検索で見つかりやすく**: 他の人が「〇〇（地名） 記念日 ディナー」のように検索することを想定し、アンケート結果にある利用シーンやお店の立地に関する情報（例：「景色が良い」）を、具体的で魅力的な表現で文章に含めてください。\n- **体験の具体化**: 「美味しかった」や「雰囲気が良かった」という言葉だけでなく、アンケート結果の「特に良かった料理」などを元に、なぜそう感じたのかが伝わるような、五感を刺激する文章を作成してください。", // AIへの役割指示
+    reviewPostUrl: 'https://www.google.com/maps/search/', // 口コミ投稿ページのURL（要設定）
     questions: [
       { id: 'visitType', label: 'ご来店は初めてですか？', type: 'radio', options: ['初来店', '再来店'] },
       { id: 'occasion', label: 'どのような目的で利用しましたか？', type: 'radio', options: ['ランチ', 'ディナー', '記念日', '友人・知人と'] },
@@ -52,10 +54,11 @@ const configs = {
     typeName: "買取専門店",
     pageTitle: "買取専門店向け お客様の声 自動作成ツール",
     mainTitle: "買取専門店向け お客様の声 自動作成ツール",
-    description: "選んでいくだけで、簡単にお客様の声の案を作成できます。",
+    description: "選んでいくだけで、簡単にお客様の声(案)を作成できます。",
     submitButtonText: "お声を作成する",
     resultTitle: "生成されたお客様の声(案)",
     promptContext: "あなたは、これからお店を探す人の役に立つ、具体的で魅力的なレビューを書くのが得意な顧客です。以下の点を意識して文章を作成してください。\n\n- **検索で見つかりやすく**: 他の人が「〇〇（地名） ブランド品 買取」のように検索することを想定し、アンケート結果にある売却品目やお店の立地に関する情報（例：「駐車場が便利」）を、具体的で魅力的な表現で文章に含めてください。\n- **体験の具体化**: 「満足」や「丁寧だった」という言葉だけでなく、アンケート結果の「特に良かった点」などを元に、なぜそう感じたのかが伝わるような、信頼感が伝わる文章を作成してください。", // AIへの役割指示
+    reviewPostUrl: 'https://www.google.com/maps/search/', // 口コミ投稿ページのURL（要設定）
     questions: [
       { id: 'visitType', label: 'ご来店は初めてですか？', type: 'radio', options: ['初来店', '再来店'] },
       { id: 'soldItems', label: '売却したお品物は何ですか？（複数選択可）', type: 'checkbox', options: ['ブランド品', 'バッグ', '財布', '時計', '貴金属', '金', 'プラチナ', 'ジュエリー', '指輪', 'ネックレス', 'カメラ', 'お酒', '骨董品', '切手', '古銭', 'テレカ', 'スマホ', '金券', '株主優待券', 'その他'] },
@@ -161,4 +164,100 @@ function collectFormData(questions) {
     }
   });
   return data;
+}
+
+/**
+ * フォームの送信を処理し、バックエンドAPIを呼び出す関数
+ * @param {Event} event - フォーム送信イベント
+ * @param {Object} config - 使用する設定オブジェクト (例: configs.salon)
+ * @param {string} apiUrl - バックエンドAPIのURL
+ */
+async function handleFormSubmit(event, config, apiUrl) {
+  event.preventDefault(); // フォームのデフォルト送信をキャンセル
+
+  const submitButton = document.getElementById('submit-button');
+  const resultDiv = document.getElementById('result');
+  const generatedTextP = document.getElementById('generated-text');
+  // ボタンを配置するためのコンテナを取得
+  const resultActionsDiv = document.getElementById('result-actions');
+
+  // ボタンを無効化し、ローディング表示
+  submitButton.disabled = true;
+  submitButton.textContent = '作成中...';
+  resultDiv.style.display = 'none';
+  generatedTextP.textContent = '';
+
+  // 以前の結果（ボタンなど）が残っている場合があるのでクリアする
+  if (resultActionsDiv) resultActionsDiv.innerHTML = '';
+
+  try {
+    // フォームデータを収集
+    const formData = collectFormData(config.questions);
+
+    // バックエンドAPIに送信
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        formData: formData,
+        context: config.promptContext // AIへの指示文も送信
+      }),
+    });
+
+    if (!response.ok) {
+      // APIからのエラーメッセージをより詳細に取得する
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(`APIエラー: ${response.statusText} - ${errorData.error || '詳細不明'}`);
+    }
+
+    const data = await response.json();
+
+    // 結果を表示
+    generatedTextP.textContent = data.review;
+
+    // --- ここからがボタン生成ロジックです ---
+    if (resultActionsDiv) {
+      // 1. 「クリップボードにコピー」ボタンを作成 (左側)
+      const copyButton = document.createElement('button');
+      copyButton.id = 'copy-button';
+      copyButton.className = 'button-secondary'; // CSSでスタイルを定義します
+      copyButton.textContent = 'クリップボードにコピー';
+
+      // 2. コピーボタンのクリックイベントを設定
+      copyButton.onclick = () => {
+        navigator.clipboard.writeText(data.review).then(() => {
+          // コピー成功時の処理
+          copyButton.textContent = 'コピーしました！';
+          copyButton.disabled = true;
+
+          // 3. 「GBPに移動する」リンクボタンを作成して表示 (右側)
+          if (!document.getElementById('gbp-link-button')) {
+            const gbpLink = document.createElement('a');
+            gbpLink.id = 'gbp-link-button';
+            gbpLink.href = 'https://www.google.com/business/'; // デモURL
+            gbpLink.textContent = 'GBPに移動する';
+            gbpLink.className = 'button-primary'; // CSSでスタイルを定義します
+            gbpLink.target = '_blank'; // 新しいタブで開く
+            resultActionsDiv.appendChild(gbpLink);
+          }
+        }).catch(err => {
+          console.error('クリップボードへのコピーに失敗しました:', err);
+          alert('コピーに失敗しました。');
+        });
+      };
+      resultActionsDiv.appendChild(copyButton);
+    }
+    resultDiv.style.display = 'block';
+
+  } catch (error) {
+    console.error('レビュー生成中にエラーが発生しました:', error);
+    generatedTextP.textContent = `エラーが発生しました。しばらくしてからもう一度お試しください。(${error.message})`;
+    resultDiv.style.display = 'block';
+  } finally {
+    // ボタンを再度有効化
+    submitButton.disabled = false;
+    submitButton.textContent = config.submitButtonText;
+  }
 }
