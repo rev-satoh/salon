@@ -100,8 +100,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultErrorMessage = document.getElementById('result-error-message');
 
     // --- APIエンドポイントの設定 ---
-    // 本番環境のURL（ご自身のサーバーのURLに合わせてください）
-    const API_BASE_URL_PROD = 'https://revision-co.jp';
+    // 本番環境のURL（RenderでデプロイしたバックエンドサーバーのURL）
+    const API_BASE_URL_PROD = 'https://kuchikomi-api.onrender.com'; // ★★★ 必ずご自身のURLに書き換えてください！ ★★★
     // 開発環境のURL
     const API_BASE_URL_DEV = 'http://localhost:5001';
     const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -135,8 +135,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- ページの初期化処理 ---
-    const path = window.location.pathname; // URLのパス部分を取得 (例: "/ksl-h")
-    const type = path.substring(1); // 先頭の "/" を取り除いて店舗IDを取得
+    // URLのハッシュ（#）部分から設定IDを取得する方式に変更
+    // これによりGitHub Pagesのようなサブディレクトリ環境でも正しく動作する
+    const hash = window.location.hash; // 例: #/ksl-h
+    const type = hash.startsWith('#/') ? hash.substring(2) : ''; // 先頭の "#/" を取り除く
 
     // typeパラメータがない場合はエラーメッセージを表示して処理を中断
     if (!type) {
