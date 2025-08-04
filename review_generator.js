@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- APIエンドポイントの設定 ---
     // 本番環境のURL（RenderでデプロイしたバックエンドサーバーのURL）
-    const API_BASE_URL_PROD = 'https://kuchikomi-api.onrender.com'; // ★★★ 必ずご自身のURLに書き換えてください！ ★★★
+    const API_BASE_URL_PROD = 'https://kuchikomi-api.onrender.com'; // ★★★ Part2でコピーしたご自身のURLに書き換えてください ★★★
     // 開発環境のURL
     const API_BASE_URL_DEV = 'http://localhost:5001';
     const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -155,7 +155,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ページタイトルと見出しを設定
     document.title = currentConfig.pageTitle;
-    main.querySelector('p').textContent = currentConfig.description;
+    // IDが指定されている要素を直接取得する方が堅牢
+    document.getElementById('config-description').textContent = currentConfig.description;
 
     // フォームを動的に構築
     const formContainer = document.getElementById('reviewForm');
@@ -331,11 +332,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
         } catch (error) {
+            // --- エラー処理を修正 ---
+            // エラーメッセージを専用の領域に表示し、テキストエリアは隠す
             console.error('お声の生成に失敗しました:', error.message);
-            reviewResult.value = `エラーが発生しました:\n\n${error.message}`;
+            resultErrorMessage.textContent = `エラーが発生しました: ${error.message}`;
+            resultErrorMessage.style.display = 'block';
             resultContainer.style.display = 'block';
             resultNotice.style.display = 'none';
-            autoResizeTextarea(reviewResult); // エラー表示でも高さを調整
+            reviewResult.style.display = 'none'; // エラー時はテキストエリアを隠す
         } finally {
             // ボタンを元に戻す
             generateButton.disabled = false;
