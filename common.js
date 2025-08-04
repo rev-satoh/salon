@@ -26,53 +26,18 @@ async function loadHTML(url, elementId) {
     } // ← loadHTML 関数の閉じ '}' はここ
 }
 
-/**
- * 現在のページに基づいてナビゲーションリンクに 'active' クラスを設定します。
- */
-function setActiveNavigation() {
-    console.log('Attempting to set active navigation');
-    const currentPageFilename = window.location.pathname.split("/").pop();
-
-    // すべてのナビゲーションリンクから 'active' クラスを削除
-    document.querySelectorAll('nav ul li a').forEach(link => {
-        link.classList.remove('active');
-    });
-
-    let activeLinkId = '';
-    switch (currentPageFilename) {
-        case 'index.html':
-        case '': // ルートパスの場合
-            activeLinkId = 'nav-home';
-            break;
-        case 'customer_search.html':
-            activeLinkId = 'nav-search';
-            break;
-        case 'customer_detail.html':
-            activeLinkId = 'nav-search'; // 詳細ページでは検索をアクティブにする例
-            break;
-        // 他のページも同様に追加
-        // case 'new_carte.html':
-        //     activeLinkId = 'nav-new-carte';
-        //     break;
-    }
-
-    if (activeLinkId) {
-        const activeLink = document.getElementById(activeLinkId);
-        if (activeLink) {
-            activeLink.classList.add('active');
-        }
-    }
-}
-
 // DOMの読み込みが完了したら共通部品をロード
 document.addEventListener('DOMContentLoaded', async () => {
     // header, nav, footerのプレースホルダーが存在する場合のみ読み込む
     if (document.getElementById('header-placeholder')) {
         await loadHTML('header.html', 'header-placeholder');
     }
-        // nav.html は header.html に統合されたため、個別の読み込みは不要
-        setActiveNavigation(); // ヘッダーが読み込まれた後にアクティブ状態を設定
     if (document.getElementById('footer-placeholder')) {
         await loadHTML('footer.html', 'footer-placeholder');
+        // フッターが読み込まれた後に年を更新
+        const yearSpan = document.getElementById('copyright-year');
+        if (yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
     }
 });
