@@ -85,7 +85,10 @@ def generate_review():
     try:
         prompt_context = data.get('promptContext', 'あなたは顧客です。')
         form_data = data.get('formData', {})
-        text_length = form_data.get('textLength', 250) # スライダーの値を取得、なければデフォルト250
+
+        # textLengthを取得し、元の辞書からは削除する
+        # これにより、以降のループで意図せず処理されるのを防ぎ、プロンプトをクリーンに保つ
+        text_length = form_data.pop('textLength', 250)
 
         # フォームデータを箇条書きに変換
         details_text = ""
