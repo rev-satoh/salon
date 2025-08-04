@@ -103,8 +103,18 @@ def generate_review():
         # AIの応答から余分な空白行を削除（3つ以上の連続改行を2つに置換）
         cleaned_text = re.sub(r'\n{3,}', '\n\n', response.text).strip()
 
-        # 改行スタイルを常に「空白行あり」に固定し、読みやすさを担保する
-        final_text = cleaned_text
+        # 3つの改行スタイルからランダムに1つを選択
+        style = random.choice(['double_newline', 'single_newline', 'single_block'])
+        
+        if style == 'single_newline':
+            # パターン1: 2つ以上の連続改行を1つに置換（空白行なしで、こまめに改行するスタイル）
+            final_text = re.sub(r'\n{2,}', '\n', cleaned_text)
+        elif style == 'single_block':
+            # パターン2: すべての改行をスペースに置換（改行がほとんどない1ブロックの文章）
+            final_text = re.sub(r'\s*\n\s*', ' ', cleaned_text)
+        else: # 'double_newline'
+            # パターン3: 空白行で段落を区切るスタイル（AIの出力を尊重）
+            final_text = cleaned_text
 
         # フロントエンドに返す直前に再度strip()を呼び出し、先頭・末尾の空白を確実に除去する
         return jsonify({'review': final_text.strip()})
