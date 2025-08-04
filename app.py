@@ -113,7 +113,8 @@ def generate_review():
         else: # double_newline
             final_text = cleaned_text
 
-        return jsonify({'review': final_text})
+        # フロントエンドに返す直前に再度strip()を呼び出し、先頭・末尾の空白を確実に除去する
+        return jsonify({'review': final_text.strip()})
     
     # このtry-exceptは、予期せぬエラーを捕捉するための最後の砦として残します。
     # 個別のGoogle APIエラーは下のerrorhandlerで処理されます。

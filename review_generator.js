@@ -108,6 +108,46 @@ document.addEventListener('DOMContentLoaded', () => {
     const apiEndpoint = (isDevelopment ? API_BASE_URL_DEV : API_BASE_URL_PROD) + '/generate-review';
 
     /**
+     * 設定とランダム要素に基づいて、AIへの動的な指示を組み立てる
+     * @param {object} config - 現在の店舗設定
+     * @returns {string} - 組み立てられたプロンプトコンテキスト
+     */
+    function buildDynamicPromptContext(config) {
+        let dynamicPromptContext = config.promptContext;
+        const additionalInstructions = [];
+
+        let randomStoreName = '';
+        // 店名が設定されている場合、ランダムに選択
+        if (config.storeNames && config.storeNames.length > 0) {
+            randomStoreName = config.storeNames[Math.floor(Math.random() * config.storeNames.length)];
+            additionalInstructions.push(`- **店名の使用**: 文章のどこかで ${randomStoreName} という店名を自然な形で一度だけ使用してください。`);
+        }
+
+        // 地名とキーワードのリストが設定されている場合、ランダムに選択
+        if (config.locations && config.locations.length > 0 &&
+            config.keywords && config.keywords.length > 0) {
+
+            // 選択された店名に地名が含まれている場合、その地名を候補から除外する
+            let availableLocations = config.locations;
+            if (randomStoreName) {
+                availableLocations = config.locations.filter(loc => !randomStoreName.includes(loc));
+            }
+            if (availableLocations.length === 0) {
+                availableLocations = config.locations;
+            }
+            const randomLocation = availableLocations[Math.floor(Math.random() * availableLocations.length)];
+
+            const shuffledKeywords = [...config.keywords].sort(() => 0.5 - Math.random());
+            const keywordCount = Math.random() < 0.5 ? 1 : 2;
+            const randomKeywords = shuffledKeywords.slice(0, keywordCount);
+
+            additionalInstructions.push(`- **地名とキーワードの活用**: 文章のどこかに ${randomLocation} という地名と、${randomKeywords.join('や')} といったキーワードを、それぞれ最低1回は含めてください。ただし、いかにも宣伝のような不自然な文章にならないよう、あくまで顧客自身の言葉として自然に聞こえるように工夫してください。`);
+        }
+
+        return additionalInstructions.length > 0 ? `${dynamicPromptContext}\n\n${additionalInstructions.join('\n')}` : dynamicPromptContext;
+    }
+
+    /**
      * テキストエリアの高さを内容に応じて自動調整する関数
      * @param {HTMLTextAreaElement} textarea - 対象のテキストエリア
      */
@@ -173,54 +213,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const formData = collectFormData(currentConfig.questions);
 
-        // バックエンドに送信する基本データを作成
+        // 動的なプロンプトを組み立て、リクエストデータを作成
+        const dynamicPromptContext = buildDynamicPromptContext(currentConfig);
         const requestData = {
-            formData: formData
+            formData: formData,
+            promptContext: dynamicPromptContext
         };
-
-        // AIへの役割指示を動的に組み立てる
-        let dynamicPromptContext = currentConfig.promptContext;
-        const additionalInstructions = [];
-
-        let randomStoreName = '';
-        // 店名が設定されている場合、ランダムに選択
-        if (currentConfig.storeNames && currentConfig.storeNames.length > 0) {
-            randomStoreName = currentConfig.storeNames[Math.floor(Math.random() * currentConfig.storeNames.length)];
-            additionalInstructions.push(`- **店名の使用**: 文章のどこかで ${randomStoreName} という店名を自然な形で一度だけ使用してください。`);
-        }
-
-        // 地名とキーワードのリストが設定されている場合、ランダムに選択
-        if (currentConfig.locations && currentConfig.locations.length > 0 &&
-            currentConfig.keywords && currentConfig.keywords.length > 0) {
-
-            // 選択された店名に地名が含まれている場合、その地名を候補から除外する
-            let availableLocations = currentConfig.locations;
-            if (randomStoreName) {
-                // 店名に含まれない地名だけをフィルタリング
-                availableLocations = currentConfig.locations.filter(loc => !randomStoreName.includes(loc));
-            }
-            
-            // もしフィルタリングの結果、利用可能な地名がなくなってしまったら、元のリストを使いAIの判断に任せる
-            if (availableLocations.length === 0) {
-                availableLocations = currentConfig.locations;
-            }
-
-            // 利用可能な地名リストからランダムに1つ選択
-            const randomLocation = availableLocations[Math.floor(Math.random() * availableLocations.length)];
-
-            // キーワードリストをシャッフルし、先頭から1つまたは2つ取得（50%の確率で数を変える）
-            const shuffledKeywords = [...currentConfig.keywords].sort(() => 0.5 - Math.random());
-            const keywordCount = Math.random() < 0.5 ? 1 : 2;
-            const randomKeywords = shuffledKeywords.slice(0, keywordCount);
-
-            // AIへの追加指示を作成（より自然な表現を促すように変更）
-            additionalInstructions.push(`- **地名とキーワードの活用**: 文章のどこかに ${randomLocation} という地名と、${randomKeywords.join('や')} といったキーワードを、それぞれ最低1回は含めてください。ただし、いかにも宣伝のような不自然な文章にならないよう、あくまで顧客自身の言葉として自然に聞こえるように工夫してください。`);
-        }
-
-        if (additionalInstructions.length > 0) {
-            dynamicPromptContext += "\n\n" + additionalInstructions.join('\n');
-        }
-        requestData.promptContext = dynamicPromptContext;
 
         // 選択・入力された項目の数をカウント
         let answerCount = 0;
