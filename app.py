@@ -46,8 +46,9 @@ except Exception as e:
 
 @app.route('/')
 def index():
-    # デフォルトで広島八丁堀店にリダイレクト
-    return redirect('/ksl-h')
+    # サーバーが起動していることを確認するためのヘルスチェック用エンドポイント
+    # Pingサービスからのアクセスや、動作確認のために使用します
+    return jsonify({'status': 'ok', 'message': 'Backend server is running.'})
 
 # お声生成API
 @app.route('/generate-review', methods=['POST'])
