@@ -51,7 +51,7 @@ def index():
     return jsonify({'status': 'ok', 'message': 'Backend server is running.'})
 
 # お声生成API
-@app.route('/generate-review', methods=['POST'])
+@app.route('/generate-review', methods=['POST', 'OPTIONS'])
 def generate_review():
     # JSON形式・空リクエストの検証
     if not request.is_json:
