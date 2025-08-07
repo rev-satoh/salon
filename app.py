@@ -139,11 +139,8 @@ def handle_invalid_argument(e):
 
 @app.errorhandler(404)
 def not_found_error(error):
-    # APIへのリクエストで404になった場合はJSONでエラーを返す
-    if request.path.startswith('/generate-review'):
-        return jsonify(error='API endpoint not found'), 404
-    # それ以外のパス（/ksl-h など）はSPAの本体を返す
-    return app.send_static_file('review_generator.html')
+    # APIサーバーなので、存在しないパスへのアクセスはJSONで404エラーを返す
+    return jsonify({'error': '指定されたAPIエンドポイントは見つかりません。'}), 404
 
 @app.errorhandler(Exception)
 def handle_generic_exception(e):
