@@ -107,8 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     const apiEndpoint = (isDevelopment ? API_BASE_URL_DEV : API_BASE_URL_PROD) + '/generate-review';
 
-    /**
-     * 設定とランダム要素に基づいて、AIへの動的な指示を組み立てる
+    /**     * 設定とランダム要素に基づいて、AIへの動的な指示を組み立てる
      * @param {object} config - 現在の店舗設定
      * @returns {string} - 組み立てられたプロンプトコンテキスト
      */
@@ -120,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 店名が設定されている場合、ランダムに選択
         if (config.storeNames && config.storeNames.length > 0) {
             randomStoreName = config.storeNames[Math.floor(Math.random() * config.storeNames.length)];
-            additionalInstructions.push(`- **店名の使用**: 文章のどこかで ${randomStoreName} という店名を自然な形で一度だけ使用してください。`);
+            additionalInstructions.push(`- **店名の使用**: 文章のどこかで ${randomStoreName} という店名を自然な形で一度だけ使用してください。その際、店名を鉤括弧（「」）、二重引用符（””）、単一引用符（''）などのいかなる記号でも囲まないでください。`);
         }
 
         // 地名とキーワードのリストが設定されている場合、ランダムに選択
@@ -249,8 +248,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // ボタンを無効化し、ローディング表示
         generateButton.disabled = true;
+        generateButton.textContent = 'AIと通信中です…しばらくお待ちください';
         generateButton.textContent = 'AIが生成中です...';
-        resultContainer.style.display = 'none'; // 前回の結果を隠す
 
         try {
             // バックエンドのAPIにリクエストを送信
