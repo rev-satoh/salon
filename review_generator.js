@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const keywordCount = Math.random() < 0.5 ? 1 : 2;
             const randomKeywords = shuffledKeywords.slice(0, keywordCount);
 
-            additionalInstructions.push(`- **地名とキーワードの活用**: 文章のどこかに ${randomLocation} という地名と、${randomKeywords.join('や')} といったキーワードを、それぞれ最低1回は含めてください。ただし、いかにも宣伝のような不自然な文章にならないよう、あくまで顧客自身の言葉として自然に聞こえるように工夫してください。`);
+            additionalInstructions.push(`- **地名とキーワードの活用**: 文章のどこかに ${randomLocation} という地名と、${randomKeywords.join('や')} といったキーワードを、それぞれ最低1回は含めてください。これらの地名やキーワードは、鉤括弧（「」）や引用符などのいかなる記号でも囲まず、あくまで顧客自身の言葉として自然に聞こえるように工夫してください。`);
         }
 
         return additionalInstructions.length > 0 ? `${dynamicPromptContext}\n\n${additionalInstructions.join('\n')}` : dynamicPromptContext;
@@ -246,10 +246,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return; // 4つ未満の場合は処理を中断
         }
 
+        const buttonText = generateButton.querySelector('.button-text');
+
         // ボタンを無効化し、ローディング表示
         generateButton.disabled = true;
-        generateButton.textContent = 'AIと通信中です…しばらくお待ちください';
-        generateButton.textContent = 'AIが生成中です...';
+        generateButton.classList.add('loading');
+        if (buttonText) buttonText.textContent = 'AIが生成中です...';
 
         try {
             // バックエンドのAPIにリクエストを送信
@@ -340,7 +342,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } finally {
             // ボタンを元に戻す
             generateButton.disabled = false;
-            generateButton.textContent = currentConfig.submitButtonText || '作成する';
+            generateButton.classList.remove('loading');
+            if (buttonText) buttonText.textContent = currentConfig.submitButtonText || '作成する';
         }
     });
 
