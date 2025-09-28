@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>お客様の声 自動作成ツール - 電子カルテシステム</title>
-    <link rel="stylesheet" href="style.css">
+    <title>お客様の声 自動作成ツール - 電子カルテシステム</title>    
     <style>
         /* review_generator.html固有のスタイル */
         .review-form .form-group {
@@ -187,8 +186,19 @@
     <script src="configs.js" defer></script>
 </head>
 <body>
-    <div id="header-placeholder"></div>
-    <div id="nav-placeholder"></div>
+    <header>
+        <div class="header-title">
+            <h1>サロン業務システム</h1>
+        </div>
+        <nav id="header-nav"> <!-- このnavをタイトルの右に配置したい -->
+            <a href="index.html" id="nav-home">ホーム</a>
+            <a href="ranking_checker.html" id="nav-ranking">順位計測</a>
+            <a href="customer_search.html" id="nav-search">顧客検索</a>
+            <a href="#" id="nav-new-carte">新規カルテ作成</a>
+            <a href="#" id="nav-reservation">予約確認</a>
+            <a href="#" id="nav-settings">設定</a>
+        </nav>
+    </header>
 
     <main>
         <h2 style="font-weight: 600; margin-bottom: 16px;">お客様の声 自動作成ツール</h2>

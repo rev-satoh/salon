@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>サロン業務システム</title>
-    <link rel="stylesheet" href="style.css">
+    <title>サロン業務システム</title>    
     <style>
         /* index.html固有のスタイルがあればここに記述 */
         .welcome-message { text-align: center; margin-top: 20px; font-size: 20px; color: #333; }
@@ -30,7 +29,19 @@
     <script src="common.js" defer></script>
 </head>
 <body>
-    <div id="header-placeholder"></div>
+    <header>
+        <div class="header-title">
+            <h1>サロン業務システム</h1>
+        </div>
+        <nav id="header-nav"> <!-- このnavをタイトルの右に配置したい -->
+            <a href="index.html" id="nav-home">ホーム</a>
+            <a href="ranking_checker.html" id="nav-ranking">順位計測</a>
+            <a href="customer_search.html" id="nav-search">顧客検索</a>
+            <a href="#" id="nav-new-carte">新規カルテ作成</a>
+            <a href="#" id="nav-reservation">予約確認</a>
+            <a href="#" id="nav-settings">設定</a>
+        </nav>
+    </header>
 
     <main>
         <h2 style="text-align: center; font-weight: 500; margin-bottom: 20px;">ようこそ！</h2>

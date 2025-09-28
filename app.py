@@ -356,10 +356,18 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
     with app.app_context():
         app.logger.info("--- 自動計測ジョブを開始します ---")
         all_tasks = load_json_file(AUTO_TASKS_FILE)
-        
+
         tasks_to_run = []
         if task_ids_to_run:
-            app.logger.info(f"選択された {len(task_ids_to_run)} 件のタスクを実行します。")
+            # 渡されたIDの順序を維持しつつ、重複を除外する
+            seen_ids = set()
+            unique_task_ids = []
+            for task_id in task_ids_to_run:
+                if task_id not in seen_ids:
+                    seen_ids.add(task_id)
+                    unique_task_ids.append(task_id)
+            task_ids_to_run = unique_task_ids
+            app.logger.info(f"選択された {len(task_ids_to_run)} 件のタスクを実行します。ID: {task_ids_to_run}")
             tasks_to_run = [task for task in all_tasks if task.get('id') in task_ids_to_run]
         else:
             app.logger.info("スケジュールされた全タスクを実行します。")
@@ -367,6 +375,22 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
 
         history = load_json_file(AUTO_HISTORY_FILE)
         today = datetime.date.today().strftime('%Y/%m/%d')
+
+        # --- ロジック見直し：タスクをタイプ別に分割し、特集ページはURLでグループ化 ---
+        normal_tasks = []
+        special_tasks_grouped_by_url = {}
+        for task in tasks_to_run:
+            task_type = task.get('type', 'normal')
+            if task_type == 'special':
+                url = task['featurePageUrl']
+                if url not in special_tasks_grouped_by_url:
+                    special_tasks_grouped_by_url[url] = []
+                special_tasks_grouped_by_url[url].append(task)
+            else:
+                normal_tasks.append(task)
+
+        total_job_count = len(normal_tasks) + len(special_tasks_grouped_by_url)
+        job_counter = 0
 
         # --- 高速化のための変更: WebDriverを一度だけ起動 ---
         chrome_options = Options()
@@ -380,93 +404,129 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
             driver = webdriver.Chrome(options=chrome_options)
             driver.set_page_load_timeout(30)
 
-            for i, task in enumerate(tasks_to_run):
+            # --- 1. 通常検索タスクの処理 ---
+            for task in normal_tasks:
+                job_counter += 1
                 task_id = task['id']
-                task_type = task.get('type', 'normal') # typeがなければ通常検索とみなす
-                
-                task_name = ""
-                if task_type == 'normal':
-                    task_name = f"[{task.get('areaName', '')}] {task.get('serviceKeyword', '')}"
-                else: # special
-                    task_name = task.get('featurePageName', task.get('featurePageUrl'))
-                
+                task_name = f"[{task.get('areaName', '')}] {task.get('serviceKeyword', '')}"
+
                 if stream_progress:
-                    yield sse_format({"progress": {"current": i + 1, "total": len(tasks_to_run), "task": task}})
+                    yield sse_format({"progress": {"current": job_counter, "total": total_job_count, "task": task}})
                 else:
                     app.logger.info(f"タスク '{task_id}' の計測を開始...")
-                
-                # --- タスクタイプに応じて呼び出す関数を切り替え ---
-                result = {}
-                scraper_generator = None
-                if task_type == 'normal':
-                    scraper_generator = check_hotpepper_ranking(driver, task['serviceKeyword'], task['salonName'], task['areaCodes'])
-                else: # special
-                    scraper_generator = check_feature_page_ranking(driver, task['featurePageUrl'], [task['salonName']])
 
+                result = {}
+                scraper_generator = check_hotpepper_ranking(driver, task['serviceKeyword'], task['salonName'], task['areaCodes'])
                 for sse_message in scraper_generator:
                     if stream_progress:
-                        # フロントエンドに進捗を中継する
                         data = json.loads(sse_message.split('data: ')[1])
                         if 'status' in data:
-                             yield sse_format({"status": data['status'], "task_name": task_name})
-                        # 特集ページの場合、初回にページタイトルをタスクに保存する
-                        if 'final_result' in data and task_type == 'special' and not task.get('featurePageName'):
-                            task['featurePageName'] = data['final_result'].get('page_title')
-                    
+                            yield sse_format({"status": data['status'], "task_name": task_name})
                     data = json.loads(sse_message.split('data: ')[1])
-                    if 'final_result' in data: # 最後の結果のみを保持
+                    if 'final_result' in data:
                         result = data['final_result']
-                
-                # 順位とスクリーンショットのパスを取得
-                rank_to_save = "圏外"
-                if task_type == 'normal':
-                    if result.get('results'):
-                        rank_to_save = result['results'][0]['rank']
-                else: # special
-                    # 複数サロンの結果から自分のサロンの結果を取り出す
-                    salon_results = result.get('results_map', {}).get(task['salonName'], [])
-                    if salon_results:
-                        rank_to_save = salon_results[0]['rank']
-                
+
+                rank_to_save = result.get('results', [{}])[0].get('rank', '圏外')
                 screenshot_path_to_save = result.get('screenshot_path')
 
-                if stream_progress:
-                    yield sse_format({"result": {"rank": rank_to_save, "total_count": result.get('total_count'), "task_name": task_name}})
-                    time.sleep(1) # フロントエンドでの表示のためのウェイト
-
-                # 履歴を更新
-                task_history = next((item for item in history if item["id"] == task_id), None)
-                log_entry = {'date': today, 'rank': rank_to_save, 'screenshot': screenshot_path_to_save}
-
-                if task_history:
-                    # 同じ日の記録があれば更新、なければ追加
-                    date_entry = next((d for d in task_history['log'] if d['date'] == today), None)
-                    if date_entry:
-                        # 既存のエントリを更新
-                        date_entry['rank'] = rank_to_save
-                        date_entry['screenshot'] = screenshot_path_to_save
-                    else:
-                        task_history['log'].append(log_entry)
-                else:
-                    # 新しいタスクの履歴を作成
-                    history.append({
-                        "id": task_id,
-                        "task": task,
-                        "log": [log_entry]
-                    })
+                update_history(history, task, today, rank_to_save, screenshot_path_to_save)
                 app.logger.info(f"タスク '{task_id}' の結果: {rank_to_save}位")
-                time.sleep(10) # 次のタスクまで少し待つ
+
+                if stream_progress:
+                    yield sse_format({"result": {"rank": rank_to_save, "total_count": result.get('total_count'), "task_name": task_name, "task_id": task_id}})
+                    time.sleep(1) # フロントエンドでの表示のためのウェイト
+                else:
+                    time.sleep(10) # 次のタスクまで少し待つ
+
+            # --- 2. 特集ページタスクの処理（URLごとに一括） ---
+            for url, tasks_in_group in special_tasks_grouped_by_url.items():
+                job_counter += 1
+                salon_names_in_group = [t['salonName'] for t in tasks_in_group]
+                
+                # フロントエンドに進捗を伝えるための代表タスク
+                representative_task = tasks_in_group[0]
+                task_name = representative_task.get('featurePageName', url)
+
+                if stream_progress:
+                    yield sse_format({"progress": {"current": job_counter, "total": total_job_count, "task": representative_task}})
+                else:
+                    app.logger.info(f"特集ページ '{url}' の一括計測を開始... 対象サロン: {salon_names_in_group}")
+
+                result = {}
+                scraper_generator = check_feature_page_ranking(driver, url, salon_names_in_group)
+                for sse_message in scraper_generator:
+                    if stream_progress:
+                        data = json.loads(sse_message.split('data: ')[1])
+                        if 'status' in data:
+                            yield sse_format({"status": data['status'], "task_name": task_name})
+                    
+                    data = json.loads(sse_message.split('data: ')[1])
+                    if 'final_result' in data:
+                        result = data['final_result']
+
+                # グループ内の各タスクについて履歴を更新
+                for task in tasks_in_group:
+                    task_id = task['id']
+                    salon_name = task['salonName']
+                    
+                    # ページタイトルが取得でき、タスクに未設定なら保存
+                    page_title = result.get('page_title')
+                    if page_title and not task.get('featurePageName'):
+                        task['featurePageName'] = page_title
+                        # all_tasks内の該当タスクも更新
+                        original_task = next((t for t in all_tasks if t.get('id') == task_id), None)
+                        if original_task:
+                            original_task['featurePageName'] = page_title
+
+                    salon_results = result.get('results_map', {}).get(salon_name, [])
+                    rank_to_save = salon_results[0]['rank'] if salon_results else '圏外'
+                    screenshot_path_to_save = result.get('screenshot_path')
+                    
+                    update_history(history, task, today, rank_to_save, screenshot_path_to_save)
+                    app.logger.info(f"タスク '{task_id}' ({salon_name}) の結果: {rank_to_save}位")
+
+                    if stream_progress:
+                        # 個別のタスク名を生成して結果を送信
+                        individual_task_name = f"[{task['salonName']}] {task.get('featurePageName', task.get('featurePageUrl'))}"
+                        yield sse_format({"result": {"rank": rank_to_save, "total_count": result.get('total_count'), "task_name": individual_task_name, "task_id": task_id}})
+                        time.sleep(1)
+                
+                if not stream_progress:
+                    time.sleep(10) # 次のURLグループまで少し待つ
+
         except Exception as e:
             app.logger.error(f"自動計測ジョブ全体でエラーが発生しました: {e}")
         finally:
             if driver:
                 driver.quit() # 全てのタスクが終わったらブラウザを終了
             save_json_file(AUTO_HISTORY_FILE, history)
+            # 特集ページ名が更新された可能性があるので、タスクファイルも保存
+            save_json_file(AUTO_TASKS_FILE, all_tasks)
             
             if stream_progress:
-                yield sse_format({"final_status": f"すべての計測が完了しました。（{len(tasks_to_run)}件）"})
+                yield sse_format({"final_status": f"すべての計測が完了しました。（{total_job_count}件）"})
             else:
                 app.logger.info("--- 自動計測ジョブが完了しました ---")
+
+def update_history(history, task, date_str, rank, screenshot_path):
+    """履歴リストを更新するヘルパー関数"""
+    task_id = task['id']
+    task_history = next((item for item in history if item["id"] == task_id), None)
+    log_entry = {'date': date_str, 'rank': rank, 'screenshot': screenshot_path}
+
+    if task_history:
+        date_entry = next((d for d in task_history['log'] if d['date'] == date_str), None)
+        if date_entry:
+            date_entry.update(log_entry)
+        else:
+            task_history['log'].append(log_entry)
+            task_history['log'].sort(key=lambda x: datetime.datetime.strptime(x['date'], '%Y/%m/%d'))
+    else:
+        history.append({
+            "id": task_id,
+            "task": task,
+            "log": [log_entry]
+        })
 
 @app.route('/api/auto-tasks', methods=['GET', 'POST'])
 def handle_auto_tasks():

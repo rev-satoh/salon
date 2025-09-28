@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>掲載順位チェッカー - サロン業務システム</title>
-    <link rel="stylesheet" href="style.css">
+    <title>掲載順位チェッカー - サロン業務システム</title>    
     <style>
         /* ranking_checker.html固有のスタイル */
         .checker-container { display: flex; flex-direction: column; gap: 15px; }
@@ -91,7 +90,19 @@
     <script src="common.js" defer></script>
 </head>
 <body>
-    <div id="header-placeholder"></div>
+    <header>
+        <div class="header-title">
+            <h1>サロン業務システム</h1>
+        </div>
+        <nav id="header-nav"> <!-- このnavをタイトルの右に配置したい -->
+            <a href="index.html" id="nav-home">ホーム</a>
+            <a href="ranking_checker.html" id="nav-ranking">順位計測</a>
+            <a href="customer_search.html" id="nav-search">顧客検索</a>
+            <a href="#" id="nav-new-carte">新規カルテ作成</a>
+            <a href="#" id="nav-reservation">予約確認</a>
+            <a href="#" id="nav-settings">設定</a>
+        </nav>
+    </header>
 
     <main>
         <h2 style="font-weight: 600; margin-bottom: 16px;">ホットペッパービューティー 掲載順位チェッカー</h2>
@@ -762,6 +773,18 @@
                 const activeSearchType = searchTypeToggle.querySelector('.toggle-button.active').dataset.type;
                 const filteredTasks = autoTasks.filter(task => (task.type || 'normal') === activeSearchType);
 
+                // --- 特集ページのタイトルをURLごとに集約して、表示のばらつきをなくす ---
+                const urlToTitleMap = new Map();
+                if (activeSearchType === 'special') {
+                    autoTasks.forEach(task => {
+                        if (task.type === 'special' && task.featurePageUrl && task.featurePageName) {
+                            if (!urlToTitleMap.has(task.featurePageUrl)) {
+                                urlToTitleMap.set(task.featurePageUrl, task.featurePageName);
+                            }
+                        }
+                    });
+                }
+
                 if (filteredTasks.length === 0) {
                     autoTaskList.innerHTML = `<li>この検索タイプの自動計測タスクはありません。</li>`;
                     selectAllContainer.style.display = 'none';
@@ -773,7 +796,8 @@
                 filteredTasks.sort((a, b) => {
                     const getText = (task) => {
                         if (task.type === 'special') {
-                            return task.featurePageName || `[${task.salonName}] ${task.featurePageUrl.replace(/^(https?:\/\/)?[^/]+/, '')}`;
+                            const pageTitle = urlToTitleMap.get(task.featurePageUrl) || task.featurePageName || task.featurePageUrl.replace(/^(https?:\/\/)?[^/]+/, '');
+                            return `[${task.salonName}] ${pageTitle}`;
                         }
                         // 通常検索の場合
                         return `[${task.areaName}] ${task.serviceKeyword} - ${task.salonName}`;
@@ -809,14 +833,8 @@
                     if (taskType === 'normal') {
                         taskText.textContent = `[${task.areaName}] ${task.serviceKeyword} - ${task.salonName}`;
                     } else { // special
-                        // タイトルがあればタイトルを、なければURLを表示
-                        if (task.featurePageName) {
-                            taskText.textContent = task.featurePageName;
-                        } else {
-                            // URLからドメイン部分を除いたパスを表示
-                            const urlPath = task.featurePageUrl.replace(/^(https?:\/\/)?[^/]+/, '');
-                            taskText.textContent = `[${task.salonName}] ${urlPath}`;
-                        }
+                        const pageTitle = urlToTitleMap.get(task.featurePageUrl) || task.featurePageName || task.featurePageUrl.replace(/^(https?:\/\/)?[^/]+/, '');
+                        taskText.textContent = `[${task.salonName}] ${pageTitle}`;
                     }
                     
                     taskLabel.appendChild(checkbox);
@@ -963,7 +981,6 @@
                     return new Promise((resolve, reject) => {
                         const params = new URLSearchParams({ task_ids: JSON.stringify(taskIds) });
                         const eventSource = new EventSource(`/api/run-tasks-manually?${params.toString()}`);
-                        let currentTaskContainer = null;
 
                         eventSource.onmessage = (event) => {
                             const data = JSON.parse(event.data);
@@ -979,31 +996,50 @@
 
                             if (data.progress) {
                                 const { current, total, task } = data.progress;
-                                let fullKeyword = '';
+                                
                                 if (task.type === 'special') {
-                                    const urlPath = task.featurePageUrl.replace(/^(https?:\/\/)?[^/]+/, '');
-                                    fullKeyword = `[${task.salonName}] ${urlPath}`;
+                                    // 特集ページの場合、グループ内の全タスクのコンテナを先に作成
+                                    const tasksInGroup = tasksToRun.filter(t => t.featurePageUrl === task.featurePageUrl);
+                                    tasksInGroup.forEach(groupTask => {
+                                        const taskId = groupTask.id;
+                                        const fullKeyword = `[${groupTask.salonName}] ${groupTask.featurePageName || groupTask.featurePageUrl}`;
+                                        const taskContainer = document.createElement('div');
+                                        taskContainer.id = `task-container-${taskId}`;
+                                        taskContainer.style.borderBottom = '1px solid #e5e5e7';
+                                        taskContainer.style.paddingBottom = '15px';
+                                        taskContainer.style.marginBottom = '15px';
+                                        taskContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${fullKeyword}」</h4><p>計測を開始します...</p>`;
+                                        resultArea.appendChild(taskContainer);
+                                    });
                                 } else {
-                                    fullKeyword = `[${task.areaName}] ${task.serviceKeyword}`;
+                                    // 通常検索の場合
+                                    const taskId = task.id;
+                                    const fullKeyword = `[${task.areaName}] ${task.serviceKeyword}`;
+                                    const taskContainer = document.createElement('div');
+                                    taskContainer.id = `task-container-${taskId}`;
+                                    taskContainer.style.borderBottom = '1px solid #e5e5e7';
+                                    taskContainer.style.paddingBottom = '15px';
+                                    taskContainer.style.marginBottom = '15px';
+                                    taskContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${fullKeyword}」</h4><p>計測を開始します...</p>`;
+                                    resultArea.appendChild(taskContainer);
                                 }
-                                // このタスク用のコンテナを新しく作成
-                                currentTaskContainer = document.createElement('div');
-                                currentTaskContainer.style.borderBottom = '1px solid #e5e5e7';
-                                currentTaskContainer.style.paddingBottom = '15px';
-                                currentTaskContainer.style.marginBottom = '15px';
-                                currentTaskContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${fullKeyword}」</h4><p>計測を開始します...</p>`;
-                                resultArea.appendChild(currentTaskContainer);
                             }
 
-                            if (data.status && currentTaskContainer) {
-                                currentTaskContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${data.task_name}」</h4><p>${data.status}</p>`;
+                            if (data.status) {
+                                // statusイベントは特定のタスクIDに紐付かない場合があるため、最後のコンテナを更新
+                                const lastContainer = resultArea.querySelector('div:last-of-type');
+                                if (lastContainer) {
+                                    lastContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${data.task_name}」</h4><p>${data.status}</p>`;
+                                }
                             }
 
-                            if (data.result && currentTaskContainer) {
-                                const { rank, total_count } = data.result;
+                            if (data.result) {
+                                const { rank, total_count, task_name, task_id } = data.result;
+                                const taskContainer = document.getElementById(`task-container-${task_id}`);
+                                if (!taskContainer) return; // 対応するコンテナがなければ何もしない
                                 const totalCountHtml = (total_count !== undefined) ? `<p style="font-size: 14px; color: #6c6c70; margin-bottom: 10px;">検索結果総数: <strong style="color: #1c1c1e;">${total_count}</strong> 件</p>` : '';
                                 const resultMessageHtml = `<p style="margin: 0; font-size: 18px; font-weight: bold;"><span style="color: #007aff; font-size: 1.3em;">${rank}</span> 位</p>`;
-                                currentTaskContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${data.task_name}」</h4>${totalCountHtml}${resultMessageHtml}`;
+                                taskContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${task_name}」</h4>${totalCountHtml}${resultMessageHtml}`;
                             }
 
                             if (data.final_status) {
