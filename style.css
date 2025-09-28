@@ -15,57 +15,17 @@ header {
     flex-shrink: 0;
     display: flex; /* Flexbox を使用 */
     align-items: center; /* 垂直方向中央揃え */
-    /* justify-content: space-between; */ /* これを削除またはコメントアウト */
+    justify-content: center; /* 水平方向中央揃え */
 }
 
 .header-title {
-    text-align: left;
+    text-align: center; /* テキストも中央揃えに */
 }
 
 .header-title h1 {
-    font-size: 16px; /* 文字サイズを小さく */
+    font-size: 17px; /* タイトルに合わせて調整 */
     font-weight: 600;
     margin: 0;
-}
-
-.header-title span {
-    font-size: 12px; /* 2行目の文字サイズ */
-    font-weight: 500;
-    color: #555;
-    display: block; /* 改行させる */
-}
-
-/* nav タグは header 内に移動したため、独立した nav スタイルは不要になるか、調整が必要 */
-/* nav { ... } */
-
-#header-nav {
-    display: flex; /* 横並びにする */
-    margin-left: 20px; /* タイトルとの間にマージンを追加 */
-    /* justify-content: flex-end; を削除または flex-start に変更 */
-    gap: 10px; /* ボタン間の間隔を指定 */
-}
-
-/* header内のナビゲーションリンクのスタイル */
-#header-nav a {
-    text-decoration: none;
-    color: #ffffff; /* 文字色を白に */
-    background-color: #007aff; /* iOSのアクセントカラーを背景色に */
-    font-size: 15px;
-    padding: 8px 12px;
-    border-radius: 8px;
-    display: block; /* クリック範囲を広げる */
-    text-align: center; /* 文字を中央揃えに */
-    transition: background-color 0.2s ease-in-out; /* ホバー時の色変化を滑らかに */
-}
-
-#header-nav a:hover {
-    background-color: #005ecb; /* ホバー時の背景色を少し濃く */
-    color: #ffffff; /* ホバー時も文字色は白のまま */
-}
-
-#header-nav a.active {
-    background-color: #005ecb; /* アクティブなボタンの背景色 */
-    /* 必要に応じて他のスタイルも調整 */
 }
 
 main {
@@ -79,6 +39,23 @@ main {
     padding: 16px;
     margin-bottom: 20px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06); /* 控えめな影 */
+}
+
+.result-notice {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #6c6c70;
+    text-align: center;
+}
+
+.error-message {
+    color: #d93025; /* エラーを示す赤色 */
+    background-color: #fbe9e7;
+    border: 1px solid #d93025;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    text-align: center;
 }
 
 .card h3 {
@@ -119,37 +96,69 @@ footer {
 }
 
 /* GBP移動ボタンのスタイル (プライマリボタン) */
-.button-primary {
-    display: inline-block;
-    background-color: #007bff;
-    color: white;
-    padding: 10px 15px;
+.button-primary, .button-secondary {
     border: none;
-    border-radius: 5px;
-    text-decoration: none;
+    border-radius: 8px;
+    padding: 12px 20px;
     font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.2s ease-in-out;
+    display: inline-flex; /* Flexboxで中央揃え */
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    text-decoration: none; /* aタグの場合も考慮 */
+}
+
+.button-primary {
+    background-color: #007aff;
+    color: white;
 }
 .button-primary:hover {
-    background-color: #0056b3;
+    background-color: #005ecb;
 }
 
 /* コピーボタンのスタイル (セカンダリボタン) */
 .button-secondary {
-    background-color: #6c757d;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.2s;
+    background-color: #e5e5e7;
+    color: #1c1c1e;
+    font-weight: 500;
+    padding: 10px 16px; /* 少し小さめ */
 }
 .button-secondary:hover {
-    background-color: #5a6268;
+    background-color: #d1d1d6;
 }
+
+/* ボタンが無効な時のスタイル */
+.button-primary:disabled,
 .button-secondary:disabled {
-    background-color: #a9a9a9;
+    background-color: #c8c7cc;
+    color: #8e8e93;
     cursor: not-allowed;
+}
+
+/* --- ローディングスピナーのスタイル --- */
+.spinner {
+    display: none; /* 通常時は非表示 */
+    width: 18px;
+    height: 18px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 10px; /* テキストとの間に余白 */
+}
+
+.button-primary.loading .spinner {
+    display: inline-block; /* ローディング中は表示 */
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* 読み取り専用テキストエリアのフォーカス時の枠線を消す */
+textarea:read-only:focus {
+    outline: none;
 }

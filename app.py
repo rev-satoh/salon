@@ -14,7 +14,6 @@ from PIL import Image
 from apscheduler.schedulers.background import BackgroundScheduler
 from feature_page_scraper import check_feature_page_ranking # 新しいスクレイパーをインポート
 
-
 # app.pyと同じ階層にある静的ファイル(css, js, html)を読み込めるように設定
 app = Flask(__name__, static_folder='.', static_url_path='')
 # CORS(Cross-Origin Resource Sharing)を有効化
@@ -24,16 +23,6 @@ CORS(app)
 AUTO_TASKS_FILE = 'auto_tasks.json'
 AUTO_HISTORY_FILE = 'auto_history.json'
 SCHEDULER_CONFIG_FILE = 'scheduler_config.json'
-
-# --- ヘルパー関数 (ファイルの読み書き) ---
-def load_json_file(filename):
-    if not os.path.exists(filename):
-        return []
-    try:
-        with open(filename, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    except (json.JSONDecodeError, IOError):
-        return []
 
 def save_json_file(filename, data):
     with open(filename, 'w', encoding='utf-8') as f:
@@ -60,6 +49,16 @@ def save_scheduler_config(config):
 def sse_format(data: dict) -> str:
     """Server-Sent Eventsのフォーマットで文字列を返す"""
     return f"data: {json.dumps(data)}\n\n"
+
+# --- ヘルパー関数 (ファイルの読み書き) ---
+def load_json_file(filename):
+    if not os.path.exists(filename):
+        return []
+    try:
+        with open(filename, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except (json.JSONDecodeError, IOError):
+        return []
 
 @app.route('/')
 def index():
