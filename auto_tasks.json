@@ -1,0 +1,718 @@
+[
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "福山・尾道",
+    "id": "ケイトステージラッシュ-福山・尾道-まつげ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつげ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "福山・尾道",
+    "id": "ケイトステージラッシュ-福山・尾道-まつげパーマ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつげパーマ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "福山・尾道",
+    "id": "ケイトステージラッシュ-福山・尾道-まつ毛パーマ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつ毛パーマ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "福山・尾道",
+    "id": "ケイトステージラッシュ-福山・尾道-まつぱ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつぱ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "福山・尾道",
+    "id": "ケイトステージラッシュ-福山・尾道-マツパ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "マツパ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "福山・尾道",
+    "id": "ケイトステージラッシュ-福山・尾道-眉毛",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "眉毛"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "福山・尾道",
+    "id": "ケイトステージラッシュ-福山・尾道-眉毛ワックス",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "眉毛ワックス"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "福山・尾道",
+    "id": "ケイトステージラッシュ-福山・尾道-眉毛WAX",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "眉毛WAX"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "福山・尾道",
+    "id": "ケイトステージラッシュ-福山・尾道-アイラッシュ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "アイラッシュ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "福山・尾道",
+    "id": "ケイトステージラッシュ-福山・尾道-アイブロウ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "アイブロウ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "福山・尾道",
+    "id": "ケイトステージラッシュ-福山・尾道-マツエク",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "マツエク"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
+    "id": "ケイトステージラッシュ-広島-まつげ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつげ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
+    "id": "ケイトステージラッシュ-広島-まつげパーマ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつげパーマ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
+    "id": "ケイトステージラッシュ-広島-まつ毛パーマ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつ毛パーマ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
+    "id": "ケイトステージラッシュ-広島-まつぱ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつぱ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
+    "id": "ケイトステージラッシュ-広島-マツパ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "マツパ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
+    "id": "ケイトステージラッシュ-広島-眉毛",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "眉毛"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
+    "id": "ケイトステージラッシュ-広島-眉毛ワックス",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "眉毛ワックス"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
+    "id": "ケイトステージラッシュ-広島-眉毛WAX",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "眉毛WAX"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
+    "id": "ケイトステージラッシュ-広島-アイラッシュ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "アイラッシュ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
+    "id": "ケイトステージラッシュ-広島-アイブロウ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "アイブロウ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
+    "id": "ケイトステージラッシュ-広島-マツエク",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "マツエク"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "福山・尾道",
+    "id": "ケイトステージラッシュ-福山・尾道-パリジェンヌ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "パリジェンヌ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
+    "id": "ケイトステージラッシュ-広島-パリジェンヌ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "パリジェンヌ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "福山・尾道",
+    "id": "ケイトステージラッシュ-福山・尾道-HBL",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "HBL"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "福山・尾道",
+    "id": "ケイトステージラッシュ-福山・尾道-ハリウッドブロウ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "ハリウッドブロウ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
+    "id": "ケイトステージラッシュ-広島-HBL",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "HBL"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
+    "id": "ケイトステージラッシュ-広島-ハリウッドブロウ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "ハリウッドブロウ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "CB",
+      "serviceAreaCd": "SC"
+    },
+    "areaName": "岐阜",
+    "id": "ケイトステージラッシュ-岐阜-まつげ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつげ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "CB",
+      "serviceAreaCd": "SC"
+    },
+    "areaName": "岐阜",
+    "id": "ケイトステージラッシュ-岐阜-まつげパーマ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつげパーマ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "CB",
+      "serviceAreaCd": "SC"
+    },
+    "areaName": "岐阜",
+    "id": "ケイトステージラッシュ-岐阜-まつ毛パーマ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつ毛パーマ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "CB",
+      "serviceAreaCd": "SC"
+    },
+    "areaName": "岐阜",
+    "id": "ケイトステージラッシュ-岐阜-まつぱ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつぱ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "CB",
+      "serviceAreaCd": "SC"
+    },
+    "areaName": "岐阜",
+    "id": "ケイトステージラッシュ-岐阜-マツパ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "マツパ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "CB",
+      "serviceAreaCd": "SC"
+    },
+    "areaName": "岐阜",
+    "id": "ケイトステージラッシュ-岐阜-眉毛",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "眉毛"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "CB",
+      "serviceAreaCd": "SC"
+    },
+    "areaName": "岐阜",
+    "id": "ケイトステージラッシュ-岐阜-眉毛ワックス",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "眉毛ワックス"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "CB",
+      "serviceAreaCd": "SC"
+    },
+    "areaName": "岐阜",
+    "id": "ケイトステージラッシュ-岐阜-眉毛WAX",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "眉毛WAX"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "CB",
+      "serviceAreaCd": "SC"
+    },
+    "areaName": "岐阜",
+    "id": "ケイトステージラッシュ-岐阜-アイラッシュ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "アイラッシュ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "CB",
+      "serviceAreaCd": "SC"
+    },
+    "areaName": "岐阜",
+    "id": "ケイトステージラッシュ-岐阜-アイブロウ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "アイブロウ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "CB",
+      "serviceAreaCd": "SC"
+    },
+    "areaName": "岐阜",
+    "id": "ケイトステージラッシュ-岐阜-マツエク",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "マツエク"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "CB",
+      "serviceAreaCd": "SC"
+    },
+    "areaName": "岐阜",
+    "id": "ケイトステージラッシュ-岐阜-パリジェンヌ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "パリジェンヌ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "CB",
+      "serviceAreaCd": "SC"
+    },
+    "areaName": "岐阜",
+    "id": "ケイトステージラッシュ-岐阜-HBL",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "HBL"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "CB",
+      "serviceAreaCd": "SC"
+    },
+    "areaName": "岐阜",
+    "id": "ケイトステージラッシュ-岐阜-ハリウッドブロウ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "ハリウッドブロウ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "AB",
+      "serviceAreaCd": "SA"
+    },
+    "areaName": "池袋・目白",
+    "id": "ケイトステージラッシュ-池袋・目白-まつげ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつげ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "AB",
+      "serviceAreaCd": "SA"
+    },
+    "areaName": "池袋・目白",
+    "id": "ケイトステージラッシュ-池袋・目白-まつげパーマ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつげパーマ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "AB",
+      "serviceAreaCd": "SA"
+    },
+    "areaName": "池袋・目白",
+    "id": "ケイトステージラッシュ-池袋・目白-まつ毛パーマ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつ毛パーマ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "AB",
+      "serviceAreaCd": "SA"
+    },
+    "areaName": "池袋・目白",
+    "id": "ケイトステージラッシュ-池袋・目白-まつぱ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつぱ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "AB",
+      "serviceAreaCd": "SA"
+    },
+    "areaName": "池袋・目白",
+    "id": "ケイトステージラッシュ-池袋・目白-マツパ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "マツパ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "AB",
+      "serviceAreaCd": "SA"
+    },
+    "areaName": "池袋・目白",
+    "id": "ケイトステージラッシュ-池袋・目白-眉毛",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "眉毛"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "AB",
+      "serviceAreaCd": "SA"
+    },
+    "areaName": "池袋・目白",
+    "id": "ケイトステージラッシュ-池袋・目白-眉毛ワックス",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "眉毛ワックス"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "AB",
+      "serviceAreaCd": "SA"
+    },
+    "areaName": "池袋・目白",
+    "id": "ケイトステージラッシュ-池袋・目白-眉毛WAX",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "眉毛WAX"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "AB",
+      "serviceAreaCd": "SA"
+    },
+    "areaName": "池袋・目白",
+    "id": "ケイトステージラッシュ-池袋・目白-アイラッシュ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "アイラッシュ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "AB",
+      "serviceAreaCd": "SA"
+    },
+    "areaName": "池袋・目白",
+    "id": "ケイトステージラッシュ-池袋・目白-アイブロウ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "アイブロウ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "AB",
+      "serviceAreaCd": "SA"
+    },
+    "areaName": "池袋・目白",
+    "id": "ケイトステージラッシュ-池袋・目白-マツエク",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "マツエク"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "AB",
+      "serviceAreaCd": "SA"
+    },
+    "areaName": "池袋・目白",
+    "id": "ケイトステージラッシュ-池袋・目白-パリジェンヌ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "パリジェンヌ"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "AB",
+      "serviceAreaCd": "SA"
+    },
+    "areaName": "池袋・目白",
+    "id": "ケイトステージラッシュ-池袋・目白-HBL",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "HBL"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "AB",
+      "serviceAreaCd": "SA"
+    },
+    "areaName": "池袋・目白",
+    "id": "ケイトステージラッシュ-池袋・目白-ハリウッドブロウ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "ハリウッドブロウ"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "salonName": "ケイトステージラッシュ",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "salonName": "ケイトステージラッシュ",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "id": "ist-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "salonName": "ist",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "id": "ティティラッシュ-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "salonName": "ティティラッシュ",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "id": "Lila-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "salonName": "Lila",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "id": "フィネス-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "salonName": "フィネス",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "id": "ビューティーアイラッシュ-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "salonName": "ビューティーアイラッシュ",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "id": "COCOVI-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "salonName": "COCOVI",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "id": "ReRe【リリ】福山駅前店-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "salonName": "ReRe【リリ】福山駅前店",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "id": "kino-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "salonName": "kino",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "id": "CUT・S-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "salonName": "CUT・S",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "id": "RLASH福山駅前店-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "salonName": "RLASH福山駅前店",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "id": "RLASH福山駅前店-https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "salonName": "RLASH福山駅前店",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "id": "福松学園-https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "salonName": "福松学園",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "id": "ist-https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "salonName": "ist",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "id": "ティティラッシュ-https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "salonName": "ティティラッシュ",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "id": "Lila-https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "salonName": "Lila",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "id": "フィネス-https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "salonName": "フィネス",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "id": "ビューティーアイラッシュ-https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "salonName": "ビューティーアイラッシュ",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "id": "COCOVI-https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "salonName": "COCOVI",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "id": "ReRe【リリ】福山駅前店-https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "salonName": "ReRe【リリ】福山駅前店",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "id": "福松学園-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "salonName": "福松学園",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "id": "Ciel Eyelash-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
+    "salonName": "Ciel Eyelash",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "id": "Ciel Eyelash-https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "salonName": "Ciel Eyelash",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "id": "CUT・S-https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "salonName": "CUT・S",
+    "type": "special"
+  },
+  {
+    "id": "kino-https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "type": "special",
+    "salonName": "kino",
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/"
+  }
+]

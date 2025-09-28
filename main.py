@@ -52,8 +52,8 @@ def create_prompt(form_data, context):
 """
     return prompt
 
-@app.route('/generate', methods=['POST'])
-def generate_review_api():
+@app.route('/generate-review', methods=['POST'])
+def generate_review():
     """APIのエンドポイント"""
     if not request.is_json:
         return jsonify({"error": "リクエストはJSON形式である必要があります"}), 400

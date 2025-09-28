@@ -3,11 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>電子カルテシステム</title>
+    <title>サロン業務システム</title>
     <link rel="stylesheet" href="style.css">
     <style>
         /* index.html固有のスタイルがあればここに記述 */
-        .welcome-message { text-align: center; margin-top: 40px; font-size: 20px; color: #333; }
+        .welcome-message { text-align: center; margin-top: 20px; font-size: 20px; color: #333; }
+        .menu-description {
+            max-width: 600px;
+            margin: 30px auto;
+            text-align: left;
+        }
+        .menu-item {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+        }
+        .menu-item strong {
+            font-size: 16px;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 5px;
+        }
     </style>
     <script src="common.js" defer></script>
 </head>
@@ -16,7 +34,30 @@
 
     <main>
         <h2 style="text-align: center; font-weight: 500; margin-bottom: 20px;">ようこそ！</h2>
-        <p class="welcome-message">各メニューから操作を選択してください。</p>
+        <p class="welcome-message">ヘッダーからメニューを選択して下さい。</p>
+
+        <div class="menu-description">
+            <div class="menu-item">
+                <strong>順位計測</strong>
+                <p style="margin:0; color: #6c6c70;">ホットペッパービューティーでの掲載順位を計測します。</p>
+            </div>
+            <div class="menu-item">
+                <strong>顧客検索</strong>
+                <p style="margin:0; color: #6c6c70;">顧客情報の検索や詳細の確認ができます。（デモデータ）</p>
+            </div>
+            <div class="menu-item">
+                <strong>新規カルテ作成</strong>
+                <p style="margin:0; color: #6c6c70;">新しい顧客のカルテを作成します。（準備中）</p>
+            </div>
+             <div class="menu-item">
+                <strong>予約確認</strong>
+                <p style="margin:0; color: #6c6c70;">予約状況を確認します。（準備中）</p>
+            </div>
+             <div class="menu-item">
+                <strong>設定</strong>
+                <p style="margin:0; color: #6c6c70;">システムの各種設定を行います。（準備中）</p>
+            </div>
+        </div>
     </main>
 
     <div id="footer-placeholder"></div>
