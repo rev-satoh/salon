@@ -770,31 +770,185 @@
     "type": "special"
   },
   {
-    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw038/pre21/city20100000/",
-    "type": "special",
-    "salonName": "ケイトステージラッシュ",
+    "featurePageName": "岐阜市でまつげパーマが人気のまつげサロン｜ホットペッパービューティー",
     "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre21/city20100000/",
-    "featurePageName": "岐阜市でまつげパーマが人気のまつげサロン｜ホットペッパービューティー"
+    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw038/pre21/city20100000/",
+    "salonName": "ケイトステージラッシュ",
+    "type": "special"
   },
   {
-    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw038/stc9911780/",
-    "type": "special",
-    "salonName": "ケイトステージラッシュ",
+    "featurePageName": "岐阜駅でまつげパーマが人気のまつげサロン｜ホットペッパービューティー",
     "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/stc9911780/",
-    "featurePageName": "岐阜駅でまつげパーマが人気のまつげサロン｜ホットペッパービューティー"
+    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw038/stc9911780/",
+    "salonName": "ケイトステージラッシュ",
+    "type": "special"
   },
   {
-    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw038/stc0090082/",
-    "type": "special",
-    "salonName": "ケイトステージラッシュ",
+    "featurePageName": "池袋駅でまつげパーマが人気のまつげサロン｜ホットペッパービューティー",
     "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/stc0090082/",
-    "featurePageName": "池袋駅でまつげパーマが人気のまつげサロン｜ホットペッパービューティー"
+    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw038/stc0090082/",
+    "salonName": "ケイトステージラッシュ",
+    "type": "special"
   },
   {
-    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw092/stc0090082/",
-    "type": "special",
-    "salonName": "ケイトステージラッシュ",
+    "featurePageName": "池袋駅でまつげカールが人気のまつげサロン｜ホットペッパービューティー",
     "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw092/stc0090082/",
-    "featurePageName": "池袋駅でまつげカールが人気のまつげサロン｜ホットペッパービューティー"
+    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw092/stc0090082/",
+    "salonName": "ケイトステージラッシュ",
+    "type": "special"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-福山　まつげパーマ",
+    "keyword": "福山　まつげパーマ",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "福山駅",
+    "type": "google"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-まつ毛パーマ",
+    "type": "google",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "福山駅",
+    "keyword": "まつ毛パーマ"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-マツパ",
+    "type": "google",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "福山駅",
+    "keyword": "マツパ"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-まつぱ",
+    "type": "google",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "福山駅",
+    "keyword": "まつぱ"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-まつげ",
+    "type": "google",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "福山駅",
+    "keyword": "まつげ"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-眉毛",
+    "type": "google",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "福山駅",
+    "keyword": "眉毛"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-眉毛ワックス",
+    "type": "google",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "福山駅",
+    "keyword": "眉毛ワックス"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-眉毛WAX",
+    "type": "google",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "福山駅",
+    "keyword": "眉毛WAX"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-アイラッシュ",
+    "type": "google",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "福山駅",
+    "keyword": "アイラッシュ"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-アイブロウ",
+    "type": "google",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "福山駅",
+    "keyword": "アイブロウ"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-HBL",
+    "type": "google",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "福山駅",
+    "keyword": "HBL"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-ハリウッドブロウリフト",
+    "type": "google",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "福山駅",
+    "keyword": "ハリウッドブロウリフト"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-パリジェンヌ",
+    "type": "google",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "福山駅",
+    "keyword": "パリジェンヌ"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-福山　パリジェンヌ",
+    "type": "google",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "福山駅",
+    "keyword": "福山　パリジェンヌ"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-福山　HBL",
+    "type": "google",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "福山駅",
+    "keyword": "福山　HBL"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-福山　ハリウッドブロウ",
+    "type": "google",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "福山駅",
+    "keyword": "福山　ハリウッドブロウ"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-福山　眉毛ワックス",
+    "type": "google",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "福山駅",
+    "keyword": "福山　眉毛ワックス"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-福山　眉毛WAX",
+    "type": "google",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "福山駅",
+    "keyword": "福山　眉毛WAX"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-福山　眉毛",
+    "type": "google",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "福山駅",
+    "keyword": "福山　眉毛"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-福山　まつげ",
+    "type": "google",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "福山駅",
+    "keyword": "福山　まつげ"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-福山　マツパ",
+    "type": "google",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "福山駅",
+    "keyword": "福山　マツパ"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-福山　まつ毛パーマ",
+    "type": "google",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "福山駅",
+    "keyword": "福山　まつ毛パーマ"
   }
 ]

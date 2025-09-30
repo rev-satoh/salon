@@ -112,7 +112,7 @@
         <div id="searchTypeToggle" class="search-type-toggle" style="margin-bottom: 16px;">
             <button type="button" class="toggle-button active" data-type="normal">HPB 通常</button>
             <button type="button" class="toggle-button" data-type="special">HPB 特集</button>
-            <button type="button" class="toggle-button" data-type="google">Googleマップ</button>
+            <button type="button" class="toggle-button" data-type="google">MEO</button>
         </div>
 
         <!-- 自動計測セクション -->
@@ -193,7 +193,7 @@
                     <small style="margin-top: 5px; color: #6c6c70;">順位を計測したいホットペッパービューティーの特集ページのURLを貼り付けます。</small>
                 </div>
 
-                <!-- Googleマップ検索用の入力フォーム -->
+                <!-- MEO検索用の入力フォーム -->
                 <div id="googleMapSearchInputs" style="display: none;">
                     <div class="form-group">
                         <label for="searchLocationInput">検索地点（例: 広島駅, 福山駅）</label>
@@ -238,6 +238,7 @@
             const salonNameInput = document.getElementById('salonNameInput');
             const checkRankButton = document.getElementById('checkRankButton');
             const resultArea = document.getElementById('resultArea');
+            const salonNameFormGroup = document.querySelector('label[for="salonNameInput"]').parentElement;
             const addAutoTaskButton = document.getElementById('addAutoTaskButton');
             const autoTaskList = document.getElementById('autoTaskList');
             const autoHistoryContainer = document.getElementById('autoHistoryContainer');
@@ -412,12 +413,15 @@
                     normalSearchInputs.style.display = 'none';
                     specialSearchInputs.style.display = 'block';
                     googleMapSearchInputs.style.display = 'none';
+                    salonNameFormGroup.style.display = 'block';
                 } else { // google
                     normalSearchInputs.style.display = 'none';
                     specialSearchInputs.style.display = 'none';
                     googleMapSearchInputs.style.display = 'block';
+                    salonNameFormGroup.style.display = 'block'; // MEOでも自店サロン名入力欄を表示
                 }
                 // グラフの表示を切り替えるために履歴を再読み込み・再描画する
+                // MEOの履歴機能は今後の拡張で対応
                 fetchAndDisplayAutoHistory();
                 // タスク一覧の表示も切り替える
                 renderAutoTasks();
@@ -500,12 +504,6 @@
                 const salonName = salonNameInput.value.trim();
                 const activeSearchType = searchTypeToggle.querySelector('.toggle-button.active').dataset.type;
 
-                // --- 入力値のバリデーション ---
-                if (!salonName) {
-                    alert('自店のサロン名を入力してください。');
-                    return;
-                }
-
                 let serviceKeywords = [];
                 let areaCodes = {};
                 let areaName = '';
@@ -516,6 +514,10 @@
                     const smallArea = smallAreaSelect.value;
                     const keywordsRaw = keywordInput.value.trim();
 
+                    if (!salonName) {
+                        alert('自店のサロン名を入力してください。');
+                        return;
+                    }
                     if (!largeArea || !keywordsRaw) {
                         alert('通常検索では、エリアブロックと検索キーワードを入力してください。');
                         return;
@@ -531,13 +533,24 @@
                         alert('特集ページ検索では、URLを入力してください。');
                         return;
                     }
+                    if (!salonName) {
+                        alert('特集ページ検索では、URLを入力してください。');
+                        return;
+                    }
                     serviceKeywords.push(featureUrl); // 特集ページはURLをキーワードとして1タスクとして扱う
                 } else { // google
-                    // Googleマップの計測機能は未実装のため、アラートのみ表示して処理を中断
-                    alert('Googleマップの手動計測機能はまだ実装されていません。');
-                    return;
+                    const googleKeyword = document.getElementById('googleKeywordInput').value.trim();
+                    const searchLocation = document.getElementById('searchLocationInput').value.trim();
+                    if (!salonName) {
+                        alert('自店のサロン名を入力してください。');
+                        return;
+                    }
+                    if (!googleKeyword || !searchLocation) {
+                        alert('MEO検索では、検索地点と検索キーワードを入力してください。');
+                        return;
+                    }
+                    serviceKeywords.push(googleKeyword); // MEOではキーワードは1つずつ
                 }
-                const serviceKeywordsRaw = keywordInput.value.trim();
 
                 checkRankButton.disabled = true; // ボタンを無効化
                 checkRankButton.textContent = '計測中...';
@@ -564,10 +577,18 @@
                     let fullKeyword = '';
                     let eventSourceUrl = '';
                     if (activeSearchType === 'normal') {
-                        const displayArea = areaName || "全国";
+                        const displayArea = areaName || "エリア未指定";
                         fullKeyword = (displayArea !== "全国" ? displayArea + ' ' : '') + serviceKeyword;
                         eventSourceUrl = `/check-ranking?` + new URLSearchParams({
                             serviceKeyword, salonName, areaCodes: JSON.stringify(areaCodes)
+                        });
+                    } else if (activeSearchType === 'google') {
+                        const searchLocation = document.getElementById('searchLocationInput').value.trim();
+                        fullKeyword = `[${searchLocation}] ${serviceKeyword}`;
+                        eventSourceUrl = `/check-meo-ranking?` + new URLSearchParams({
+                            keyword: serviceKeyword,
+                            location: searchLocation,
+                            // salonName: salonName // バックエンドでの照合は不要になったため削除
                         });
                     } else { // special
                         fullKeyword = serviceKeyword; // この時点ではURLそのもの
@@ -609,54 +630,109 @@
                                 let totalCountHtml = (result.total_count !== undefined) ? `<p style="font-size: 14px; color: #6c6c70; margin-bottom: 10px;">検索結果総数: <strong style="color: #1c1c1e;">${result.total_count}</strong> 件</p>` : '';
                                 let resultMessageHtml;
 
-                                if (result.results && result.results.length > 0) {
-                                    const resultsListHtml = result.results.map((item, index) => `
-                                        <div style="padding: 10px 0; ${index < result.results.length - 1 ? 'border-bottom: 1px solid #e5e5e7;' : ''}">
-                                            <p style="margin: 0; font-size: 18px; font-weight: bold;"><span style="color: #007aff; font-size: 1.3em;">${item.rank}</span> 位</p>
-                                            <p style="font-size: 15px; font-weight: 500; margin: 8px 0 0 0; color: #1c1c1e;">${item.foundSalonName}</p>
-                                        </div>
-                                    `).join('');
-                                    resultMessageHtml = `<div style="text-align: left;">${resultsListHtml}</div>`;
-                                    
-                                    // --- 履歴保存をバックエンドAPI呼び出しに変更 ---
-                                    const finalRank = result.results[0].rank;
-                                    let taskId, taskPayload;
-                                    if (activeSearchType === 'normal') {
-                                        taskId = `${salonName}-${areaName}-${serviceKeyword}`;
-                                        taskPayload = { id: taskId, type: 'normal', salonName, areaName, areaCodes, serviceKeyword };
-                                    } else { // special
-                                        taskId = `${salonName}-${serviceKeyword}`; // URLをIDの一部に
-                                        taskPayload = { id: taskId, type: 'special', salonName, featurePageUrl: serviceKeyword, featurePageName: result.page_title };
-                                    }
-                                    const historyPayload = {
-                                        task: taskPayload,
-                                        result: { rank: finalRank, screenshot_path: result.screenshot_path }
-                                    };
-                                    saveManualHistory(historyPayload);
+                                // --- MEOとそれ以外で結果表示を分岐 ---
+                                if (activeSearchType === 'google') {
+                                    if (result.results && result.results.length > 0) {
+                                        let foundMySalon = false;
+                                        const resultsListHtml = result.results.map((item, index) => {
+                                            const isMySalon = salonName && item.foundSalonName.toLowerCase().includes(salonName.toLowerCase());
+                                            if (isMySalon) foundMySalon = true;
+                                            const itemStyle = isMySalon ? 'background-color: #eef7ff; border-left: 3px solid #007aff;' : '';
+                                            const rankColor = isMySalon ? '#007aff' : '#1c1c1e';
+                                            return `
+                                                <div style="padding: 10px; ${index < result.results.length - 1 ? 'border-bottom: 1px solid #e5e5e7;' : ''} ${itemStyle}">
+                                                    <p style="margin: 0; font-size: 16px; font-weight: bold;"><span style="color: ${rankColor}; font-size: 1.2em; display: inline-block; width: 3em;">${item.rank}位</span> ${escapeHtml(item.foundSalonName)}</p>
+                                                </div>
+                                            `;
+                                        }).join('');
+                                        
+                                        const summaryMessage = foundMySalon 
+                                            ? `<p style="font-weight: bold; color: #007aff; margin-bottom: 15px;">自店をリスト内に発見しました。</p>`
+                                            : `<p style="font-weight: bold; color: #ff3b30; margin-bottom: 15px;">自店が見つかりませんでした。以下のリストを確認してください。</p>`;
 
-                                } else {
-                                    resultMessageHtml = `<p>5ページ（100位）以内に見つかりませんでした (圏外)</p>`;
-                                    // --- 圏外の場合の履歴保存処理を追加 ---
-                                    let taskId, taskPayload;
-                                    if (activeSearchType === 'normal') {
-                                        taskId = `${salonName}-${areaName}-${serviceKeyword}`;
-                                        taskPayload = { id: taskId, type: 'normal', salonName, areaName, areaCodes, serviceKeyword };
-                                    } else { // special
-                                        taskId = `${salonName}-${serviceKeyword}`;
-                                        taskPayload = { id: taskId, type: 'special', salonName, featurePageUrl: serviceKeyword, featurePageName: result.page_title };
+                                        resultMessageHtml = `${summaryMessage}<div style="text-align: left; max-height: 400px; overflow-y: auto;">${resultsListHtml}</div>`;
+
+                                        // --- MEOの履歴保存処理 ---
+                                        const mySalonRankItem = result.results.find(item => salonName && item.foundSalonName.toLowerCase().includes(salonName.toLowerCase()));
+                                        const finalRank = mySalonRankItem ? mySalonRankItem.rank : '圏外';
+                                        const searchLocation = document.getElementById('searchLocationInput').value.trim();
+                                        const googleKeyword = document.getElementById('googleKeywordInput').value.trim();
+                                        // IDの形式を統一する
+                                        // 古い形式のIDが "[google]-" プレフィックスなしで作成されていたため、
+                                        // 新しく作成する際は必ずプレフィックスを付けるようにする。
+                                        const taskId = `[google]-${salonName}-${searchLocation}-${googleKeyword}`; 
+                                        const taskPayload = { id: taskId, type: 'google', salonName, searchLocation, keyword: googleKeyword };
+                                        const historyPayload = {
+                                            task: taskPayload,
+                                            result: { rank: finalRank, screenshot_path: result.screenshot_path }
+                                        };
+                                        saveManualHistory(historyPayload);
+
+                                    } else {
+                                        resultMessageHtml = `<p>検索結果に店舗が見つかりませんでした。</p>`;
                                     }
-                                    const historyPayload = {
-                                        task: taskPayload,
-                                        result: { rank: '圏外', screenshot_path: result.screenshot_path }
-                                    };
-                                    saveManualHistory(historyPayload);
+                                } else { // 通常検索と特集ページ検索の場合
+                                    if (result.results && result.results.length > 0) {
+                                        const resultsListHtml = result.results.map((item, index) => {
+                                            const isMySalon = salonName && item.foundSalonName.includes(salonName);
+                                            const itemStyle = isMySalon ? 'background-color: #eef7ff; border-left: 3px solid #007aff;' : '';
+                                            const rankColor = isMySalon ? '#007aff' : '#1c1c1e';
+
+                                            return `
+                                                <div style="padding: 10px; ${index < result.results.length - 1 ? 'border-bottom: 1px solid #e5e5e7;' : ''} ${itemStyle}">
+                                                    <p style="margin: 0; font-size: 16px; font-weight: bold;"><span style="color: ${rankColor}; font-size: 1.2em; display: inline-block; width: 3em;">${item.rank}位</span> ${escapeHtml(item.foundSalonName)}</p>
+                                                </div>
+                                            `;
+                                        }).join('');
+                                        resultMessageHtml = `<div style="text-align: left;">${resultsListHtml}</div>`;
+                                        
+                                        // --- 履歴保存をバックエンドAPI呼び出しに変更 ---
+                                        const finalRank = result.results[0].rank;
+                                        let taskId, taskPayload;
+                                        if (activeSearchType === 'normal') {
+                                            taskId = `${salonName}-${areaName}-${serviceKeyword}`;
+                                            taskPayload = { id: taskId, type: 'normal', salonName, areaName, areaCodes, serviceKeyword };
+                                        } else if (activeSearchType === 'special') {
+                                            taskId = `${salonName}-${serviceKeyword}`; // URLをIDの一部に
+                                            taskPayload = { id: taskId, type: 'special', salonName, featurePageUrl: serviceKeyword, featurePageName: result.page_title };
+                                        } else {
+                                            taskPayload = null;
+                                        }
+                                        if (taskPayload) {
+                                            const historyPayload = {
+                                                task: taskPayload,
+                                                result: { rank: finalRank, screenshot_path: result.screenshot_path }
+                                            };
+                                            saveManualHistory(historyPayload);
+                                        }
+                                    } else { // 圏外の場合
+                                        resultMessageHtml = `<p>5ページ（100位）以内に見つかりませんでした (圏外)</p>`;
+                                        // --- 圏外の場合の履歴保存処理を追加 ---
+                                        let taskId, taskPayload;
+                                        if (activeSearchType === 'normal') {
+                                            taskId = `${salonName}-${areaName}-${serviceKeyword}`;
+                                            taskPayload = { id: taskId, type: 'normal', salonName, areaName, areaCodes, serviceKeyword };
+                                        } else if (activeSearchType === 'special') {
+                                            taskId = `${salonName}-${serviceKeyword}`;
+                                            taskPayload = { id: taskId, type: 'special', salonName, featurePageUrl: serviceKeyword, featurePageName: result.page_title };
+                                        } else {
+                                            taskPayload = null;
+                                        }
+                                        if (taskPayload) {
+                                            const historyPayload = {
+                                                task: taskPayload,
+                                                result: { rank: '圏外', screenshot_path: result.screenshot_path }
+                                            };
+                                            saveManualHistory(historyPayload);
+                                        }
+                                    }
                                 }
 
                                 function saveManualHistory(payload) {
-                                     fetch('/api/save-auto-history-entry', {
+                                    fetch('/api/save-auto-history-entry', {
                                         method: 'POST',
                                         headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify(historyPayload)
+                                        body: JSON.stringify(payload) // 引数 payload を使用するように修正
                                     }).catch(err => console.error('履歴の保存に失敗しました:', err));
                                 }
 
@@ -945,9 +1021,13 @@
                         alert('検索地点と検索キーワードを入力してください。');
                         return;
                     }
-                    // Googleマップの自動計測追加機能は未実装のため、アラートのみ
-                    alert('Googleマップの自動計測追加機能はまだ実装されていません。');
-                    return; // ここで処理を終了
+                    const taskId = `[google]-${salonName}-${searchLocation}-${googleKeyword}`;
+                    if (autoTasks.some(t => t.id === taskId)) {
+                        existingTasks.push(`[${searchLocation}] ${googleKeyword}`);
+                    } else {
+                        autoTasks.push({ id: taskId, type: 'google', salonName, searchLocation, keyword: googleKeyword });
+                        addedTasks.push(`[${searchLocation}] ${googleKeyword}`);
+                    }
                 }
 
                 if (addedTasks.length > 0) {
@@ -1002,8 +1082,12 @@
                     .filter(t => (t.type || 'normal') === 'normal')
                     .map(t => t.id);
 
-                const specialTaskIds = tasksToRun
+                const specialTaskIds = tasksToRun // 特集ページタスク
                     .filter(t => t.type === 'special')
+                    .map(t => t.id);
+
+                const meoTaskIds = tasksToRun // MEOタスク
+                    .filter(t => t.type === 'google')
                     .map(t => t.id);
 
                 const promises = [];
@@ -1011,7 +1095,7 @@
                 // --- 汎用的なストリーム処理関数 ---
                 const processStream = (taskIds) => {
                     if (taskIds.length === 0) {
-                        return Promise.resolve(); // 実行するタスクがなければ即座に解決
+                        return Promise.resolve();
                     }
 
                     return new Promise((resolve, reject) => {
@@ -1034,7 +1118,7 @@
                                 const { current, total, task } = data.progress;
                                 
                                 if (task.type === 'special') {
-                                    // 特集ページの場合、グループ内の全タスクのコンテナを先に作成
+                                    // 特集ページの場合
                                     const tasksInGroup = tasksToRun.filter(t => t.featurePageUrl === task.featurePageUrl);
                                     tasksInGroup.forEach(groupTask => {
                                         const taskId = groupTask.id;
@@ -1047,8 +1131,18 @@
                                         taskContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${fullKeyword}」</h4><p>計測を開始します...</p>`;
                                         resultArea.appendChild(taskContainer);
                                     });
+                                } else if (task.type === 'google') {
+                                    // MEOの場合
+                                    const taskId = task.id;
+                                    const fullKeyword = `[${task.searchLocation}] ${task.keyword}`;
+                                    const taskContainer = document.createElement('div');
+                                    taskContainer.id = `task-container-${taskId}`;
+                                    taskContainer.style.borderBottom = '1px solid #e5e5e7';
+                                    taskContainer.style.paddingBottom = '15px';
+                                    taskContainer.style.marginBottom = '15px';
+                                    taskContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${fullKeyword}」</h4><p>計測を開始します...</p>`;
+                                    resultArea.appendChild(taskContainer);
                                 } else {
-                                    // 通常検索の場合
                                     const taskId = task.id;
                                     const fullKeyword = `[${task.areaName}] ${task.serviceKeyword}`;
                                     const taskContainer = document.createElement('div');
@@ -1095,9 +1189,10 @@
                     });
                 }
 
-                // 通常検索と特集ページ検索のタスクをそれぞれ（並行して）実行
+                // 各タイプのタスクをそれぞれ（並行して）実行
                 promises.push(processStream(normalTaskIds));
                 promises.push(processStream(specialTaskIds));
+                promises.push(processStream(meoTaskIds));
 
                 try {
                     // すべてのストリーム処理が終わるのを待つ
@@ -1151,8 +1246,10 @@
                         if (activeSearchType === 'normal') {
                             groupKey = `${historyItem.task.areaName} - ${historyItem.task.salonName}`;
                         } else if (activeSearchType === 'special') { // special
+                            // 特集ページは、ページのタイトルまたはURLのみでグループ化する
                             groupKey = historyItem.task.featurePageName || historyItem.task.featurePageUrl;
                         } else if (activeSearchType === 'google') {
+                            // MEOは、検索地点とサロン名でグループ化する
                             groupKey = `${historyItem.task.searchLocation} - ${historyItem.task.salonName}`;
                         }
                         
@@ -1201,12 +1298,20 @@
                                 }
                                 return { x: date, y: NaN }; // nullの代わりにNaNを使用
                             });
+
+                            let labelText = taskData.task.salonName; // デフォルト
+                            if (activeSearchType === 'normal') {
+                                labelText = taskData.task.serviceKeyword;
+                            } else if (activeSearchType === 'special') {
+                                // 特集ページの場合、同じグラフに複数のサロンが表示される可能性があるため、サロン名を表示
+                                labelText = taskData.task.salonName;
+                            } else if (activeSearchType === 'google') {
+                                labelText = taskData.task.keyword;
+                            }
+
                             return {
                                 // ラベルを検索タイプによって変更
-                                label: (activeSearchType === 'normal') ? taskData.task.serviceKeyword
-                                     : (activeSearchType === 'special') ? taskData.task.salonName
-                                     : (activeSearchType === 'google') ? taskData.task.keyword
-                                     : taskData.task.salonName, // デフォルト
+                                label: labelText,
                                 data: dataForChart,
                                 borderColor: CHART_COLORS[index % CHART_COLORS.length],
                                 tension: 0.1,
@@ -1328,5 +1433,7 @@
             fetchAndDisplayAutoHistory();
         }); // End of main DOMContentLoaded listener
     </script>
+</body>
+</html>
 </body>
 </html>

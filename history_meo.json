@@ -1,0 +1,274 @@
+[
+  {
+    "id": "ケイトステージラッシュ-福山駅-まつげパーマ",
+    "task": {
+      "id": "ケイトステージラッシュ-福山駅-まつげパーマ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山駅",
+      "keyword": "まつげパーマ"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": 4,
+        "screenshot": "screenshots/screenshot_meo_20250930_163335.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-福山　まつげパーマ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山駅-福山　まつげパーマ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山駅",
+      "keyword": "福山　まつげパーマ"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": 1,
+        "screenshot": "screenshots/screenshot_meo_20250930_203638.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-まつ毛パーマ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山駅-まつ毛パーマ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山駅",
+      "keyword": "まつ毛パーマ"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": 1,
+        "screenshot": "screenshots/screenshot_meo_20250930_203653.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-マツパ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山駅-マツパ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山駅",
+      "keyword": "マツパ"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": "screenshots/screenshot_meo_20250930_203707.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-まつぱ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山駅-まつぱ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山駅",
+      "keyword": "まつぱ"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": "screenshots/screenshot_meo_20250930_203722.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-まつげ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山駅-まつげ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山駅",
+      "keyword": "まつげ"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": 1,
+        "screenshot": "screenshots/screenshot_meo_20250930_203738.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-眉毛",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山駅-眉毛",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山駅",
+      "keyword": "眉毛"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": 3,
+        "screenshot": "screenshots/screenshot_meo_20250930_203753.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-眉毛ワックス",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山駅-眉毛ワックス",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山駅",
+      "keyword": "眉毛ワックス"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": "screenshots/screenshot_meo_20250930_203808.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-眉毛WAX",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山駅-眉毛WAX",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山駅",
+      "keyword": "眉毛WAX"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": "screenshots/screenshot_meo_20250930_203824.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-アイラッシュ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山駅-アイラッシュ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山駅",
+      "keyword": "アイラッシュ"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": 5,
+        "screenshot": "screenshots/screenshot_meo_20250930_203840.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-アイブロウ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山駅-アイブロウ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山駅",
+      "keyword": "アイブロウ"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": "screenshots/screenshot_meo_20250930_203857.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-HBL",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山駅-HBL",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山駅",
+      "keyword": "HBL"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": "screenshots/screenshot_meo_20250930_203912.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-ハリウッドブロウリフト",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山駅-ハリウッドブロウリフト",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山駅",
+      "keyword": "ハリウッドブロウリフト"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": "screenshots/screenshot_meo_20250930_203928.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-パリジェンヌ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山駅-パリジェンヌ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山駅",
+      "keyword": "パリジェンヌ"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": 1,
+        "screenshot": "screenshots/screenshot_meo_20250930_203943.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-福山　パリジェンヌ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山駅-福山　パリジェンヌ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山駅",
+      "keyword": "福山　パリジェンヌ"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": 1,
+        "screenshot": "screenshots/screenshot_meo_20250930_204003.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-福山　HBL",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山駅-福山　HBL",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山駅",
+      "keyword": "福山　HBL"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": "screenshots/screenshot_meo_20250930_204025.jpg"
+      }
+    ]
+  }
+]
