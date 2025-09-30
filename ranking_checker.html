@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>掲載順位チェッカー - サロン業務システム</title>    
+    <title>掲載順位チェッカー - サロン業務システム</title>
+    <link rel="stylesheet" href="style.css">
     <style>
         /* ranking_checker.html固有のスタイル */
         .checker-container { display: flex; flex-direction: column; gap: 15px; }
@@ -106,17 +107,47 @@
 
     <main>
         <h2 style="font-weight: 600; margin-bottom: 16px;">ホットペッパービューティー 掲載順位チェッカー</h2>
-        
-        <div class="card">
-            <div class="checker-container">
-                <!-- 計測タイプ選択UI -->
-                <div class="form-group">
-                    <div id="searchTypeToggle" class="search-type-toggle">
-                        <button type="button" class="toggle-button active" data-type="normal">通常検索</button>
-                        <button type="button" class="toggle-button" data-type="special">特集ページ検索</button>
-                    </div>
-                </div>
 
+        <!-- 計測タイプ選択UI -->
+        <div id="searchTypeToggle" class="search-type-toggle" style="margin-bottom: 16px;">
+            <button type="button" class="toggle-button active" data-type="normal">通常検索</button>
+            <button type="button" class="toggle-button" data-type="special">特集ページ検索</button>
+        </div>
+
+        <!-- 自動計測セクション -->
+        <div class="card">
+            <h3 style="margin-top: 0; margin-bottom: 10px; font-size: 18px; font-weight: 600;">自動計測 - 履歴グラフ</h3>
+            <div id="autoHistoryContainer" style="display: none;">
+                <div id="autoHistoryGraphs">
+                    <!-- 自動計測グラフがここに動的に追加されます -->
+                </div>
+            </div>
+            <p id="noAutoHistoryMessage">自動計測の履歴はありません。</p>
+
+            <div id="autoTaskListToggle" style="cursor: pointer; user-select: none; margin-top: 20px; padding-bottom: 10px; border-bottom: 1px solid #e5e5e7;">
+                <div style="display: flex; justify-content: space-between; align-items: center;" title="クリックしてタスク一覧を開閉">
+                    <h4 style="margin: 0; font-size: 18px; font-weight: 600;">自動計測タスク一覧</h4>
+                    <span id="taskListToggleIcon" style="font-weight: bold; transition: transform 0.2s;">▼</span>
+                </div>
+            </div>
+            <div id="autoTaskListContent" style="display: none; padding-top: 10px;">
+                <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 10px;">
+                    <button type="button" id="manualTriggerButton" class="button-secondary" style="padding: 4px 10px; font-size: 13px;">選択したタスクを実行</button>
+                </div>
+                <div id="autoTaskListContainer">
+                    <div id="selectAllContainer" style="padding-bottom: 10px; border-bottom: 1px solid #ddd; margin-bottom: 5px; display: none;">
+                        <input type="checkbox" id="selectAllTasks">
+                        <label for="selectAllTasks" style="font-weight: 500; margin-left: 5px; cursor: pointer;">すべて選択</label>
+                    </div>
+                    <ul id="autoTaskList" style="list-style: none; padding: 0;"></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 手動計測セクション -->
+        <div class="card">
+            <h3>手動計測・タスク追加</h3>
+            <div class="checker-container">
                 <div class="form-group">
                     <label for="salonNameInput">自店のサロン名（正式名称の一部でOK）</label>
                     <input type="text" id="salonNameInput" placeholder="例: ケイトステージラッシュ広島八丁堀店">
@@ -176,46 +207,8 @@
                     <small style="color: #ff3b30; font-size: 12px; display: block;">※実行時間を変更した後は、アプリケーション（ターミナルで実行しているPythonプログラム）の再起動が必要です。</small>
                 </div>
             </div>
-        </div>
-
-        <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <h3 style="margin: 0;">計測結果</h3>
-            </div>
-            <div id="resultArea" class="result-area">
+            <div id="resultArea" class="result-area" style="margin-top: 20px;">
                 <p id="initialResultMessage">キーワードとサロン名を入力して「順位を計測」ボタンを押してください。</p>
-            </div>
-
-        </div>
-
-        <div class="card">
-            <h3>自動計測</h3>
-
-            <h4 style="margin-top: 20px; margin-bottom: 10px; font-size: 18px; font-weight: 600;">自動計測履歴</h4>
-            <div id="autoHistoryContainer" style="display: none;">
-                <div id="autoHistoryGraphs">
-                    <!-- 自動計測グラフがここに動的に追加されます -->
-                </div>
-            </div>
-            <p id="noAutoHistoryMessage">自動計測の履歴はありません。</p>
-
-            <div id="autoTaskListToggle" style="cursor: pointer; user-select: none; margin-top: 20px; padding-bottom: 10px; border-bottom: 1px solid #e5e5e7;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h4 style="margin: 0; font-size: 18px; font-weight: 600;">自動計測タスク一覧</h4>
-                    <span id="taskListToggleIcon" style="font-weight: bold; transition: transform 0.2s;">▼</span>
-                </div>
-            </div>
-            <div id="autoTaskListContent" style="display: none; padding-top: 10px;">
-                <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 10px;">
-                    <button type="button" id="manualTriggerButton" class="button-secondary" style="padding: 4px 10px; font-size: 13px;">選択したタスクを実行</button>
-                </div>
-                <div id="autoTaskListContainer">
-                    <div id="selectAllContainer" style="padding-bottom: 10px; border-bottom: 1px solid #ddd; margin-bottom: 5px; display: none;">
-                        <input type="checkbox" id="selectAllTasks">
-                        <label for="selectAllTasks" style="font-weight: 500; margin-left: 5px; cursor: pointer;">すべて選択</label>
-                    </div>
-                    <ul id="autoTaskList" style="list-style: none; padding: 0;"></ul>
-                </div>
             </div>
         </div>
     </main>
@@ -730,13 +723,15 @@
 
             // --- 自動計測タスク一覧の開閉 ---
             autoTaskListToggle.addEventListener('click', () => {
-                const isHidden = autoTaskListContent.style.display === 'none';
-                if (isHidden) {
-                    autoTaskListContent.style.display = 'block';
-                    taskListToggleIcon.textContent = '▲';
-                } else {
+                const isVisible = autoTaskListContent.style.display === 'block';
+                if (isVisible) {
+                    localStorage.setItem('taskListVisible', 'false');
                     autoTaskListContent.style.display = 'none';
-                    taskListToggleIcon.textContent = '▼';
+                    taskListToggleIcon.style.transform = 'rotate(0deg)';
+                } else {
+                    localStorage.setItem('taskListVisible', 'true');
+                    autoTaskListContent.style.display = 'block';
+                    taskListToggleIcon.style.transform = 'rotate(180deg)';
                 }
             });
 
@@ -1276,6 +1271,14 @@
                 }
             };
 
+            // --- ページ読み込み時にタスク一覧の表示状態を復元 ---
+            const taskListVisible = localStorage.getItem('taskListVisible');
+            if (taskListVisible === 'true') {
+                autoTaskListContent.style.display = 'block';
+                taskListToggleIcon.style.transform = 'rotate(180deg)';
+            } else {
+                taskListToggleIcon.style.transform = 'rotate(0deg)';
+            }
             fetchSchedule();
             fetchAutoTasks();
             fetchAndDisplayAutoHistory();

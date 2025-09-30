@@ -15,17 +15,42 @@ header {
     flex-shrink: 0;
     display: flex; /* Flexbox を使用 */
     align-items: center; /* 垂直方向中央揃え */
-    justify-content: center; /* 水平方向中央揃え */
+    justify-content: space-between; /* タイトルとナビゲーションを両端に配置 */
 }
 
 .header-title {
-    text-align: center; /* テキストも中央揃えに */
+    /* text-align: center; は不要に */
 }
 
 .header-title h1 {
     font-size: 17px; /* タイトルに合わせて調整 */
     font-weight: 600;
     margin: 0;
+}
+
+/* --- ヘッダーナビゲーションのスタイル --- */
+#header-nav {
+    display: flex;
+    gap: 8px; /* ボタン間の隙間 */
+}
+
+#header-nav a {
+    padding: 6px 12px;
+    text-decoration: none;
+    color: #007aff; /* iOSのアクセントカラー */
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+#header-nav a:hover {
+    background-color: #e5e5e7; /* ホバー時の背景色 */
+}
+
+#header-nav a.active {
+    background-color: #007aff;
+    color: white;
 }
 
 main {

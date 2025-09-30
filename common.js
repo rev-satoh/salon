@@ -1,19 +1,3 @@
-/**
- * 共通のCSSファイルを動的に読み込みます。
- * @param {string} url CSSファイルのURL
- */
-function loadCSS(url) {
-    // 既に同じCSSが読み込まれていないかチェック
-    if (!document.querySelector(`link[href="${url}"]`)) {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = url;
-        document.head.appendChild(link);
-        console.log(`Dynamically loaded CSS: ${url}`);
-    }
-}
-
-
 console.log('common.js script loaded'); // スクリプトが読み込まれたことを確認
 
 /**
@@ -91,9 +75,6 @@ function setActiveNavigation() {
 
 // DOMの読み込みが完了したら共通部品をロード
 document.addEventListener('DOMContentLoaded', async () => {
-    // 最初に共通CSSを読み込む
-    loadCSS('style.css');
-
     // headerは各HTMLに直接記述するため、JSでの読み込みは不要に。
     // ナビゲーションのアクティブ状態設定は、DOM読み込み完了後すぐに実行する。
     setActiveNavigation();
