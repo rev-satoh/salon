@@ -323,6 +323,10 @@ def get_lat_lng_from_address(address):
 
 def check_meo_ranking(driver, keyword, location_name):
     """Googleマップでの掲載順位をスクレイピングし、見つかった店舗をすべてリストアップするジェネレータ関数"""
+    # エラー発生時に備え、デバッグ用変数を初期化
+    last_url_checked = ""
+    screenshot_path = None
+
     try:
         yield sse_format({"status": f"「{location_name}」の座標を取得しています..."})
         latitude, longitude = get_lat_lng_from_address(location_name)
@@ -468,7 +472,7 @@ def check_meo_ranking(driver, keyword, location_name):
         yield sse_format({
             "error": f"ブラウザの操作中にエラーが発生しました: {e}",
             "url": last_url_checked,
-            "html": driver.page_source if 'driver' in locals() and driver else last_html_content,
+            "html": driver.page_source if 'driver' in locals() and driver else "HTMLの取得に失敗しました。",
             "screenshot_path": screenshot_path
         })
 

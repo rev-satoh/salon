@@ -29,7 +29,7 @@
       {
         "date": "2025/09/30",
         "rank": 1,
-        "screenshot": "screenshots/screenshot_meo_20250930_203638.jpg"
+        "screenshot": "screenshots/screenshot_meo_20250930_225034.jpg"
       }
     ]
   },
@@ -46,7 +46,7 @@
       {
         "date": "2025/09/30",
         "rank": 1,
-        "screenshot": "screenshots/screenshot_meo_20250930_203653.jpg"
+        "screenshot": "screenshots/screenshot_meo_20250930_225049.jpg"
       }
     ]
   },
@@ -63,7 +63,7 @@
       {
         "date": "2025/09/30",
         "rank": "圏外",
-        "screenshot": "screenshots/screenshot_meo_20250930_203707.jpg"
+        "screenshot": "screenshots/screenshot_meo_20250930_225103.jpg"
       }
     ]
   },
@@ -80,7 +80,7 @@
       {
         "date": "2025/09/30",
         "rank": "圏外",
-        "screenshot": "screenshots/screenshot_meo_20250930_203722.jpg"
+        "screenshot": "screenshots/screenshot_meo_20250930_225118.jpg"
       }
     ]
   },
@@ -97,7 +97,7 @@
       {
         "date": "2025/09/30",
         "rank": 1,
-        "screenshot": "screenshots/screenshot_meo_20250930_203738.jpg"
+        "screenshot": "screenshots/screenshot_meo_20250930_225132.jpg"
       }
     ]
   },
@@ -114,7 +114,7 @@
       {
         "date": "2025/09/30",
         "rank": 3,
-        "screenshot": "screenshots/screenshot_meo_20250930_203753.jpg"
+        "screenshot": "screenshots/screenshot_meo_20250930_225148.jpg"
       }
     ]
   },
@@ -131,7 +131,7 @@
       {
         "date": "2025/09/30",
         "rank": "圏外",
-        "screenshot": "screenshots/screenshot_meo_20250930_203808.jpg"
+        "screenshot": "screenshots/screenshot_meo_20250930_225203.jpg"
       }
     ]
   },
@@ -148,7 +148,7 @@
       {
         "date": "2025/09/30",
         "rank": "圏外",
-        "screenshot": "screenshots/screenshot_meo_20250930_203824.jpg"
+        "screenshot": "screenshots/screenshot_meo_20250930_225218.jpg"
       }
     ]
   },
@@ -165,7 +165,7 @@
       {
         "date": "2025/09/30",
         "rank": 5,
-        "screenshot": "screenshots/screenshot_meo_20250930_203840.jpg"
+        "screenshot": "screenshots/screenshot_meo_20250930_225234.jpg"
       }
     ]
   },
@@ -182,7 +182,7 @@
       {
         "date": "2025/09/30",
         "rank": "圏外",
-        "screenshot": "screenshots/screenshot_meo_20250930_203857.jpg"
+        "screenshot": "screenshots/screenshot_meo_20250930_225249.jpg"
       }
     ]
   },
@@ -199,7 +199,7 @@
       {
         "date": "2025/09/30",
         "rank": "圏外",
-        "screenshot": "screenshots/screenshot_meo_20250930_203912.jpg"
+        "screenshot": "screenshots/screenshot_meo_20250930_225304.jpg"
       }
     ]
   },
@@ -216,7 +216,7 @@
       {
         "date": "2025/09/30",
         "rank": "圏外",
-        "screenshot": "screenshots/screenshot_meo_20250930_203928.jpg"
+        "screenshot": "screenshots/screenshot_meo_20250930_225319.jpg"
       }
     ]
   },
@@ -233,7 +233,7 @@
       {
         "date": "2025/09/30",
         "rank": 1,
-        "screenshot": "screenshots/screenshot_meo_20250930_203943.jpg"
+        "screenshot": "screenshots/screenshot_meo_20250930_225335.jpg"
       }
     ]
   },
@@ -250,7 +250,7 @@
       {
         "date": "2025/09/30",
         "rank": 1,
-        "screenshot": "screenshots/screenshot_meo_20250930_204003.jpg"
+        "screenshot": "screenshots/screenshot_meo_20250930_225356.jpg"
       }
     ]
   },
@@ -267,7 +267,585 @@
       {
         "date": "2025/09/30",
         "rank": "圏外",
-        "screenshot": "screenshots/screenshot_meo_20250930_204025.jpg"
+        "screenshot": "screenshots/screenshot_meo_20250930_225416.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-福山　ハリウッドブロウ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山駅-福山　ハリウッドブロウ",
+      "keyword": "福山　ハリウッドブロウ",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": null
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-福山　眉毛ワックス",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山駅-福山　眉毛ワックス",
+      "keyword": "福山　眉毛ワックス",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": "screenshots/screenshot_meo_20250930_225501.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-福山　眉毛WAX",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山駅-福山　眉毛WAX",
+      "keyword": "福山　眉毛WAX",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": "screenshots/screenshot_meo_20250930_225521.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-福山　眉毛",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山駅-福山　眉毛",
+      "keyword": "福山　眉毛",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": 2,
+        "screenshot": "screenshots/screenshot_meo_20250930_225543.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-福山　まつげ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山駅-福山　まつげ",
+      "keyword": "福山　まつげ",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": 1,
+        "screenshot": "screenshots/screenshot_meo_20250930_225606.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-福山　マツパ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山駅-福山　マツパ",
+      "keyword": "福山　マツパ",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": "screenshots/screenshot_meo_20250930_225627.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-福山　まつ毛パーマ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山駅-福山　まつ毛パーマ",
+      "keyword": "福山　まつ毛パーマ",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": 1,
+        "screenshot": "screenshots/screenshot_meo_20250930_225648.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山市-HBL",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山市-HBL",
+      "keyword": "HBL",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": "screenshots/screenshot_meo_20250930_225704.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山市-アイブロウ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山市-アイブロウ",
+      "keyword": "アイブロウ",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": "screenshots/screenshot_meo_20250930_225726.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山市-アイラッシュ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山市-アイラッシュ",
+      "keyword": "アイラッシュ",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": 5,
+        "screenshot": "screenshots/screenshot_meo_20250930_225743.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山市-ハリウッドブロウ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山市-ハリウッドブロウ",
+      "keyword": "ハリウッドブロウ",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": "screenshots/screenshot_meo_20250930_225804.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山市-パリジェンヌ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山市-パリジェンヌ",
+      "keyword": "パリジェンヌ",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": 1,
+        "screenshot": "screenshots/screenshot_meo_20250930_225826.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山市-まつげ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山市-まつげ",
+      "keyword": "まつげ",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": 1,
+        "screenshot": "screenshots/screenshot_meo_20250930_225845.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山市-まつげパーマ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山市-まつげパーマ",
+      "keyword": "まつげパーマ",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": 1,
+        "screenshot": "screenshots/screenshot_meo_20250930_225906.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山市-まつ毛パーマ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山市-まつ毛パーマ",
+      "keyword": "まつ毛パーマ",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": 1,
+        "screenshot": "screenshots/screenshot_meo_20250930_225926.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山市-マツパ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山市-マツパ",
+      "keyword": "マツパ",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": "screenshots/screenshot_meo_20250930_225947.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山市-眉毛",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山市-眉毛",
+      "keyword": "眉毛",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": 3,
+        "screenshot": "screenshots/screenshot_meo_20250930_230007.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山市-眉毛ワックス",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山市-眉毛ワックス",
+      "keyword": "眉毛ワックス",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": "screenshots/screenshot_meo_20250930_230028.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山市-眉毛WAX",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山市-眉毛WAX",
+      "keyword": "眉毛WAX",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": "screenshots/screenshot_meo_20250930_230049.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-福山　アイブロウ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山駅-福山　アイブロウ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山駅",
+      "keyword": "福山　アイブロウ"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": "screenshots/screenshot_meo_20250930_230110.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山駅-福山　アイラッシュ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山駅-福山　アイラッシュ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山駅",
+      "keyword": "福山　アイラッシュ"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": 1,
+        "screenshot": "screenshots/screenshot_meo_20250930_230132.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山市-福山　パリジェンヌ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山市-福山　パリジェンヌ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山市",
+      "keyword": "福山　パリジェンヌ"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": 1,
+        "screenshot": "screenshots/screenshot_meo_20250930_230149.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山市-福山　HBL",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山市-福山　HBL",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山市",
+      "keyword": "福山　HBL"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": "screenshots/screenshot_meo_20250930_230210.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山市-福山　まつげパーマ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山市-福山　まつげパーマ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山市",
+      "keyword": "福山　まつげパーマ"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": 1,
+        "screenshot": "screenshots/screenshot_meo_20250930_230231.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山市-福山　まつ毛パーマ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山市-福山　まつ毛パーマ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山市",
+      "keyword": "福山　まつ毛パーマ"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": 1,
+        "screenshot": "screenshots/screenshot_meo_20250930_230248.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山市-福山　マツパ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山市-福山　マツパ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山市",
+      "keyword": "福山　マツパ"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": "screenshots/screenshot_meo_20250930_230305.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山市-福山　まつげ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山市-福山　まつげ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山市",
+      "keyword": "福山　まつげ"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": 1,
+        "screenshot": "screenshots/screenshot_meo_20250930_230322.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山市-福山　眉毛",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山市-福山　眉毛",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山市",
+      "keyword": "福山　眉毛"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": 2,
+        "screenshot": "screenshots/screenshot_meo_20250930_230339.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山市-福山　眉毛ワックス",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山市-福山　眉毛ワックス",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山市",
+      "keyword": "福山　眉毛ワックス"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": "screenshots/screenshot_meo_20250930_230400.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山市-福山　眉毛WAX",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山市-福山　眉毛WAX",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山市",
+      "keyword": "福山　眉毛WAX"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": "screenshots/screenshot_meo_20250930_230421.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山市-まつぱ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山市-まつぱ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山市",
+      "keyword": "まつぱ"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": "screenshots/screenshot_meo_20250930_230442.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山市-福山　アイブロウ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山市-福山　アイブロウ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山市",
+      "keyword": "福山　アイブロウ"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": "screenshots/screenshot_meo_20250930_230503.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山市-福山　アイラッシュ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山市-福山　アイラッシュ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山市",
+      "keyword": "福山　アイラッシュ"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": 1,
+        "screenshot": "screenshots/screenshot_meo_20250930_230520.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-福山市-福山　ハリウッドブロウ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-福山市-福山　ハリウッドブロウ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "福山市",
+      "keyword": "福山　ハリウッドブロウ"
+    },
+    "log": [
+      {
+        "date": "2025/09/30",
+        "rank": "圏外",
+        "screenshot": null
       }
     ]
   }

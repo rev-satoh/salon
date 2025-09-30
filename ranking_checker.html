@@ -1283,8 +1283,19 @@
                         groupData.forEach(task => task.log.forEach(entry => allDates.add(entry.date)));
                         const sortedLabels = Array.from(allDates).sort((a, b) => new Date(a) - new Date(b));
                         
-                        // サロン名でソートして、グラフ間の色と順番を統一する
-                        groupData.sort((a, b) => a.task.salonName.localeCompare(b.task.salonName));
+                        // --- 凡例を「あいうえお順」にソート ---
+                        groupData.sort((a, b) => {
+                            let labelA = '';
+                            let labelB = '';
+                            if (activeSearchType === 'normal') {
+                                labelA = a.task.serviceKeyword;
+                                labelB = b.task.serviceKeyword;
+                            } else if (activeSearchType === 'google') {
+                                labelA = a.task.keyword;
+                                labelB = b.task.keyword;
+                            }
+                            return labelA.localeCompare(labelB, 'ja');
+                        });
 
                         // groupData（タスクのリスト）から、グラフ用のデータセットを作成します
                         const datasets = groupData.map((taskData, index) => {
