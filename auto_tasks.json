@@ -742,31 +742,59 @@
     "type": "special"
   },
   {
+    "featurePageName": "福山駅でまつげパーマが人気のまつげサロン｜ホットペッパービューティー",
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
     "id": "アバンギャルド-https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
-    "type": "special",
     "salonName": "アバンギャルド",
-    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
-    "featurePageName": "福山駅でまつげパーマが人気のまつげサロン｜ホットペッパービューティー"
+    "type": "special"
   },
   {
+    "featurePageName": "福山市でまつげパーマが人気のまつげサロン｜ホットペッパービューティー",
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
     "id": "アバンギャルド-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
-    "type": "special",
     "salonName": "アバンギャルド",
-    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
-    "featurePageName": "福山市でまつげパーマが人気のまつげサロン｜ホットペッパービューティー"
+    "type": "special"
   },
   {
+    "featurePageName": "福山市でまつげパーマが人気のまつげサロン｜ホットペッパービューティー",
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
     "id": "eyelash Luana-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
-    "type": "special",
     "salonName": "eyelash Luana",
-    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city20700000/",
-    "featurePageName": "福山市でまつげパーマが人気のまつげサロン｜ホットペッパービューティー"
+    "type": "special"
   },
   {
-    "id": "eyelash Luana-https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
-    "type": "special",
-    "salonName": "eyelash Luana",
+    "featurePageName": "福山駅でまつげパーマが人気のまつげサロン｜ホットペッパービューティー",
     "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
-    "featurePageName": "福山駅でまつげパーマが人気のまつげサロン｜ホットペッパービューティー"
+    "id": "eyelash Luana-https://beauty.hotpepper.jp/genre/kgkw038/stc9952340/",
+    "salonName": "eyelash Luana",
+    "type": "special"
+  },
+  {
+    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw038/pre21/city20100000/",
+    "type": "special",
+    "salonName": "ケイトステージラッシュ",
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre21/city20100000/",
+    "featurePageName": "岐阜市でまつげパーマが人気のまつげサロン｜ホットペッパービューティー"
+  },
+  {
+    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw038/stc9911780/",
+    "type": "special",
+    "salonName": "ケイトステージラッシュ",
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/stc9911780/",
+    "featurePageName": "岐阜駅でまつげパーマが人気のまつげサロン｜ホットペッパービューティー"
+  },
+  {
+    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw038/stc0090082/",
+    "type": "special",
+    "salonName": "ケイトステージラッシュ",
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/stc0090082/",
+    "featurePageName": "池袋駅でまつげパーマが人気のまつげサロン｜ホットペッパービューティー"
+  },
+  {
+    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw092/stc0090082/",
+    "type": "special",
+    "salonName": "ケイトステージラッシュ",
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw092/stc0090082/",
+    "featurePageName": "池袋駅でまつげカールが人気のまつげサロン｜ホットペッパービューティー"
   }
 ]

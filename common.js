@@ -53,16 +53,6 @@ function setActiveNavigation() {
         case 'customer_detail.html':
             activeLinkId = 'nav-search'; // 詳細ページでは検索をアクティブにする例
             break;
-        // 他のページも同様に追加
-        // case 'review_generator.html':
-        //     activeLinkId = 'nav-review';
-        //     break;
-        // case 'new_carte.html':
-        //     activeLinkId = 'nav-new-carte';
-        //     break;
-        // case 'new_carte.html':
-        //     activeLinkId = 'nav-new-carte';
-        //     break;
     }
 
     if (activeLinkId) {

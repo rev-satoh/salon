@@ -106,12 +106,13 @@
     </header>
 
     <main>
-        <h2 style="font-weight: 600; margin-bottom: 16px;">ホットペッパービューティー 掲載順位チェッカー</h2>
+        <h2 style="font-weight: 600; margin-bottom: 16px;">順位チェッカー</h2>
 
         <!-- 計測タイプ選択UI -->
         <div id="searchTypeToggle" class="search-type-toggle" style="margin-bottom: 16px;">
-            <button type="button" class="toggle-button active" data-type="normal">通常検索</button>
-            <button type="button" class="toggle-button" data-type="special">特集ページ検索</button>
+            <button type="button" class="toggle-button active" data-type="normal">HPB 通常</button>
+            <button type="button" class="toggle-button" data-type="special">HPB 特集</button>
+            <button type="button" class="toggle-button" data-type="google">Googleマップ</button>
         </div>
 
         <!-- 自動計測セクション -->
@@ -192,6 +193,17 @@
                     <small style="margin-top: 5px; color: #6c6c70;">順位を計測したいホットペッパービューティーの特集ページのURLを貼り付けます。</small>
                 </div>
 
+                <!-- Googleマップ検索用の入力フォーム -->
+                <div id="googleMapSearchInputs" style="display: none;">
+                    <div class="form-group">
+                        <label for="searchLocationInput">検索地点（例: 広島駅, 福山駅）</label>
+                        <input type="text" id="searchLocationInput" placeholder="順位を知りたい検索の基点を入力">
+                    </div>
+                    <div class="form-group">
+                        <label for="googleKeywordInput">検索キーワード（例: まつげパーマ, 眉毛サロン）</label>
+                        <input type="text" id="googleKeywordInput" placeholder="Googleマップで検索するキーワードを入力">
+                    </div>
+                </div>
                 <div class="button-container">
                     <button type="button" id="checkRankButton" class="button-primary">順位を計測</button>
                     <button type="button" id="addAutoTaskButton" class="button-secondary">自動計測に追加</button>
@@ -241,6 +253,7 @@
             const taskListToggleIcon = document.getElementById('taskListToggleIcon');
             const normalSearchInputs = document.getElementById('normalSearchInputs');
             const specialSearchInputs = document.getElementById('specialSearchInputs');
+            const googleMapSearchInputs = document.getElementById('googleMapSearchInputs');
             const searchTypeToggle = document.getElementById('searchTypeToggle');
 
 
@@ -392,11 +405,17 @@
                 clickedButton.classList.add('active');
 
                 if (clickedButton.dataset.type === 'normal') {
-                        normalSearchInputs.style.display = 'block';
-                        specialSearchInputs.style.display = 'none';
-                } else {
-                        normalSearchInputs.style.display = 'none';
-                        specialSearchInputs.style.display = 'block';
+                    normalSearchInputs.style.display = 'block';
+                    specialSearchInputs.style.display = 'none';
+                    googleMapSearchInputs.style.display = 'none';
+                } else if (clickedButton.dataset.type === 'special') {
+                    normalSearchInputs.style.display = 'none';
+                    specialSearchInputs.style.display = 'block';
+                    googleMapSearchInputs.style.display = 'none';
+                } else { // google
+                    normalSearchInputs.style.display = 'none';
+                    specialSearchInputs.style.display = 'none';
+                    googleMapSearchInputs.style.display = 'block';
                 }
                 // グラフの表示を切り替えるために履歴を再読み込み・再描画する
                 fetchAndDisplayAutoHistory();
@@ -505,16 +524,19 @@
                     areaName = smallArea || middleArea || largeArea;
                     if (largeArea) areaCodes.serviceAreaCd = areas[largeArea].code;
                     if (middleArea) areaCodes.middleAreaCd = areas[largeArea].middleAreas[middleArea].code;
-                    if (smallArea) areaCodes.smallAreaCd = areas[largeArea].middleAreas[smallArea].smallAreas[smallArea].code;
-                } else { // special
+                    if (smallArea) areaCodes.smallAreaCd = areas[largeArea].middleAreas[middleArea].smallAreas[smallArea].code; // この行は変更なし
+                } else if (activeSearchType === 'special') { // special
                     const featureUrl = featurePageUrlInput.value.trim();
                     if (!featureUrl) {
                         alert('特集ページ検索では、URLを入力してください。');
                         return;
                     }
                     serviceKeywords.push(featureUrl); // 特集ページはURLをキーワードとして1タスクとして扱う
+                } else { // google
+                    // Googleマップの計測機能は未実装のため、アラートのみ表示して処理を中断
+                    alert('Googleマップの手動計測機能はまだ実装されていません。');
+                    return;
                 }
-
                 const serviceKeywordsRaw = keywordInput.value.trim();
 
                 checkRankButton.disabled = true; // ボタンを無効化
@@ -765,7 +787,10 @@
                 autoTaskList.innerHTML = '';
 
                 // --- 検索タイプに応じてタスクをフィルタリング ---
-                const activeSearchType = searchTypeToggle.querySelector('.toggle-button.active').dataset.type;
+                // activeなボタンがない場合(初期描画時など)を考慮
+                const activeButton = searchTypeToggle.querySelector('.toggle-button.active');
+                if (!activeButton) return;
+                const activeSearchType = activeButton.dataset.type;
                 const filteredTasks = autoTasks.filter(task => (task.type || 'normal') === activeSearchType);
 
                 // --- 特集ページのタイトルをURLごとに集約して、表示のばらつきをなくす ---
@@ -781,7 +806,7 @@
                 }
 
                 if (filteredTasks.length === 0) {
-                    autoTaskList.innerHTML = `<li>この検索タイプの自動計測タスクはありません。</li>`;
+                    autoTaskList.innerHTML = `<li style="padding: 8px 0; color: #6c6c70;">この検索タイプの自動計測タスクはありません。</li>`;
                     selectAllContainer.style.display = 'none';
                     return;
                 }
@@ -793,6 +818,9 @@
                         if (task.type === 'special') {
                             const pageTitle = urlToTitleMap.get(task.featurePageUrl) || task.featurePageName || task.featurePageUrl.replace(/^(https?:\/\/)?[^/]+/, '');
                             return `[${task.salonName}] ${pageTitle}`;
+                        } else if (task.type === 'google') {
+                            // Googleマップ用のタスク表示形式
+                            return `[${task.searchLocation}] ${task.keyword} - ${task.salonName}`;
                         }
                         // 通常検索の場合
                         return `[${task.areaName}] ${task.serviceKeyword} - ${task.salonName}`;
@@ -827,11 +855,14 @@
                     const taskText = document.createElement('span');
                     if (taskType === 'normal') {
                         taskText.textContent = `[${task.areaName}] ${task.serviceKeyword} - ${task.salonName}`;
-                    } else { // special
+                    } else if (taskType === 'special') { // special
                         const pageTitle = urlToTitleMap.get(task.featurePageUrl) || task.featurePageName || task.featurePageUrl.replace(/^(https?:\/\/)?[^/]+/, '');
                         taskText.textContent = `[${task.salonName}] ${pageTitle}`;
+                    } else if (taskType === 'google') { // google
+                        // Googleマップ用のタスク表示
+                        taskText.textContent = `[${task.searchLocation}] ${task.keyword} - ${task.salonName}`;
                     }
-                    
+
                     taskLabel.appendChild(checkbox);
                     taskLabel.appendChild(taskText);
                     li.appendChild(taskLabel);
@@ -893,7 +924,7 @@
                             addedTasks.push(keyword);
                         }
                     });
-                } else { // special
+                } else if (activeSearchType === 'special') { // special
                     const featureUrl = featurePageUrlInput.value.trim();
                     if (!featureUrl) {
                         alert('特集ページのURLを入力してください。');
@@ -907,6 +938,16 @@
                         autoTasks.push({ id: taskId, type: 'special', salonName, featurePageUrl: featureUrl });
                         addedTasks.push(featureUrl);
                     }
+                } else if (activeSearchType === 'google') { // google
+                    const searchLocation = document.getElementById('searchLocationInput').value.trim();
+                    const googleKeyword = document.getElementById('googleKeywordInput').value.trim();
+                    if (!searchLocation || !googleKeyword) {
+                        alert('検索地点と検索キーワードを入力してください。');
+                        return;
+                    }
+                    // Googleマップの自動計測追加機能は未実装のため、アラートのみ
+                    alert('Googleマップの自動計測追加機能はまだ実装されていません。');
+                    return; // ここで処理を終了
                 }
 
                 if (addedTasks.length > 0) {
@@ -1109,10 +1150,12 @@
                         let groupKey;
                         if (activeSearchType === 'normal') {
                             groupKey = `${historyItem.task.areaName} - ${historyItem.task.salonName}`;
-                        } else { // special
+                        } else if (activeSearchType === 'special') { // special
                             groupKey = historyItem.task.featurePageName || historyItem.task.featurePageUrl;
+                        } else if (activeSearchType === 'google') {
+                            groupKey = `${historyItem.task.searchLocation} - ${historyItem.task.salonName}`;
                         }
-
+                        
                         if (!acc[groupKey]) { 
                             acc[groupKey] = []; 
                         }
@@ -1160,9 +1203,10 @@
                             });
                             return {
                                 // ラベルを検索タイプによって変更
-                                label: activeSearchType === 'normal' 
-                                    ? taskData.task.serviceKeyword 
-                                    : taskData.task.salonName,
+                                label: (activeSearchType === 'normal') ? taskData.task.serviceKeyword
+                                     : (activeSearchType === 'special') ? taskData.task.salonName
+                                     : (activeSearchType === 'google') ? taskData.task.keyword
+                                     : taskData.task.salonName, // デフォルト
                                 data: dataForChart,
                                 borderColor: CHART_COLORS[index % CHART_COLORS.length],
                                 tension: 0.1,
