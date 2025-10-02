@@ -193,21 +193,25 @@ def check_hotpepper_ranking(driver, keyword, salon_name, area_codes):
                 driver.set_window_size(1200, total_height)
                 time.sleep(0.5) # リサイズを待機
 
-                timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+                # --- ファイル名生成ロジックの改善 (yyMMdd形式, 接頭辞なし) ---
+                timestamp = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
+                # ファイル名に使えない文字を置換
+                safe_keyword = re.sub(r'[\\/:*?"<>|]', '_', keyword)
+                safe_area = re.sub(r'[\\/:*?"<>|]', '_', area_codes.get('areaName', ''))
+                base_filename = f"{timestamp}_{safe_area}_{safe_keyword}"
                 
-                # PNGで一時的に保存
-                temp_png_path = os.path.join('screenshots', f"temp_{timestamp}.png")
+                temp_png_path = os.path.join('screenshots', f"temp_{timestamp}.png") # 一時ファイル名はタイムスタンプのみでOK
                 driver.save_screenshot(temp_png_path)
 
-                # Pillowで開き、JPEGとして画質を落として保存
-                jpeg_filename = f"screenshot_{timestamp}.jpg"
+                # 最終的なファイル名を指定
+                jpeg_filename = f"{base_filename}.jpg"
                 jpeg_filepath = os.path.join('screenshots', jpeg_filename)
                 
                 try:
                     with Image.open(temp_png_path) as img:
                         if img.mode == 'RGBA': # JPEGは透明度をサポートしないためRGBに変換
                             img = img.convert('RGB')
-                        img.save(jpeg_filepath, 'jpeg', quality=75) # qualityは0-95の範囲で調整可能
+                        img.save(jpeg_filepath, 'jpeg', quality=30) # qualityは0-95の範囲で調整可能
                     screenshot_path = jpeg_filepath
                     app.logger.info(f"画質を調整したスクリーンショットを {jpeg_filepath} に保存しました。")
                 finally:
@@ -381,28 +385,37 @@ def check_meo_ranking(driver, keyword, location_name):
 
         last_url_checked = driver.current_url
 
-        # --- スクリーンショット撮影処理の修正 ---
-        # ページ全体の高さではなく、スクロール可能なパネル(feed)の高さを取得して撮影する
+        # --- スクリーンショット撮影処理の修正: ウィンドウリサイズ方式に戻す ---
         yield sse_format({"status": "スクリーンショットを撮影しています..."})
-        # scrollable_element は上で取得済み
-        panel_height = driver.execute_script("return arguments[0].scrollHeight", scrollable_element)
-        # ウィンドウの高さをパネルの高さに合わせる（最小800px、最大8000pxの制限を追加）
-        window_height = max(800, min(panel_height, 8000))
-        driver.set_window_size(1200, window_height)
-        time.sleep(0.5)
+        # 確実にパネル全体を描画させるため、一度一番下までスクロールする
+        try:
+            driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", scrollable_element)
+            time.sleep(1) # スクロール後の描画を待つ
+            panel_height = driver.execute_script("return arguments[0].scrollHeight", scrollable_element)
+            # ウィンドウの高さをパネルの高さに合わせる（最小800px、最大8000pxの制限を追加）
+            window_height = max(800, min(panel_height, 8000))
+            driver.set_window_size(1200, window_height)
+            time.sleep(0.5)
+        except Exception as e:
+            app.logger.warning(f"スクリーンショットのためのリサイズ中にエラーが発生: {e}")
 
-        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        # --- ファイル名生成ロジックの改善 (yyMMdd形式, 接頭辞なし) ---
+        timestamp = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
+        safe_keyword = re.sub(r'[\\/:*?"<>|]', '_', keyword)
+        safe_location = re.sub(r'[\\/:*?"<>|]', '_', location_name)
+        base_filename = f"{timestamp}_{safe_location}_{safe_keyword}"
+
         temp_png_path = os.path.join('screenshots', f"temp_meo_{timestamp}.png")
-        driver.save_screenshot(temp_png_path)
+        driver.save_screenshot(temp_png_path) # ページ全体を撮影
 
-        jpeg_filename = f"screenshot_meo_{timestamp}.jpg"
+        jpeg_filename = f"{base_filename}.jpg"
         jpeg_filepath = os.path.join('screenshots', jpeg_filename)
         
         try:
             with Image.open(temp_png_path) as img:
                 if img.mode == 'RGBA':
                     img = img.convert('RGB')
-                img.save(jpeg_filepath, 'jpeg', quality=75)
+                img.save(jpeg_filepath, 'jpeg', quality=30) # qualityは0-95の範囲で調整可能
             screenshot_path = jpeg_filepath
         finally:
             if os.path.exists(temp_png_path):
@@ -636,7 +649,10 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
             for task in normal_tasks:
                 job_counter += 1
                 task_id = task['id']
-                task_name = f"[{task.get('areaName', '')}] {task.get('serviceKeyword', '')}"
+                # --- areaNameをtaskから直接取得するように修正 ---
+                area_name_for_task = task.get('areaName', '')
+                task_name = f"[{area_name_for_task}] {task.get('serviceKeyword', '')}"
+                task['areaName'] = area_name_for_task # 念のためtaskオブジェクトにもareaNameをセット
 
                 if stream_progress:
                     yield sse_format({"progress": {"current": job_counter, "total": total_job_count, "task": task}})

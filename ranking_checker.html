@@ -143,6 +143,19 @@
                     <ul id="autoTaskList" style="list-style: none; padding: 0;"></ul>
                 </div>
             </div>
+            <!-- MEOタスク一括コピー機能 -->
+            <div id="meoTaskCopySection" style="display: none; padding-top: 15px; margin-top: 15px; border-top: 1px solid #e5e5e7;">
+                <h4 style="margin-top: 0; margin-bottom: 10px; font-size: 16px; font-weight: 600;">MEOタスクを別地点にコピー</h4>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <select id="copySourceLocation" style="padding: 6px 10px; font-size: 14px; border-radius: 6px;"></select>
+                    <span style="font-weight: bold;">→</span>
+                    <input type="text" id="copyDestLocation" placeholder="コピー先の検索地点 (例: 池袋駅)" style="padding: 6px 10px; font-size: 14px; flex-grow: 1;">
+                    <button type="button" id="executeCopyButton" class="button-secondary" style="padding: 6px 12px; font-size: 13px;">コピー実行</button>
+                </div>
+                <small style="display: block; margin-top: 8px; color: #6c6c70; font-size: 12px;">
+                    コピー元の検索地点に登録されている全てのキーワードを、新しい検索地点のタスクとして一括で追加します。
+                </small>
+            </div>
         </div>
 
         <!-- 手動計測セクション -->
@@ -424,6 +437,14 @@
                 // MEOの履歴機能は今後の拡張で対応
                 fetchAndDisplayAutoHistory();
                 // タスク一覧の表示も切り替える
+                const meoCopySection = document.getElementById('meoTaskCopySection');
+                if (clickedButton.dataset.type === 'google') {
+                    meoCopySection.style.display = 'block';
+                    updateCopySourceLocations();
+                } else {
+                    meoCopySection.style.display = 'none';
+                }
+
                 renderAutoTasks();
             });
 
@@ -833,6 +854,81 @@
                 }
             });
 
+            // --- MEOタスクコピー機能 ---
+            const copySourceSelect = document.getElementById('copySourceLocation');
+            const copyDestInput = document.getElementById('copyDestLocation');
+            const copyButton = document.getElementById('executeCopyButton');
+
+            function updateCopySourceLocations() {
+                const meoTasks = autoTasks.filter(task => task.type === 'google');
+                const locations = [...new Set(meoTasks.map(task => task.searchLocation))];
+                
+                copySourceSelect.innerHTML = ''; // プルダウンをクリア
+                if (locations.length === 0) {
+                    const option = document.createElement('option');
+                    option.textContent = 'コピー元の地点がありません';
+                    option.disabled = true;
+                    copySourceSelect.appendChild(option);
+                    copyButton.disabled = true;
+                    return;
+                }
+
+                locations.sort((a,b) => a.localeCompare(b, 'ja'));
+                locations.forEach(location => {
+                    const option = document.createElement('option');
+                    option.value = location;
+                    option.textContent = location;
+                    copySourceSelect.appendChild(option);
+                });
+                copyButton.disabled = false;
+            }
+
+            copyButton.addEventListener('click', () => {
+                const sourceLocation = copySourceSelect.value;
+                const destLocation = copyDestInput.value.trim();
+
+                if (!sourceLocation || !destLocation) {
+                    alert('コピー元とコピー先の両方を指定してください。');
+                    return;
+                }
+
+                if (sourceLocation === destLocation) {
+                    alert('コピー元とコピー先が同じです。');
+                    return;
+                }
+
+                const tasksToCopy = autoTasks.filter(task => task.type === 'google' && task.searchLocation === sourceLocation);
+                
+                if (!confirm(`「${sourceLocation}」の${tasksToCopy.length}個のキーワードを「${destLocation}」にコピーしますか？`)) {
+                    return;
+                }
+
+                tasksToCopy.forEach(task => {
+                    const salonName = task.salonName;
+                    const originalKeyword = task.keyword;
+                    let newKeyword = originalKeyword;
+
+                    // --- キーワード内の地名を置換するロジック ---
+                    const sourceLocationBase = sourceLocation.replace(/駅|市$/, '').trim();
+                    const destLocationBase = destLocation.replace(/駅|市$/, '').trim();
+
+                    // キーワードがコピー元の地名で始まっている場合、コピー先の地名に置き換える
+                    if (sourceLocationBase && originalKeyword.startsWith(sourceLocationBase)) {
+                        newKeyword = destLocationBase + originalKeyword.substring(sourceLocationBase.length);
+                    }
+
+                    const newTaskId = `[google]-${salonName}-${destLocation}-${newKeyword}`;
+                    if (!autoTasks.some(t => t.id === newTaskId)) {
+                        autoTasks.push({ id: newTaskId, type: 'google', salonName: salonName, searchLocation: destLocation, keyword: newKeyword });
+                    }
+                });
+
+                saveAutoTasks();
+                renderAutoTasks();
+                alert(`タスクのコピーが完了しました。「${destLocation}」のタスク一覧を確認してください。`);
+                copyDestInput.value = ''; // 入力欄をクリア
+            });
+
             // --- 自動計測機能 ---
             let autoTasks = [];
             let autoRankChart = null;
@@ -841,6 +937,7 @@
                 try {
                     const response = await fetch(`/api/auto-tasks?_=${new Date().getTime()}`);
                     autoTasks = await response.json();
+                    updateCopySourceLocations(); // MEOコピー元のプルダウンも更新
                     renderAutoTasks();
                 } catch (error) {
                     console.error('自動計測タスクの読み込みに失敗しました:', error);
@@ -869,97 +966,150 @@
                 const activeSearchType = activeButton.dataset.type;
                 const filteredTasks = autoTasks.filter(task => (task.type || 'normal') === activeSearchType);
 
-                // --- 特集ページのタイトルをURLごとに集約して、表示のばらつきをなくす ---
-                const urlToTitleMap = new Map();
-                if (activeSearchType === 'special') {
-                    autoTasks.forEach(task => {
-                        if (task.type === 'special' && task.featurePageUrl && task.featurePageName) {
-                            if (!urlToTitleMap.has(task.featurePageUrl)) {
-                                urlToTitleMap.set(task.featurePageUrl, task.featurePageName);
-                            }
-                        }
-                    });
-                }
-
                 if (filteredTasks.length === 0) {
                     autoTaskList.innerHTML = `<li style="padding: 8px 0; color: #6c6c70;">この検索タイプの自動計測タスクはありません。</li>`;
                     selectAllContainer.style.display = 'none';
                     return;
                 }
                 selectAllContainer.style.display = 'block';
-
-                // --- タスク名（表示テキスト）でソート ---
-                filteredTasks.sort((a, b) => {
-                    const getText = (task) => {
-                        if (task.type === 'special') {
-                            const pageTitle = urlToTitleMap.get(task.featurePageUrl) || task.featurePageName || task.featurePageUrl.replace(/^(https?:\/\/)?[^/]+/, '');
-                            return `[${task.salonName}] ${pageTitle}`;
-                        } else if (task.type === 'google') {
-                            // Googleマップ用のタスク表示形式
-                            return `[${task.searchLocation}] ${task.keyword} - ${task.salonName}`;
+                
+                // --- MEOの場合のみグループ化 ---
+                if (activeSearchType === 'google') {
+                    const groupedTasks = filteredTasks.reduce((acc, task) => {
+                        const groupKey = task.searchLocation || '地点未設定';
+                        if (!acc[groupKey]) {
+                            acc[groupKey] = [];
                         }
-                        // 通常検索の場合
-                        return `[${task.areaName}] ${task.serviceKeyword} - ${task.salonName}`;
-                    };
-                    return getText(a).localeCompare(getText(b), 'ja'); // 日本語の辞書順でソート
-                });
+                        acc[groupKey].push(task);
+                        return acc;
+                    }, {});
 
-                filteredTasks.forEach(task => {
-                    const taskType = task.type || 'normal';
+                    const sortedGroups = Object.keys(groupedTasks).sort((a, b) => a.localeCompare(b, 'ja'));
 
-                    const li = document.createElement('li');
-                    li.style.display = 'flex';
-                    li.style.justifyContent = 'space-between';
-                    li.style.alignItems = 'center';
-                    li.style.padding = '8px 0';
-                    li.style.borderBottom = '1px solid #eee';
-                    li.style.wordBreak = 'break-all'; // 長いURLがはみ出ないように
+                    sortedGroups.forEach(groupKey => {
+                        const tasksInGroup = groupedTasks[groupKey];
+                        
+                        const groupHeader = document.createElement('li');
+                        groupHeader.style.padding = '10px 8px';
+                        groupHeader.style.backgroundColor = '#f0f0f5';
+                        groupHeader.style.fontWeight = '600';
+                        groupHeader.style.marginTop = '10px';
+                        groupHeader.style.borderRadius = '6px';
+                        groupHeader.style.display = 'flex';
+                        groupHeader.style.alignItems = 'center';
 
-                    const taskLabel = document.createElement('label');
-                    taskLabel.style.display = 'flex';
-                    taskLabel.style.alignItems = 'center';
-                    taskLabel.style.flexGrow = '1';
-                    taskLabel.style.cursor = 'pointer';
-                    taskLabel.style.marginRight = '10px';
+                        const groupCheckbox = document.createElement('input');
+                        groupCheckbox.type = 'checkbox';
+                        groupCheckbox.style.marginRight = '10px';
+                        groupCheckbox.dataset.groupKey = groupKey;
+                        groupHeader.appendChild(groupCheckbox);
 
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.className = 'auto-task-checkbox';
-                    checkbox.value = task.id;
-                    checkbox.style.marginRight = '10px';
-                    
-                    const taskText = document.createElement('span');
-                    if (taskType === 'normal') {
-                        taskText.textContent = `[${task.areaName}] ${task.serviceKeyword} - ${task.salonName}`;
-                    } else if (taskType === 'special') { // special
-                        const pageTitle = urlToTitleMap.get(task.featurePageUrl) || task.featurePageName || task.featurePageUrl.replace(/^(https?:\/\/)?[^/]+/, '');
-                        taskText.textContent = `[${task.salonName}] ${pageTitle}`;
-                    } else if (taskType === 'google') { // google
-                        // Googleマップ用のタスク表示
-                        taskText.textContent = `[${task.searchLocation}] ${task.keyword} - ${task.salonName}`;
+                        const groupLabel = document.createElement('label');
+                        groupLabel.textContent = groupKey;
+                        groupLabel.style.cursor = 'pointer';
+                        groupLabel.style.flexGrow = '1';
+                        groupLabel.onclick = () => groupCheckbox.click();
+                        groupHeader.appendChild(groupLabel);
+
+                        autoTaskList.appendChild(groupHeader);
+
+                        const taskUl = document.createElement('ul');
+                        taskUl.style.listStyle = 'none';
+                        taskUl.style.paddingLeft = '20px';
+                        autoTaskList.appendChild(taskUl);
+
+                        tasksInGroup.sort((a, b) => (a.keyword || '').localeCompare(b.keyword || '', 'ja'));
+
+                        tasksInGroup.forEach(task => {
+                            renderTaskItem(task, taskUl, groupKey);
+                        });
+
+                        groupCheckbox.addEventListener('change', (e) => {
+                            const isChecked = e.target.checked;
+                            const key = e.target.dataset.groupKey;
+                            taskUl.querySelectorAll(`.auto-task-checkbox[data-group-key="${key}"]`).forEach(cb => {
+                                cb.checked = isChecked;
+                            });
+                        });
+                    });
+                } else { // 通常検索と特集ページの場合
+                    // --- 特集ページのタイトルをURLごとに集約 ---
+                    const urlToTitleMap = new Map();
+                    if (activeSearchType === 'special') {
+                        autoTasks.forEach(task => {
+                            if (task.type === 'special' && task.featurePageUrl && task.featurePageName) {
+                                if (!urlToTitleMap.has(task.featurePageUrl)) {
+                                    urlToTitleMap.set(task.featurePageUrl, task.featurePageName);
+                                }
+                            }
+                        });
                     }
 
-                    taskLabel.appendChild(checkbox);
-                    taskLabel.appendChild(taskText);
-                    li.appendChild(taskLabel);
+                    // ソートして表示
+                    filteredTasks.sort((a, b) => (a.id).localeCompare(b.id, 'ja'));
+                    filteredTasks.forEach(task => {
+                        renderTaskItem(task, autoTaskList, null, urlToTitleMap);
+                    });
+                }
+            };
 
-                    const deleteButton = document.createElement('button');
-                    deleteButton.textContent = '削除';
-                    deleteButton.className = 'button-secondary';
-                    deleteButton.style.padding = '4px 8px';
-                    deleteButton.style.fontSize = '13px';
-                    deleteButton.style.flexShrink = '0'; // ボタンが縮まないように
-                    deleteButton.onclick = () => {
-                        if (confirm(`「${taskText.textContent}」を削除しますか？`)) {
-                            autoTasks = autoTasks.filter(t => t.id !== task.id);
-                            saveAutoTasks();
-                            renderAutoTasks();
-                            fetchAndDisplayAutoHistory(); // 履歴も更新
-                        }
-                    };
-                    li.appendChild(deleteButton);
-                    autoTaskList.appendChild(li);
-                });
+            function renderTaskItem(task, parentElement, groupKey = null, urlToTitleMap = new Map()) {
+                const taskType = task.type || 'normal';
+
+                const li = document.createElement('li');
+                li.style.display = 'flex';
+                li.style.justifyContent = 'space-between';
+                li.style.alignItems = 'center';
+                li.style.padding = '8px 0';
+                li.style.borderBottom = '1px solid #eee';
+                li.style.wordBreak = 'break-all';
+
+                const taskLabel = document.createElement('label');
+                taskLabel.style.display = 'flex';
+                taskLabel.style.alignItems = 'center';
+                taskLabel.style.flexGrow = '1';
+                taskLabel.style.cursor = 'pointer';
+                taskLabel.style.marginRight = '10px';
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'auto-task-checkbox';
+                checkbox.value = task.id;
+                if (groupKey) {
+                    checkbox.dataset.groupKey = groupKey;
+                }
+                checkbox.style.marginRight = '10px';
+                
+                const taskText = document.createElement('span');
+                if (taskType === 'normal') {
+                    taskText.textContent = `[${task.areaName}] ${task.serviceKeyword} - ${task.salonName}`;
+                } else if (taskType === 'special') {
+                    const pageTitle = urlToTitleMap.get(task.featurePageUrl) || task.featurePageName || task.featurePageUrl.replace(/^(https?:\/\/)?[^/]+/, '');
+                    taskText.textContent = `[${task.salonName}] ${pageTitle}`;
+                } else if (taskType === 'google') {
+                    taskText.textContent = `${task.keyword} - ${task.salonName}`;
+                }
+
+                taskLabel.appendChild(checkbox);
+                taskLabel.appendChild(taskText);
+                li.appendChild(taskLabel);
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = '削除';
+                deleteButton.className = 'button-secondary';
+                deleteButton.style.padding = '4px 8px';
+                deleteButton.style.fontSize = '13px';
+                deleteButton.style.flexShrink = '0';
+                deleteButton.onclick = () => {
+                    if (confirm(`「${taskText.textContent}」を削除しますか？`)) {
+                        autoTasks = autoTasks.filter(t => t.id !== task.id);
+                        saveAutoTasks();
+                        renderAutoTasks();
+                        fetchAndDisplayAutoHistory();
+                    }
+                };
+                li.appendChild(deleteButton);
+                parentElement.appendChild(li);
             };
 
             addAutoTaskButton.addEventListener('click', () => {
@@ -1021,12 +1171,24 @@
                         alert('検索地点と検索キーワードを入力してください。');
                         return;
                     }
-                    const taskId = `[google]-${salonName}-${searchLocation}-${googleKeyword}`;
+
+                    // --- キーワード自動整形機能 ---
+                    // 検索地点名から「駅」や「市」を取り除く（例: "福山駅" -> "福山"）
+                    const locationBaseName = searchLocation.replace(/駅|市$/, '').trim();
+                    let cleanedKeyword = googleKeyword;
+                    // キーワードが「地名 キーワード」の形式かチェック
+                    if (locationBaseName && cleanedKeyword.startsWith(locationBaseName)) {
+                        // 地名部分と、それに続く可能性のあるスペースを削除
+                        cleanedKeyword = googleKeyword.substring(locationBaseName.length).trim();
+                        console.log(`キーワードを自動整形しました: "${googleKeyword}" -> "${cleanedKeyword}"`);
+                    }
+
+                    const taskId = `[google]-${salonName}-${searchLocation}-${cleanedKeyword}`;
                     if (autoTasks.some(t => t.id === taskId)) {
-                        existingTasks.push(`[${searchLocation}] ${googleKeyword}`);
+                        existingTasks.push(`[${searchLocation}] ${cleanedKeyword}`);
                     } else {
-                        autoTasks.push({ id: taskId, type: 'google', salonName, searchLocation, keyword: googleKeyword });
-                        addedTasks.push(`[${searchLocation}] ${googleKeyword}`);
+                        autoTasks.push({ id: taskId, type: 'google', salonName, searchLocation, keyword: cleanedKeyword });
+                        addedTasks.push(`[${searchLocation}] ${cleanedKeyword}`);
                     }
                 }
 
@@ -1444,7 +1606,5 @@
             fetchAndDisplayAutoHistory();
         }); // End of main DOMContentLoaded listener
     </script>
-</body>
-</html>
 </body>
 </html>
