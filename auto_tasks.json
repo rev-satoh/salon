@@ -1226,429 +1226,793 @@
   },
   {
     "id": "[google]-ケイトステージラッシュ-池袋駅-池袋　まつげパーマ",
-    "type": "google",
+    "keyword": "池袋　まつげパーマ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "池袋駅",
-    "keyword": "池袋　まつげパーマ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-池袋駅-池袋　パリジェンヌ",
-    "type": "google",
+    "keyword": "池袋　パリジェンヌ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "池袋駅",
-    "keyword": "池袋　パリジェンヌ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-池袋駅-池袋　HBL",
-    "type": "google",
+    "keyword": "池袋　HBL",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "池袋駅",
-    "keyword": "池袋　HBL"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-池袋駅-池袋　ハリウッドブロウ",
-    "type": "google",
+    "keyword": "池袋　ハリウッドブロウ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "池袋駅",
-    "keyword": "池袋　ハリウッドブロウ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-池袋駅-池袋　眉毛ワックス",
-    "type": "google",
+    "keyword": "池袋　眉毛ワックス",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "池袋駅",
-    "keyword": "池袋　眉毛ワックス"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-池袋駅-池袋　眉毛WAX",
-    "type": "google",
+    "keyword": "池袋　眉毛WAX",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "池袋駅",
-    "keyword": "池袋　眉毛WAX"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-池袋駅-池袋　眉毛",
-    "type": "google",
+    "keyword": "池袋　眉毛",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "池袋駅",
-    "keyword": "池袋　眉毛"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-池袋駅-池袋　まつげ",
-    "type": "google",
+    "keyword": "池袋　まつげ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "池袋駅",
-    "keyword": "池袋　まつげ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-池袋駅-池袋　マツパ",
-    "type": "google",
+    "keyword": "池袋　マツパ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "池袋駅",
-    "keyword": "池袋　マツパ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-池袋駅-池袋　まつ毛パーマ",
-    "type": "google",
+    "keyword": "池袋　まつ毛パーマ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "池袋駅",
-    "keyword": "池袋　まつ毛パーマ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-池袋駅-池袋　アイブロウ",
-    "type": "google",
+    "keyword": "池袋　アイブロウ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "池袋駅",
-    "keyword": "池袋　アイブロウ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-池袋駅-池袋　アイラッシュ",
-    "type": "google",
+    "keyword": "池袋　アイラッシュ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "池袋駅",
-    "keyword": "池袋　アイラッシュ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜駅-岐阜　まつげパーマ",
-    "type": "google",
+    "keyword": "岐阜　まつげパーマ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜駅",
-    "keyword": "岐阜　まつげパーマ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜駅-まつ毛パーマ",
-    "type": "google",
+    "keyword": "まつ毛パーマ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜駅",
-    "keyword": "まつ毛パーマ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜駅-マツパ",
-    "type": "google",
+    "keyword": "マツパ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜駅",
-    "keyword": "マツパ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜駅-まつぱ",
-    "type": "google",
+    "keyword": "まつぱ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜駅",
-    "keyword": "まつぱ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜駅-まつげ",
-    "type": "google",
+    "keyword": "まつげ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜駅",
-    "keyword": "まつげ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜駅-眉毛",
-    "type": "google",
+    "keyword": "眉毛",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜駅",
-    "keyword": "眉毛"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜駅-眉毛ワックス",
-    "type": "google",
+    "keyword": "眉毛ワックス",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜駅",
-    "keyword": "眉毛ワックス"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜駅-眉毛WAX",
-    "type": "google",
+    "keyword": "眉毛WAX",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜駅",
-    "keyword": "眉毛WAX"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜駅-アイラッシュ",
-    "type": "google",
+    "keyword": "アイラッシュ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜駅",
-    "keyword": "アイラッシュ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜駅-アイブロウ",
-    "type": "google",
+    "keyword": "アイブロウ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜駅",
-    "keyword": "アイブロウ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜駅-HBL",
-    "type": "google",
+    "keyword": "HBL",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜駅",
-    "keyword": "HBL"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜駅-ハリウッドブロウリフト",
-    "type": "google",
+    "keyword": "ハリウッドブロウリフト",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜駅",
-    "keyword": "ハリウッドブロウリフト"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜駅-パリジェンヌ",
-    "type": "google",
+    "keyword": "パリジェンヌ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜駅",
-    "keyword": "パリジェンヌ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜駅-岐阜　パリジェンヌ",
-    "type": "google",
+    "keyword": "岐阜　パリジェンヌ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜駅",
-    "keyword": "岐阜　パリジェンヌ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜駅-岐阜　HBL",
-    "type": "google",
+    "keyword": "岐阜　HBL",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜駅",
-    "keyword": "岐阜　HBL"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜駅-岐阜　ハリウッドブロウ",
-    "type": "google",
+    "keyword": "岐阜　ハリウッドブロウ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜駅",
-    "keyword": "岐阜　ハリウッドブロウ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜駅-岐阜　眉毛ワックス",
-    "type": "google",
+    "keyword": "岐阜　眉毛ワックス",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜駅",
-    "keyword": "岐阜　眉毛ワックス"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜駅-岐阜　眉毛WAX",
-    "type": "google",
+    "keyword": "岐阜　眉毛WAX",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜駅",
-    "keyword": "岐阜　眉毛WAX"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜駅-岐阜　眉毛",
-    "type": "google",
+    "keyword": "岐阜　眉毛",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜駅",
-    "keyword": "岐阜　眉毛"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜駅-岐阜　まつげ",
-    "type": "google",
+    "keyword": "岐阜　まつげ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜駅",
-    "keyword": "岐阜　まつげ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜駅-岐阜　マツパ",
-    "type": "google",
+    "keyword": "岐阜　マツパ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜駅",
-    "keyword": "岐阜　マツパ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜駅-岐阜　まつ毛パーマ",
-    "type": "google",
+    "keyword": "岐阜　まつ毛パーマ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜駅",
-    "keyword": "岐阜　まつ毛パーマ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜駅-岐阜　アイブロウ",
-    "type": "google",
+    "keyword": "岐阜　アイブロウ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜駅",
-    "keyword": "岐阜　アイブロウ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜駅-岐阜　アイラッシュ",
-    "type": "google",
+    "keyword": "岐阜　アイラッシュ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜駅",
-    "keyword": "岐阜　アイラッシュ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜市-HBL",
-    "type": "google",
+    "keyword": "HBL",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜市",
-    "keyword": "HBL"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜市-アイブロウ",
-    "type": "google",
+    "keyword": "アイブロウ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜市",
-    "keyword": "アイブロウ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜市-アイラッシュ",
-    "type": "google",
+    "keyword": "アイラッシュ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜市",
-    "keyword": "アイラッシュ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜市-ハリウッドブロウ",
-    "type": "google",
+    "keyword": "ハリウッドブロウ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜市",
-    "keyword": "ハリウッドブロウ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜市-パリジェンヌ",
-    "type": "google",
+    "keyword": "パリジェンヌ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜市",
-    "keyword": "パリジェンヌ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜市-まつげ",
-    "type": "google",
+    "keyword": "まつげ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜市",
-    "keyword": "まつげ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜市-まつげパーマ",
-    "type": "google",
+    "keyword": "まつげパーマ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜市",
-    "keyword": "まつげパーマ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜市-まつ毛パーマ",
-    "type": "google",
+    "keyword": "まつ毛パーマ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜市",
-    "keyword": "まつ毛パーマ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜市-マツパ",
-    "type": "google",
+    "keyword": "マツパ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜市",
-    "keyword": "マツパ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜市-眉毛",
-    "type": "google",
+    "keyword": "眉毛",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜市",
-    "keyword": "眉毛"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜市-眉毛ワックス",
-    "type": "google",
+    "keyword": "眉毛ワックス",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜市",
-    "keyword": "眉毛ワックス"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜市-眉毛WAX",
-    "type": "google",
+    "keyword": "眉毛WAX",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜市",
-    "keyword": "眉毛WAX"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜市-岐阜　パリジェンヌ",
-    "type": "google",
+    "keyword": "岐阜　パリジェンヌ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜市",
-    "keyword": "岐阜　パリジェンヌ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜市-岐阜　HBL",
-    "type": "google",
+    "keyword": "岐阜　HBL",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜市",
-    "keyword": "岐阜　HBL"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜市-岐阜　まつげパーマ",
-    "type": "google",
+    "keyword": "岐阜　まつげパーマ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜市",
-    "keyword": "岐阜　まつげパーマ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜市-岐阜　まつ毛パーマ",
-    "type": "google",
+    "keyword": "岐阜　まつ毛パーマ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜市",
-    "keyword": "岐阜　まつ毛パーマ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜市-岐阜　マツパ",
-    "type": "google",
+    "keyword": "岐阜　マツパ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜市",
-    "keyword": "岐阜　マツパ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜市-岐阜　まつげ",
-    "type": "google",
+    "keyword": "岐阜　まつげ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜市",
-    "keyword": "岐阜　まつげ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜市-岐阜　眉毛",
-    "type": "google",
+    "keyword": "岐阜　眉毛",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜市",
-    "keyword": "岐阜　眉毛"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜市-岐阜　眉毛ワックス",
-    "type": "google",
+    "keyword": "岐阜　眉毛ワックス",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜市",
-    "keyword": "岐阜　眉毛ワックス"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜市-岐阜　眉毛WAX",
-    "type": "google",
+    "keyword": "岐阜　眉毛WAX",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜市",
-    "keyword": "岐阜　眉毛WAX"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜市-まつぱ",
-    "type": "google",
+    "keyword": "まつぱ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜市",
-    "keyword": "まつぱ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜市-岐阜　アイブロウ",
-    "type": "google",
+    "keyword": "岐阜　アイブロウ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜市",
-    "keyword": "岐阜　アイブロウ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜市-岐阜　アイラッシュ",
-    "type": "google",
+    "keyword": "岐阜　アイラッシュ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜市",
-    "keyword": "岐阜　アイラッシュ"
+    "type": "google"
   },
   {
     "id": "[google]-ケイトステージラッシュ-岐阜市-岐阜　ハリウッドブロウ",
-    "type": "google",
+    "keyword": "岐阜　ハリウッドブロウ",
     "salonName": "ケイトステージラッシュ",
     "searchLocation": "岐阜市",
-    "keyword": "岐阜　ハリウッドブロウ"
+    "type": "google"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-香椎駅-香椎　まつげパーマ",
+    "keyword": "香椎　まつげパーマ",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "香椎駅",
+    "type": "google"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-香椎駅-まつ毛パーマ",
+    "keyword": "まつ毛パーマ",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "香椎駅",
+    "type": "google"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-香椎駅-マツパ",
+    "keyword": "マツパ",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "香椎駅",
+    "type": "google"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-香椎駅-まつぱ",
+    "keyword": "まつぱ",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "香椎駅",
+    "type": "google"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-香椎駅-まつげ",
+    "keyword": "まつげ",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "香椎駅",
+    "type": "google"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-香椎駅-眉毛",
+    "keyword": "眉毛",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "香椎駅",
+    "type": "google"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-香椎駅-眉毛ワックス",
+    "keyword": "眉毛ワックス",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "香椎駅",
+    "type": "google"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-香椎駅-眉毛WAX",
+    "keyword": "眉毛WAX",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "香椎駅",
+    "type": "google"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-香椎駅-アイラッシュ",
+    "keyword": "アイラッシュ",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "香椎駅",
+    "type": "google"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-香椎駅-アイブロウ",
+    "keyword": "アイブロウ",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "香椎駅",
+    "type": "google"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-香椎駅-HBL",
+    "keyword": "HBL",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "香椎駅",
+    "type": "google"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-香椎駅-ハリウッドブロウリフト",
+    "keyword": "ハリウッドブロウリフト",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "香椎駅",
+    "type": "google"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-香椎駅-パリジェンヌ",
+    "keyword": "パリジェンヌ",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "香椎駅",
+    "type": "google"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-香椎駅-香椎　パリジェンヌ",
+    "keyword": "香椎　パリジェンヌ",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "香椎駅",
+    "type": "google"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-香椎駅-香椎　HBL",
+    "keyword": "香椎　HBL",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "香椎駅",
+    "type": "google"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-香椎駅-香椎　ハリウッドブロウ",
+    "keyword": "香椎　ハリウッドブロウ",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "香椎駅",
+    "type": "google"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-香椎駅-香椎　眉毛ワックス",
+    "keyword": "香椎　眉毛ワックス",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "香椎駅",
+    "type": "google"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-香椎駅-香椎　眉毛WAX",
+    "keyword": "香椎　眉毛WAX",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "香椎駅",
+    "type": "google"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-香椎駅-香椎　眉毛",
+    "keyword": "香椎　眉毛",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "香椎駅",
+    "type": "google"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-香椎駅-香椎　まつげ",
+    "keyword": "香椎　まつげ",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "香椎駅",
+    "type": "google"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-香椎駅-香椎　マツパ",
+    "keyword": "香椎　マツパ",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "香椎駅",
+    "type": "google"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-香椎駅-香椎　まつ毛パーマ",
+    "keyword": "香椎　まつ毛パーマ",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "香椎駅",
+    "type": "google"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-香椎駅-香椎　アイブロウ",
+    "keyword": "香椎　アイブロウ",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "香椎駅",
+    "type": "google"
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-香椎駅-香椎　アイラッシュ",
+    "keyword": "香椎　アイラッシュ",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "香椎駅",
+    "type": "google"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/stc9907850/",
+    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw038/stc9907850/",
+    "salonName": "ケイトステージラッシュ",
+    "type": "special",
+    "featurePageName": "香椎駅でまつげパーマが人気のまつげサロン｜ホットペッパービューティー"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/stc9907870/",
+    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw038/stc9907870/",
+    "salonName": "ケイトステージラッシュ",
+    "type": "special",
+    "featurePageName": "香椎宮前駅でまつげパーマが人気のまつげサロン｜ホットペッパービューティー"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw094/stc9907850/",
+    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw094/stc9907850/",
+    "salonName": "ケイトステージラッシュ",
+    "type": "special",
+    "featurePageName": "香椎駅で美眉(眉サロン)が人気のまつげサロン｜ホットペッパービューティー"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG"
+    },
+    "areaName": "福岡",
+    "id": "ケイトステージラッシュ-福岡-HBL",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "HBL",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG"
+    },
+    "areaName": "福岡",
+    "id": "ケイトステージラッシュ-福岡-アイブロウ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "アイブロウ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG"
+    },
+    "areaName": "福岡",
+    "id": "ケイトステージラッシュ-福岡-アイラッシュ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "アイラッシュ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG"
+    },
+    "areaName": "福岡",
+    "id": "ケイトステージラッシュ-福岡-ハリウッドブロウ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "ハリウッドブロウ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG"
+    },
+    "areaName": "福岡",
+    "id": "ケイトステージラッシュ-福岡-パリジェンヌ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "パリジェンヌ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG"
+    },
+    "areaName": "福岡",
+    "id": "ケイトステージラッシュ-福岡-マツエク",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "マツエク",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG"
+    },
+    "areaName": "福岡",
+    "id": "ケイトステージラッシュ-福岡-まつげ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつげ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG"
+    },
+    "areaName": "福岡",
+    "id": "ケイトステージラッシュ-福岡-まつげパーマ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつげパーマ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG"
+    },
+    "areaName": "福岡",
+    "id": "ケイトステージラッシュ-福岡-まつぱ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつぱ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG"
+    },
+    "areaName": "福岡",
+    "id": "ケイトステージラッシュ-福岡-マツパ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "マツパ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG"
+    },
+    "areaName": "福岡",
+    "id": "ケイトステージラッシュ-福岡-まつ毛パーマ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつ毛パーマ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG"
+    },
+    "areaName": "福岡",
+    "id": "ケイトステージラッシュ-福岡-眉毛",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "眉毛",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG"
+    },
+    "areaName": "福岡",
+    "id": "ケイトステージラッシュ-福岡-眉毛WAX",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "眉毛WAX",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG"
+    },
+    "areaName": "福岡",
+    "id": "ケイトステージラッシュ-福岡-眉毛ワックス",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "眉毛ワックス",
+    "type": "normal"
+  },
+  {
+    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw094/stc9952340/?vos=evhbkpg0018&pog=mt(b)ti(kwd-844162461250)dv(c)cr(480395258311)fi()gi(80460792450)ci(368609434)lc(9198798)ps()nw(g)&gclsrc=aw.ds&gad_source=1&gad_campaignid=368609434&gbraid=0AAAAADNPXWMI74zWEL02pwmT5luVvYJ8C&gclid=CjwKCAjw6P3GBhBVEiwAJPjmLiKXUbQWx-DXSYviLIAvGzkM4obUzgoSuu2c0hHYeSQ98ViAVV3mfRoCsUIQAvD_BwE",
+    "type": "special",
+    "salonName": "ケイトステージラッシュ",
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw094/stc9952340/?vos=evhbkpg0018&pog=mt(b)ti(kwd-844162461250)dv(c)cr(480395258311)fi()gi(80460792450)ci(368609434)lc(9198798)ps()nw(g)&gclsrc=aw.ds&gad_source=1&gad_campaignid=368609434&gbraid=0AAAAADNPXWMI74zWEL02pwmT5luVvYJ8C&gclid=CjwKCAjw6P3GBhBVEiwAJPjmLiKXUbQWx-DXSYviLIAvGzkM4obUzgoSuu2c0hHYeSQ98ViAVV3mfRoCsUIQAvD_BwE",
+    "featurePageName": "福山駅で美眉(眉サロン)が人気のまつげサロン｜ホットペッパービューティー"
+  },
+  {
+    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw094/pre34/city20700000/",
+    "type": "special",
+    "salonName": "ケイトステージラッシュ",
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw094/pre34/city20700000/",
+    "featurePageName": "福山市で美眉(眉サロン)が人気のまつげサロン｜ホットペッパービューティー"
+  },
+  {
+    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw094/stc9952340/",
+    "type": "special",
+    "salonName": "ケイトステージラッシュ",
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw094/stc9952340/",
+    "featurePageName": "福山駅で美眉(眉サロン)が人気のまつげサロン｜ホットペッパービューティー"
   }
 ]

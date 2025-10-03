@@ -421,45 +421,35 @@ def check_meo_ranking(driver, keyword, location_name):
             if os.path.exists(temp_png_path):
                 os.remove(temp_png_path)
 
-        # ---【抜本対策】HTML構造ではなく、ページ内部のJavaScriptデータから店舗情報を抽出 ---
-        yield sse_format({"status": "ページ内部データを解析しています..."})
-        html = driver.page_source
-        soup = BeautifulSoup(html, 'lxml')
-        scripts = soup.find_all('script')
-        
+        # --- 店舗情報解析ロジック ---
         found_salons = []
-        
-        # --- 新しいシンプルな解析ロジック ---
-        # 複数回スクロールして、表示されるすべての店舗情報を取得する
         try:
             processed_aria_labels = set()
-            for i in range(3): # 3回スクロールして最大60件程度を試みる
+            for i in range(3):
                 yield sse_format({"status": f"検索結果を解析中... ({i+1}/3)"})
                 html = driver.page_source
                 soup = BeautifulSoup(html, 'lxml')
                 
-                # 検索結果の各項目を囲むdiv要素を取得 (jsaction属性を持つことが多い)
                 result_blocks = soup.select('div[role="feed"] > div > div[jsaction]')
-
                 for item_block in result_blocks:
                     # 広告要素は除外
                     if item_block.find('span', string=re.compile(r'\b広告\b')):
                         continue
 
-                    # 店舗名は aria-label に含まれることが多い
-                    # aタグだけでなく、div自体がaria-labelを持つ場合も考慮
-                    name_element = item_block.find(['a', 'div'], {'aria-label': True})
-                    if name_element:
+                    name_element = item_block.find('a', {'aria-label': True})
+                    if name_element and name_element['aria-label'] not in processed_aria_labels:
                         salon_name = name_element['aria-label'].strip()
-                        # 重複と、明らかに店舗名ではないUIテキストを除外
-                        if salon_name and salon_name not in processed_aria_labels and "フィルタ" not in salon_name and "検索結果" not in salon_name:
-                            found_salons.append({"rank": len(found_salons) + 1, "foundSalonName": salon_name})
-                            processed_aria_labels.add(salon_name)
+                        found_salons.append({"rank": len(found_salons) + 1, "foundSalonName": salon_name})
+                        processed_aria_labels.add(salon_name)
 
                 # スクロールして新しい項目を読み込む
-                scroll_target = driver.find_element(By.CSS_SELECTOR, scrollable_element_selector)
-                driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", scroll_target)
-                time.sleep(2.5) # 読み込み待機
+                try:
+                    scroll_target = driver.find_element(By.CSS_SELECTOR, scrollable_element_selector)
+                    driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", scroll_target)
+                    time.sleep(2.5) # 読み込み待機
+                except Exception as scroll_error:
+                    app.logger.warning(f"スクロール中にエラーが発生しました: {scroll_error}。ループを中断します。")
+                    break
         except Exception as e:
             app.logger.error(f"MEOのHTML解析中にエラーが発生しました: {e}")
             # エラーが発生しても、それまでに取得した情報で処理を続ける

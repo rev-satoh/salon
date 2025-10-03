@@ -156,6 +156,32 @@
                     コピー元の検索地点に登録されている全てのキーワードを、新しい検索地点のタスクとして一括で追加します。
                 </small>
             </div>
+            <!-- HPB通常タスク一括コピー機能 -->
+            <div id="hpbNormalTaskCopySection" style="display: none; padding-top: 15px; margin-top: 15px; border-top: 1px solid #e5e5e7;">
+                <h4 style="margin-top: 0; margin-bottom: 10px; font-size: 16px; font-weight: 600;">HPB通常タスクを別エリアにコピー</h4>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <select id="copySourceArea" style="padding: 6px 10px; font-size: 14px; border-radius: 6px;"></select>
+                    <span style="font-weight: bold;">→</span>
+                    <select id="copyDestArea" style="padding: 6px 10px; font-size: 14px; border-radius: 6px; flex-grow: 1;"></select>
+                    <button type="button" id="executeHpbNormalCopyButton" class="button-secondary" style="padding: 6px 12px; font-size: 13px;">コピー実行</button>
+                </div>
+                <small style="display: block; margin-top: 8px; color: #6c6c70; font-size: 12px;">
+                    コピー元のエリアに登録されている全てのキーワードを、新しいエリアのタスクとして一括で追加します。
+                </small>
+            </div>
+            <!-- HPB特集タスク一括コピー機能 -->
+            <div id="hpbSpecialTaskCopySection" style="display: none; padding-top: 15px; margin-top: 15px; border-top: 1px solid #e5e5e7;">
+                <h4 style="margin-top: 0; margin-bottom: 10px; font-size: 16px; font-weight: 600;">HPB特集タスクを別ページにコピー</h4>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <select id="copySourceSpecialPage" style="padding: 6px 10px; font-size: 14px; border-radius: 6px;"></select>
+                    <span style="font-weight: bold;">→</span>
+                    <input type="text" id="copyDestSpecialPageUrl" placeholder="コピー先の特集ページURL" style="padding: 6px 10px; font-size: 14px; flex-grow: 1;">
+                    <button type="button" id="executeHpbSpecialCopyButton" class="button-secondary" style="padding: 6px 12px; font-size: 13px;">コピー実行</button>
+                </div>
+                <small style="display: block; margin-top: 8px; color: #6c6c70; font-size: 12px;">
+                    コピー元の特集ページに登録されている全てのサロンを、新しい特集ページのタスクとして一括で追加します。
+                </small>
+            </div>
         </div>
 
         <!-- 手動計測セクション -->
@@ -269,6 +295,12 @@
             const specialSearchInputs = document.getElementById('specialSearchInputs');
             const googleMapSearchInputs = document.getElementById('googleMapSearchInputs');
             const searchTypeToggle = document.getElementById('searchTypeToggle');
+            const meoCopySection = document.getElementById('meoTaskCopySection');
+            const hpbNormalTaskCopySection = document.getElementById('hpbNormalTaskCopySection');
+            const hpbSpecialTaskCopySection = document.getElementById('hpbSpecialTaskCopySection');
+
+
+
 
 
             // グラフで使用する色のリスト
@@ -349,7 +381,26 @@
                 "九州・沖縄": {
                     code: "SG",
                     middleAreas: {
-                        "福岡": { code: "GA", smallAreas: {} }, "北九州": { code: "GB", smallAreas: {} }, "久留米": { code: "GH", smallAreas: {} },
+                        "福岡": {
+                            code: "GA",
+                            smallAreas: {
+                                "天神・大名": { code: "X168" },
+                                "今泉・警固・薬院": { code: "X169" },
+                                "赤坂・大濠・西新周辺": { code: "X164" },
+                                "博多駅周辺": { code: "X163" },
+                                "中洲・住吉・春吉": { code: "X165" },
+                                "平尾・高宮・大橋・井尻": { code: "X166" },
+                                "春日・大野城・筑紫野周辺": { code: "X171" },
+                                "姪浜周辺": { code: "X167" },
+                                "七隈沿線": { code: "X170" },
+                                "箱崎・千早・香椎周辺": { code: "X162" },
+                                "糟屋・新宮・古賀・福津": { code: "X172" },
+                                "大牟田・柳川": { code: "X175" },
+                                "飯塚・田川": { code: "X176" },
+                                "宗像・遠賀": { code: "X177" },
+                                "糸島・その他福岡エリア": { code: "X178" }
+                            }
+                        }, "北九州": { code: "GB", smallAreas: {} }, "久留米": { code: "GH", smallAreas: {} },
                         "長崎": { code: "GD", smallAreas: {} }, "熊本": { code: "GE", smallAreas: {} }, "大分": { code: "GF", smallAreas: {} },
                         "宮崎": { code: "GG", smallAreas: {} }, "鹿児島": { code: "GC", smallAreas: {} }, "佐賀": { code: "GJ", smallAreas: {} }, "沖縄": { code: "GI", smallAreas: {} }
                     }
@@ -436,18 +487,25 @@
                 // グラフの表示を切り替えるために履歴を再読み込み・再描画する
                 // MEOの履歴機能は今後の拡張で対応
                 fetchAndDisplayAutoHistory();
-                // タスク一覧の表示も切り替える
-                const meoCopySection = document.getElementById('meoTaskCopySection');
+
+                // --- コピー機能セクションの表示切り替え ---
+                meoCopySection.style.display = 'none';
+                hpbNormalTaskCopySection.style.display = 'none';
+                hpbSpecialTaskCopySection.style.display = 'none';
+
                 if (clickedButton.dataset.type === 'google') {
                     meoCopySection.style.display = 'block';
                     updateCopySourceLocations();
-                } else {
-                    meoCopySection.style.display = 'none';
+                } else if (clickedButton.dataset.type === 'normal') {
+                    hpbNormalTaskCopySection.style.display = 'block';
+                    updateHpbNormalCopySources();
+                } else if (clickedButton.dataset.type === 'special') {
+                    hpbSpecialTaskCopySection.style.display = 'block';
+                    updateHpbSpecialCopySources();
                 }
 
                 renderAutoTasks();
             });
-
             let rankChart = null; // グラフのインスタンスを保持する変数
 
             // --- ヘルパー関数 ---
@@ -928,6 +986,138 @@
                 alert(`タスクのコピーが完了しました。「${destLocation}」のタスク一覧を確認してください。`);
                 copyDestInput.value = ''; // 入力欄をクリア
             });
+            
+            // --- HPB通常タスクコピー機能 ---
+            const copySourceAreaSelect = document.getElementById('copySourceArea');
+            const copyDestAreaSelect = document.getElementById('copyDestArea');
+            const hpbNormalCopyButton = document.getElementById('executeHpbNormalCopyButton');
+
+            function updateHpbNormalCopySources() {
+                const normalTasks = autoTasks.filter(task => (task.type || 'normal') === 'normal');
+                const sourceAreas = [...new Set(normalTasks.map(task => task.areaName))];
+                
+                copySourceAreaSelect.innerHTML = '';
+                if (sourceAreas.length === 0) {
+                    const option = document.createElement('option');
+                    option.textContent = 'コピー元のエリアがありません';
+                    option.disabled = true;
+                    copySourceAreaSelect.appendChild(option);
+                    hpbNormalCopyButton.disabled = true;
+                } else {
+                    sourceAreas.sort((a,b) => a.localeCompare(b, 'ja'));
+                    sourceAreas.forEach(area => {
+                        const option = document.createElement('option');
+                        option.value = area;
+                        option.textContent = area;
+                        copySourceAreaSelect.appendChild(option);
+                    });
+                    hpbNormalCopyButton.disabled = false;
+                }
+
+                // コピー先プルダウンを生成
+                copyDestAreaSelect.innerHTML = '';
+                Object.keys(areas).forEach(largeAreaName => {
+                    const largeArea = areas[largeAreaName];
+                    Object.keys(largeArea.middleAreas).forEach(middleAreaName => {
+                        const option = document.createElement('option');
+                        option.value = JSON.stringify({
+                            areaName: middleAreaName,
+                            areaCodes: { serviceAreaCd: largeArea.code, middleAreaCd: largeArea.middleAreas[middleAreaName].code }
+                        });
+                        option.textContent = `${largeAreaName} > ${middleAreaName}`;
+                        copyDestAreaSelect.appendChild(option);
+                    });
+                });
+            }
+
+            hpbNormalCopyButton.addEventListener('click', () => {
+                const sourceAreaName = copySourceAreaSelect.value;
+                if (!copyDestAreaSelect.value) {
+                    alert('コピー先のエリアを選択してください。');
+                    return;
+                }
+                const { areaName: destAreaName, areaCodes: destAreaCodes } = JSON.parse(copyDestAreaSelect.value);
+
+                if (!sourceAreaName || !destAreaName) {
+                    alert('コピー元とコピー先の両方を指定してください。');
+                    return;
+                }
+                if (sourceAreaName === destAreaName) {
+                    alert('コピー元とコピー先が同じです。');
+                    return;
+                }
+
+                const tasksToCopy = autoTasks.filter(task => (task.type || 'normal') === 'normal' && task.areaName === sourceAreaName);
+                if (!confirm(`「${sourceAreaName}」の${tasksToCopy.length}個のキーワードを「${destAreaName}」にコピーしますか？`)) {
+                    return;
+                }
+
+                tasksToCopy.forEach(task => {
+                    const newTaskId = `${task.salonName}-${destAreaName}-${task.serviceKeyword}`;
+                    if (!autoTasks.some(t => t.id === newTaskId)) {
+                        autoTasks.push({
+                            id: newTaskId,
+                            type: 'normal',
+                            salonName: task.salonName,
+                            areaName: destAreaName,
+                            areaCodes: destAreaCodes,
+                            serviceKeyword: task.serviceKeyword
+                        });
+                    }
+                });
+
+                saveAutoTasks();
+                renderAutoTasks();
+                alert(`タスクのコピーが完了しました。「${destAreaName}」のタスク一覧を確認してください。`);
+            });
+
+            // --- HPB特集タスクコピー機能 ---
+            const copySourceSpecialPageSelect = document.getElementById('copySourceSpecialPage');
+            const copyDestSpecialPageUrlInput = document.getElementById('copyDestSpecialPageUrl');
+            const hpbSpecialCopyButton = document.getElementById('executeHpbSpecialCopyButton');
+
+            function updateHpbSpecialCopySources() {
+                const specialTasks = autoTasks.filter(task => task.type === 'special');
+                const sourcePages = [...new Map(specialTasks.map(task => [task.featurePageUrl, task.featurePageName || task.featurePageUrl])).entries()];
+
+                copySourceSpecialPageSelect.innerHTML = '';
+                if (sourcePages.length === 0) {
+                    const option = document.createElement('option');
+                    option.textContent = 'コピー元の特集ページがありません';
+                    option.disabled = true;
+                    copySourceSpecialPageSelect.appendChild(option);
+                    hpbSpecialCopyButton.disabled = true;
+                } else {
+                    sourcePages.forEach(([url, name]) => {
+                        const option = document.createElement('option');
+                        option.value = url;
+                        option.textContent = name;
+                        copySourceSpecialPageSelect.appendChild(option);
+                    });
+                    hpbSpecialCopyButton.disabled = false;
+                }
+            }
+
+            hpbSpecialCopyButton.addEventListener('click', () => {
+                const sourceUrl = copySourceSpecialPageSelect.value;
+                const destUrl = copyDestSpecialPageUrlInput.value.trim();
+                if (!sourceUrl || !destUrl) { alert('コピー元とコピー先の両方を指定してください。'); return; }
+                if (sourceUrl === destUrl) { alert('コピー元とコピー先が同じです。'); return; }
+
+                const tasksToCopy = autoTasks.filter(task => task.type === 'special' && task.featurePageUrl === sourceUrl);
+                if (!confirm(`「${copySourceSpecialPageSelect.options[copySourceSpecialPageSelect.selectedIndex].text}」の${tasksToCopy.length}個のサロンを新しいURLにコピーしますか？`)) { return; }
+
+                tasksToCopy.forEach(task => {
+                    const newTaskId = `${task.salonName}-${destUrl}`;
+                    if (!autoTasks.some(t => t.id === newTaskId)) {
+                        autoTasks.push({ id: newTaskId, type: 'special', salonName: task.salonName, featurePageUrl: destUrl });
+                    }
+                });
+                saveAutoTasks();
+                renderAutoTasks();
+                alert('タスクのコピーが完了しました。');
+                copyDestSpecialPageUrlInput.value = '';
+            });
 
             // --- 自動計測機能 ---
             let autoTasks = [];
@@ -938,6 +1128,8 @@
                     const response = await fetch(`/api/auto-tasks?_=${new Date().getTime()}`);
                     autoTasks = await response.json();
                     updateCopySourceLocations(); // MEOコピー元のプルダウンも更新
+                    updateHpbNormalCopySources(); // HPB通常コピー元のプルダウンも更新
+                    updateHpbSpecialCopySources(); // HPB特集コピー元のプルダウンも更新
                     renderAutoTasks();
                 } catch (error) {
                     console.error('自動計測タスクの読み込みに失敗しました:', error);
@@ -971,7 +1163,7 @@
                     selectAllContainer.style.display = 'none';
                     return;
                 }
-                selectAllContainer.style.display = 'block';
+                selectAllContainer.style.display = 'flex'; // blockからflexに変更
                 
                 // --- MEOの場合のみグループ化 ---
                 if (activeSearchType === 'google') {
@@ -1032,18 +1224,60 @@
                             });
                         });
                     });
-                } else { // 通常検索と特集ページの場合
-                    // --- 特集ページのタイトルをURLごとに集約 ---
-                    const urlToTitleMap = new Map();
-                    if (activeSearchType === 'special') {
-                        autoTasks.forEach(task => {
-                            if (task.type === 'special' && task.featurePageUrl && task.featurePageName) {
-                                if (!urlToTitleMap.has(task.featurePageUrl)) {
-                                    urlToTitleMap.set(task.featurePageUrl, task.featurePageName);
-                                }
+                } else if (activeSearchType === 'normal') { // HPB通常検索のグループ化を追加
+                    const groupedTasks = filteredTasks.reduce((acc, task) => {
+                        const groupKey = task.areaName || 'エリア未設定';
+                        if (!acc[groupKey]) {
+                            acc[groupKey] = [];
+                        }
+                        acc[groupKey].push(task);
+                        return acc;
+                    }, {});
+
+                    const sortedGroups = Object.keys(groupedTasks).sort((a, b) => a.localeCompare(b, 'ja'));
+
+                    sortedGroups.forEach(groupKey => {
+                        const tasksInGroup = groupedTasks[groupKey];
+                        
+                        const groupHeader = document.createElement('li');
+                        groupHeader.style.padding = '10px 8px';
+                        groupHeader.style.backgroundColor = '#f0f0f5';
+                        groupHeader.style.fontWeight = '600';
+                        groupHeader.style.marginTop = '10px';
+                        groupHeader.style.borderRadius = '6px';
+                        groupHeader.style.display = 'flex';
+                        groupHeader.style.alignItems = 'center';
+
+                        const groupCheckbox = document.createElement('input');
+                        groupCheckbox.type = 'checkbox';
+                        groupCheckbox.style.marginRight = '10px';
+                        groupCheckbox.dataset.groupKey = groupKey;
+                        groupHeader.appendChild(groupCheckbox);
+
+                        const groupLabel = document.createElement('label');
+                        groupLabel.textContent = groupKey;
+                        groupLabel.style.cursor = 'pointer';
+                        groupLabel.style.flexGrow = '1';
+                        groupLabel.onclick = () => groupCheckbox.click();
+                        groupHeader.appendChild(groupLabel);
+
+                        autoTaskList.appendChild(groupHeader);
+
+                        tasksInGroup.sort((a, b) => (a.serviceKeyword || '').localeCompare(b.serviceKeyword || '', 'ja'));
+                        tasksInGroup.forEach(task => renderTaskItem(task, autoTaskList, groupKey));
+                    });
+                } else { // 特集ページの場合 (グループ化なし)
+                    // --- 特集ページのタイトルをURLごとに集約するロジックを改善 ---
+                    const urlToTitleMap = filteredTasks.reduce((map, task) => {
+                        if (task.type === 'special' && task.featurePageUrl) {
+                            // 既にタイトルがMapにあるか、現在のタスクにタイトルがあれば更新
+                            const existingTitle = map.get(task.featurePageUrl);
+                            if (!existingTitle && task.featurePageName) {
+                                map.set(task.featurePageUrl, task.featurePageName);
                             }
-                        });
-                    }
+                        }
+                        return map;
+                    }, new Map());
 
                     // ソートして表示
                     filteredTasks.sort((a, b) => (a.id).localeCompare(b.id, 'ja'));
@@ -1064,12 +1298,19 @@
                 li.style.borderBottom = '1px solid #eee';
                 li.style.wordBreak = 'break-all';
 
+                // グループ化されている場合はインデントを追加
+                if (groupKey) {
+                    li.style.paddingLeft = '20px';
+                }
+
                 const taskLabel = document.createElement('label');
                 taskLabel.style.display = 'flex';
                 taskLabel.style.alignItems = 'center';
                 taskLabel.style.flexGrow = '1';
                 taskLabel.style.cursor = 'pointer';
                 taskLabel.style.marginRight = '10px';
+                // グループチェックボックスと連動させるためのイベントを追加
+                taskLabel.onclick = (e) => { if (e.target.tagName !== 'INPUT') checkbox.click(); };
 
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
@@ -1082,7 +1323,7 @@
                 
                 const taskText = document.createElement('span');
                 if (taskType === 'normal') {
-                    taskText.textContent = `[${task.areaName}] ${task.serviceKeyword} - ${task.salonName}`;
+                    taskText.textContent = `${task.serviceKeyword} - ${task.salonName}`;
                 } else if (taskType === 'special') {
                     const pageTitle = urlToTitleMap.get(task.featurePageUrl) || task.featurePageName || task.featurePageUrl.replace(/^(https?:\/\/)?[^/]+/, '');
                     taskText.textContent = `[${task.salonName}] ${pageTitle}`;
@@ -1110,6 +1351,19 @@
                 };
                 li.appendChild(deleteButton);
                 parentElement.appendChild(li);
+
+                // グループチェックボックスのイベントリスナー
+                const groupCheckbox = parentElement.querySelector(`input[type="checkbox"][data-group-key="${groupKey}"]`);
+                if (groupCheckbox) {
+                    groupCheckbox.addEventListener('change', (e) => {
+                        const isChecked = e.target.checked;
+                        const key = e.target.dataset.groupKey;
+                        // 同じ親要素内の、同じグループキーを持つタスクチェックボックスの状態を同期
+                        parentElement.querySelectorAll(`.auto-task-checkbox[data-group-key="${key}"]`).forEach(cb => {
+                            cb.checked = isChecked;
+                        });
+                    });
+                }
             };
 
             addAutoTaskButton.addEventListener('click', () => {
@@ -1422,7 +1676,10 @@
                         return acc;
                     }, {});
 
-                    Object.entries(groupedHistory).forEach(([groupKey, groupData]) => {
+                    // --- グラフの表示順をグループキー（タイトル）のあいうえお順にソート ---
+                    const sortedGroupedHistory = Object.entries(groupedHistory).sort((a, b) => a[0].localeCompare(b[0], 'ja'));
+
+                    sortedGroupedHistory.forEach(([groupKey, groupData]) => {
                         const graphWrapper = document.createElement('div');
                         graphWrapper.style.position = 'relative';
                         graphWrapper.style.height = '220px';
