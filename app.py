@@ -10,6 +10,7 @@ import json
 import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -37,6 +38,7 @@ AUTO_TASKS_FILE = 'auto_tasks.json'
 HISTORY_FILE_NORMAL = 'history_normal.json'
 HISTORY_FILE_SPECIAL = 'history_special.json'
 HISTORY_FILE_MEO = 'history_meo.json'
+HISTORY_FILE_SEO = 'history_seo.json' # SEO履歴ファイルを追加
 SCHEDULER_CONFIG_FILE = 'scheduler_config.json'
 
 def save_json_file(filename, data):
@@ -67,6 +69,8 @@ def get_history_filename(task_type):
         return HISTORY_FILE_SPECIAL
     elif task_type == 'google':
         return HISTORY_FILE_MEO
+    elif task_type == 'seo':
+        return HISTORY_FILE_SEO
     else: # 'normal' or default
         return HISTORY_FILE_NORMAL
 
@@ -488,8 +492,6 @@ def check_meo_ranking_api():
         return jsonify({"error": "サロン名、キーワード、検索地点のすべてが必要です"}), 400
 
     def generate_stream():
-        # MEO計測用の共通WebDriverセットアップをここで行う
-        # （check_ranking_apiのものを参考に）
         chrome_options = Options()
         chrome_options.add_argument("--headless")
         chrome_options.add_argument("--window-size=1200,800")
@@ -498,6 +500,164 @@ def check_meo_ranking_api():
             driver = webdriver.Chrome(options=chrome_options)
             driver.set_page_load_timeout(30)
             yield from check_meo_ranking(driver, keyword, location)
+        finally:
+            if driver:
+                driver.quit()
+
+    return app.response_class(generate_stream(), mimetype='text/event-stream')
+
+# --- SEO順位計測 ---
+def check_seo_ranking(driver, url_to_find, keyword, location_name=None):
+    """Google検索での掲載順位をスクレイピングするジェネレータ関数"""
+    last_url_checked = ""
+    screenshot_path = None
+    found_results = []
+
+    try:
+        # --- 位置情報が指定されていれば設定 ---
+        if location_name:
+            try:
+                yield sse_format({"status": f"「{location_name}」の座標を取得しています..."})
+                latitude, longitude = get_lat_lng_from_address(location_name)
+                yield sse_format({"status": f"座標 ({latitude:.4f}, {longitude:.4f}) を取得しました。"})
+                time.sleep(0.5)
+                yield sse_format({"status": "ブラウザの位置情報を設定しています..."})
+                driver.execute_cdp_cmd(
+                    "Emulation.setGeolocationOverride",
+                    {"latitude": latitude, "longitude": longitude, "accuracy": 100},
+                )
+            except Exception as e:
+                yield sse_format({"error": f"位置情報の設定中にエラーが発生しました: {e}"})
+                return
+
+        # --- Cookie同意画面をスキップ ---
+        yield sse_format({"status": "Cookieポリシーに同意しています..."})
+        driver.get("https://www.google.com")
+        cookie_consent = {"name": "SOCS", "value": "CONSENT+PENDING+001"}
+        driver.add_cookie(cookie_consent)
+        time.sleep(0.5)
+
+        # --- ページネーション対応の検索ロジック ---
+        rank_offset = 0
+        for page in range(1, 11): # 最大10ページ（約100位）までチェック
+            if page == 1:
+                # 最初のページ
+                search_url = f"https://www.google.com/search?q={urllib.parse.quote(keyword)}&hl=ja"
+                yield sse_format({"status": f"Googleで「{keyword}」を検索しています..."})
+                driver.get(search_url)
+                last_url_checked = driver.current_url
+                time.sleep(1)
+
+                # --- 1ページ目でのみスクリーンショット撮影 ---
+                yield sse_format({"status": "スクリーンショットを撮影しています..."})
+                total_height = driver.execute_script("return document.body.parentNode.scrollHeight")
+                driver.set_window_size(1200, total_height)
+                time.sleep(0.5)
+
+                timestamp = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
+                safe_keyword = re.sub(r'[\\/:*?"<>|]', '_', keyword)
+                base_filename = f"seo_{timestamp}_{safe_keyword}"
+                temp_png_path = os.path.join('screenshots', f"temp_{base_filename}.png")
+                driver.save_screenshot(temp_png_path)
+
+                jpeg_filename = f"{base_filename}.jpg"
+                jpeg_filepath = os.path.join('screenshots', jpeg_filename)
+                try:
+                    with Image.open(temp_png_path) as img:
+                        if img.mode == 'RGBA': img = img.convert('RGB')
+                        img.save(jpeg_filepath, 'jpeg', quality=30)
+                    screenshot_path = jpeg_filepath
+                finally:
+                    if os.path.exists(temp_png_path): os.remove(temp_png_path)
+
+            else:
+                # 2ページ目以降は「次へ」ボタンを探してクリック
+                yield sse_format({"status": f"{page}ページ目を検索しています..."})
+                try:
+                    # 「次へ」のテキストを持つリンクを探す
+                    next_button = driver.find_element(By.XPATH, "//a[span[text()='次へ']]")
+                    driver.execute_script("arguments[0].click();", next_button)
+                    time.sleep(2) # ページ遷移を待つ
+                except Exception:
+                    # 「次へ」ボタンがなければ終了
+                    yield sse_format({"status": "次のページが見つかりませんでした。検索を終了します。"})
+                    break
+
+            # --- 検索結果の解析 ---
+            soup = BeautifulSoup(driver.page_source, 'lxml')
+            search_results = soup.select('div[data-hveid]')
+            
+            page_rank = 0
+            for result_block in search_results:
+                link_tag = result_block.find('a', href=True)
+                h3_tag = result_block.find('h3')
+                if not link_tag or not h3_tag:
+                    continue
+                
+                page_rank += 1
+                found_url = link_tag['href']
+                
+                normalized_found_url = found_url.replace('https://', '').replace('http://', '').replace('www.', '').rstrip('/')
+                normalized_target_url = url_to_find.replace('https://', '').replace('http://', '').replace('www.', '').rstrip('/')
+
+                if normalized_target_url in normalized_found_url:
+                    # 既に結果が見つかっていても、より上位の結果を優先するため上書きはしない
+                    if not found_results:
+                        found_results.append({
+                            "rank": rank_offset + page_rank,
+                            "title": h3_tag.get_text(strip=True),
+                            "url": found_url
+                        })
+            
+            rank_offset += page_rank
+            # ターゲットURLが見つかったら、それ以降のページは検索しない
+            if found_results:
+                yield sse_format({"status": "目的のURLを発見しました。検索を終了します。"})
+                break
+
+        # --- 最終結果の整形 ---
+        final_result = {
+            "total_count": rank_offset, # オーガニック検索の件数
+            "screenshot_path": screenshot_path, # 撮影したスクリーンショットのパスを結果に含める
+            "url": last_url_checked,
+            "html": driver.page_source
+        }
+        if found_results:
+            final_result["results"] = found_results
+        else:
+            final_result["rank"] = "圏外" # 100位以内に見つからなかった場合
+
+        yield sse_format({"final_result": final_result, "status": "完了"})
+
+    except Exception as e:
+        app.logger.error(f"SEO計測処理中にエラーが発生しました: {e}")
+        yield sse_format({"error": f"ブラウザの操作中にエラーが発生しました: {e}", "url": last_url_checked})
+
+@app.route('/check-seo-ranking', methods=['GET'])
+def check_seo_ranking_api():
+    url_to_find = request.args.get('url')
+    keyword = request.args.get('keyword')
+    location = request.args.get('location') # location パラメータを受け取る
+
+    if not all([url_to_find, keyword]):
+        return jsonify({"error": "URLとキーワードの両方が必要です"}), 400
+
+    def generate_stream():
+        # --- SEO計測用のボット検出回避オプション ---
+        user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36'
+        chrome_options = Options()
+        chrome_options.add_argument(f'user-agent={user_agent}')
+        chrome_options.add_argument('--headless=new')
+        chrome_options.add_argument("--window-size=1200,800")
+        chrome_options.add_argument('--disable-blink-features=AutomationControlled')
+        chrome_options.add_argument('--accept-lang=ja-JP,ja;q=0.9,en-US;q=0.8,en;q=0.7')
+        chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        chrome_options.add_experimental_option('useAutomationExtension', False)
+        driver = None
+        try:
+            driver = webdriver.Chrome(options=chrome_options)
+            driver.set_page_load_timeout(30)
+            yield from check_seo_ranking(driver, url_to_find, keyword, location) # locationを渡す
         finally:
             if driver:
                 driver.quit()
@@ -602,12 +762,14 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
         history_normal = load_json_file(HISTORY_FILE_NORMAL)
         history_special = load_json_file(HISTORY_FILE_SPECIAL)
         history_meo = load_json_file(HISTORY_FILE_MEO)
+        history_seo = load_json_file(HISTORY_FILE_SEO) # SEO履歴を読み込む
         today = datetime.date.today().strftime('%Y/%m/%d')
 
         # --- ロジック見直し：タスクをタイプ別に分割し、特集ページはURLでグループ化 ---
         normal_tasks = []
         special_tasks_grouped_by_url = {}
         meo_tasks = []
+        seo_tasks = [] # ループの外で初期化
         for task in tasks_to_run:
             task_type = task.get('type', 'normal')
             if task_type == 'special':
@@ -617,18 +779,24 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
                 special_tasks_grouped_by_url[url].append(task)
             elif task_type == 'google':
                 meo_tasks.append(task)
+            elif task_type == 'seo':
+                seo_tasks.append(task)
             else:
                 normal_tasks.append(task)
 
-        total_job_count = len(normal_tasks) + len(special_tasks_grouped_by_url) + len(meo_tasks)
+        total_job_count = len(normal_tasks) + len(special_tasks_grouped_by_url) + len(meo_tasks) + len(seo_tasks)
         job_counter = 0
 
         # --- 高速化のための変更: WebDriverを一度だけ起動 ---
+        user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36'
         chrome_options = Options()
-        chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--window-size=1200,800")
-        user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
         chrome_options.add_argument(f'user-agent={user_agent}')
+        chrome_options.add_argument('--headless=new')
+        chrome_options.add_argument("--window-size=1200,800")
+        chrome_options.add_argument('--disable-blink-features=AutomationControlled')
+        chrome_options.add_argument('--accept-lang=ja-JP,ja;q=0.9,en-US;q=0.8,en;q=0.7')
+        chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        chrome_options.add_experimental_option('useAutomationExtension', False)
         
         driver = None
         try:
@@ -764,6 +932,40 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
                 else:
                     time.sleep(10)
 
+            # --- 4. SEOタスクの処理 ---
+            for task in seo_tasks:
+                job_counter += 1
+                task_id = task['id']
+                task_name = f"[{task.get('keyword')}]"
+
+                if stream_progress:
+                    yield sse_format({"progress": {"current": job_counter, "total": total_job_count, "task": task}})
+                else:
+                    app.logger.info(f"SEOタスク '{task_id}' の計測を開始...")
+
+                result = {}
+                scraper_generator = check_seo_ranking(driver, task['url'], task['keyword'], task.get('searchLocation'))
+                for sse_message in scraper_generator:
+                    if stream_progress:
+                        data = json.loads(sse_message.split('data: ')[1])
+                        if 'status' in data:
+                            yield sse_format({"status": data['status'], "task_name": task_name})
+                    data = json.loads(sse_message.split('data: ')[1])
+                    if 'final_result' in data:
+                        result = data['final_result']
+
+                rank_to_save = result.get('results', [{}])[0].get('rank', '圏外')
+                screenshot_path_to_save = result.get('screenshot_path')
+
+                update_history(history_seo, task, today, rank_to_save, screenshot_path_to_save)
+                app.logger.info(f"SEOタスク '{task_id}' の結果: {rank_to_save}位")
+
+                if stream_progress:
+                    yield sse_format({"result": {"rank": rank_to_save, "total_count": result.get('total_count'), "task_name": task_name, "task_id": task_id}})
+                    time.sleep(1)
+                else:
+                    time.sleep(10)
+
         except Exception as e:
             app.logger.error(f"自動計測ジョブ全体でエラーが発生しました: {e}")
         finally:
@@ -773,6 +975,7 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
             save_json_file(HISTORY_FILE_NORMAL, history_normal)
             save_json_file(HISTORY_FILE_SPECIAL, history_special)
             save_json_file(HISTORY_FILE_MEO, history_meo)
+            save_json_file(HISTORY_FILE_SEO, history_seo) # SEO履歴を保存
             # 特集ページ名が更新された可能性があるので、タスクファイルも保存
             save_json_file(AUTO_TASKS_FILE, all_tasks)
             
@@ -853,7 +1056,8 @@ def get_auto_history():
     history_normal = load_json_file(HISTORY_FILE_NORMAL)
     history_special = load_json_file(HISTORY_FILE_SPECIAL)
     history_meo = load_json_file(HISTORY_FILE_MEO)
-    all_history = history_normal + history_special + history_meo
+    history_seo = load_json_file(HISTORY_FILE_SEO) # SEO履歴を読み込む
+    all_history = history_normal + history_special + history_meo + history_seo
     return jsonify(all_history)
 
 @app.route('/api/schedule', methods=['GET', 'POST'])

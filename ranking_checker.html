@@ -113,6 +113,7 @@
             <button type="button" class="toggle-button active" data-type="normal">HPB 通常</button>
             <button type="button" class="toggle-button" data-type="special">HPB 特集</button>
             <button type="button" class="toggle-button" data-type="google">MEO</button>
+            <button type="button" class="toggle-button" data-type="seo">SEO</button>
         </div>
 
         <!-- 自動計測セクション -->
@@ -182,6 +183,19 @@
                     コピー元の特集ページに登録されている全てのサロンを、新しい特集ページのタスクとして一括で追加します。
                 </small>
             </div>
+            <!-- SEOタスク一括コピー機能 -->
+            <div id="seoTaskCopySection" style="display: none; padding-top: 15px; margin-top: 15px; border-top: 1px solid #e5e5e7;">
+                <h4 style="margin-top: 0; margin-bottom: 10px; font-size: 16px; font-weight: 600;">SEOタスクを別URLにコピー</h4>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <select id="copySourceSeoUrl" style="padding: 6px 10px; font-size: 14px; border-radius: 6px;"></select>
+                    <span style="font-weight: bold;">→</span>
+                    <input type="text" id="copyDestSeoUrl" placeholder="コピー先のURL" style="padding: 6px 10px; font-size: 14px; flex-grow: 1;">
+                    <button type="button" id="executeSeoCopyButton" class="button-secondary" style="padding: 6px 12px; font-size: 13px;">コピー実行</button>
+                </div>
+                <small style="display: block; margin-top: 8px; color: #6c6c70; font-size: 12px;">
+                    コピー元のURLに登録されている全てのキーワードを、新しいURLのタスクとして一括で追加します。
+                </small>
+            </div>
         </div>
 
         <!-- 手動計測セクション -->
@@ -243,6 +257,22 @@
                         <input type="text" id="googleKeywordInput" placeholder="Googleマップで検索するキーワードを入力">
                     </div>
                 </div>
+
+                <!-- SEO検索用の入力フォーム -->
+                <div id="seoSearchInputs" style="display: none;">
+                    <div class="form-group">
+                        <label for="seoUrlInput">順位を調べたいページのURL</label>
+                        <input type="text" id="seoUrlInput" placeholder="例: https://your-salon.com/blog/post-123">
+                    </div>
+                    <div class="form-group">
+                        <label for="seoLocationInput">検索地点（任意）</label>
+                        <input type="text" id="seoLocationInput" placeholder="例: 福山駅, 広島市">
+                    </div>
+                    <div class="form-group">
+                        <label for="seoKeywordInput">検索キーワード</label>
+                        <input type="text" id="seoKeywordInput" placeholder="Googleで検索するキーワードを入力">
+                    </div>
+                </div>
                 <div class="button-container">
                     <button type="button" id="checkRankButton" class="button-primary">順位を計測</button>
                     <button type="button" id="addAutoTaskButton" class="button-secondary">自動計測に追加</button>
@@ -294,10 +324,12 @@
             const normalSearchInputs = document.getElementById('normalSearchInputs');
             const specialSearchInputs = document.getElementById('specialSearchInputs');
             const googleMapSearchInputs = document.getElementById('googleMapSearchInputs');
+            const seoSearchInputs = document.getElementById('seoSearchInputs'); // SEO入力フォーム
             const searchTypeToggle = document.getElementById('searchTypeToggle');
             const meoCopySection = document.getElementById('meoTaskCopySection');
             const hpbNormalTaskCopySection = document.getElementById('hpbNormalTaskCopySection');
             const hpbSpecialTaskCopySection = document.getElementById('hpbSpecialTaskCopySection');
+            const seoTaskCopySection = document.getElementById('seoTaskCopySection'); // SEOコピーセクション
 
 
 
@@ -469,21 +501,26 @@
                 // クリックされたボタンにactiveクラスを追加
                 clickedButton.classList.add('active');
 
+                // --- 入力フォームの表示切り替え ---
+                normalSearchInputs.style.display = 'none';
+                specialSearchInputs.style.display = 'none';
+                googleMapSearchInputs.style.display = 'none';
+                seoSearchInputs.style.display = 'none';
+                // SEO以外ではサロン名入力欄を表示
+                salonNameFormGroup.style.display = 'block';
+
                 if (clickedButton.dataset.type === 'normal') {
                     normalSearchInputs.style.display = 'block';
-                    specialSearchInputs.style.display = 'none';
-                    googleMapSearchInputs.style.display = 'none';
                 } else if (clickedButton.dataset.type === 'special') {
-                    normalSearchInputs.style.display = 'none';
                     specialSearchInputs.style.display = 'block';
-                    googleMapSearchInputs.style.display = 'none';
-                    salonNameFormGroup.style.display = 'block';
-                } else { // google
-                    normalSearchInputs.style.display = 'none';
-                    specialSearchInputs.style.display = 'none';
+                } else if (clickedButton.dataset.type === 'google') {
                     googleMapSearchInputs.style.display = 'block';
-                    salonNameFormGroup.style.display = 'block'; // MEOでも自店サロン名入力欄を表示
+                } else if (clickedButton.dataset.type === 'seo') {
+                    seoSearchInputs.style.display = 'block';
+                    // SEOではサロン名入力欄を非表示にする
+                    salonNameFormGroup.style.display = 'none';
                 }
+
                 // グラフの表示を切り替えるために履歴を再読み込み・再描画する
                 // MEOの履歴機能は今後の拡張で対応
                 fetchAndDisplayAutoHistory();
@@ -492,6 +529,7 @@
                 meoCopySection.style.display = 'none';
                 hpbNormalTaskCopySection.style.display = 'none';
                 hpbSpecialTaskCopySection.style.display = 'none';
+                seoTaskCopySection.style.display = 'none';
 
                 if (clickedButton.dataset.type === 'google') {
                     meoCopySection.style.display = 'block';
@@ -502,6 +540,9 @@
                 } else if (clickedButton.dataset.type === 'special') {
                     hpbSpecialTaskCopySection.style.display = 'block';
                     updateHpbSpecialCopySources();
+                } else if (clickedButton.dataset.type === 'seo') {
+                    seoTaskCopySection.style.display = 'block';
+                    updateSeoCopySources();
                 }
 
                 renderAutoTasks();
@@ -617,11 +658,11 @@
                         return;
                     }
                     serviceKeywords.push(featureUrl); // 特集ページはURLをキーワードとして1タスクとして扱う
-                } else { // google
+                } else if (activeSearchType === 'google') {
                     const googleKeyword = document.getElementById('googleKeywordInput').value.trim();
                     const searchLocation = document.getElementById('searchLocationInput').value.trim();
                     if (!salonName) {
-                        alert('自店のサロン名を入力してください。');
+                        alert('MEO検索では、自店のサロン名を入力してください。');
                         return;
                     }
                     if (!googleKeyword || !searchLocation) {
@@ -629,6 +670,15 @@
                         return;
                     }
                     serviceKeywords.push(googleKeyword); // MEOではキーワードは1つずつ
+                } else if (activeSearchType === 'seo') {
+                    const seoUrl = document.getElementById('seoUrlInput').value.trim();
+                    const seoKeyword = document.getElementById('seoKeywordInput').value.trim();
+                    // searchLocationは任意
+                    if (!seoUrl || !seoKeyword) {
+                        alert('SEO検索では、計測対象のURLと検索キーワードを入力してください。');
+                        return;
+                    }
+                    serviceKeywords.push(seoKeyword);
                 }
 
                 checkRankButton.disabled = true; // ボタンを無効化
@@ -668,6 +718,14 @@
                             keyword: serviceKeyword,
                             location: searchLocation,
                             // salonName: salonName // バックエンドでの照合は不要になったため削除
+                        });
+                    } else if (activeSearchType === 'seo') {
+                        const seoUrl = document.getElementById('seoUrlInput').value.trim();
+                        const seoKeyword = serviceKeyword;
+                        const seoLocation = document.getElementById('seoLocationInput').value.trim();
+                        fullKeyword = seoLocation ? `[${seoKeyword}] @${seoLocation}` : `[${seoKeyword}]`;
+                        eventSourceUrl = `/check-seo-ranking?` + new URLSearchParams({
+                            url: seoUrl, keyword: seoKeyword, location: seoLocation
                         });
                     } else { // special
                         fullKeyword = serviceKeyword; // この時点ではURLそのもの
@@ -750,6 +808,32 @@
                                     } else {
                                         resultMessageHtml = `<p>検索結果に店舗が見つかりませんでした。</p>`;
                                     }
+                                } else if (activeSearchType === 'seo') {
+                                    if (result.results && result.results.length > 0) {
+                                        const firstResult = result.results[0];
+                                        resultMessageHtml = `<p style="margin: 0; font-size: 18px; font-weight: bold;"><span style="color: #007aff; font-size: 1.3em;">${firstResult.rank}</span> 位</p>`;
+                                        
+                                        // --- SEOの履歴保存処理 ---
+                                        const seoUrl = document.getElementById('seoUrlInput').value.trim();
+                                        const seoKeyword = serviceKeyword;
+                                        const seoLocation = document.getElementById('seoLocationInput').value.trim();
+                                        const taskId = `[seo]-${seoUrl}-${seoKeyword}` + (seoLocation ? `-${seoLocation}` : '');
+                                        const taskPayload = { id: taskId, type: 'seo', url: seoUrl, keyword: seoKeyword, searchLocation: seoLocation };
+                                        const historyPayload = {
+                                            task: taskPayload,
+                                            result: { rank: firstResult.rank, screenshot_path: result.screenshot_path }
+                                        };
+                                        saveManualHistory(historyPayload);
+                                    } else {
+                                        resultMessageHtml = `<p>100位以内に見つかりませんでした (圏外)</p>`;
+                                        const seoUrl = document.getElementById('seoUrlInput').value.trim();
+                                        const seoKeyword = serviceKeyword;
+                                        const seoLocation = document.getElementById('seoLocationInput').value.trim();
+                                        const taskId = `[seo]-${seoUrl}-${seoKeyword}` + (seoLocation ? `-${seoLocation}` : '');
+                                        const taskPayload = { id: taskId, type: 'seo', url: seoUrl, keyword: seoKeyword, searchLocation: seoLocation };
+                                        const historyPayload = { task: taskPayload, result: { rank: '圏外', screenshot_path: result.screenshot_path } };
+                                        saveManualHistory(historyPayload);
+                                    } 
                                 } else { // 通常検索と特集ページ検索の場合
                                     if (result.results && result.results.length > 0) {
                                         const resultsListHtml = result.results.map((item, index) => {
@@ -1119,6 +1203,55 @@
                 copyDestSpecialPageUrlInput.value = '';
             });
 
+            // --- SEOタスクコピー機能 ---
+            const copySourceSeoUrlSelect = document.getElementById('copySourceSeoUrl');
+            const copyDestSeoUrlInput = document.getElementById('copyDestSeoUrl');
+            const seoCopyButton = document.getElementById('executeSeoCopyButton');
+
+            function updateSeoCopySources() {
+                const seoTasks = autoTasks.filter(task => task.type === 'seo');
+                const sourceUrls = [...new Set(seoTasks.map(task => task.url))];
+
+                copySourceSeoUrlSelect.innerHTML = '';
+                if (sourceUrls.length === 0) {
+                    const option = document.createElement('option');
+                    option.textContent = 'コピー元のURLがありません';
+                    option.disabled = true;
+                    copySourceSeoUrlSelect.appendChild(option);
+                    seoCopyButton.disabled = true;
+                } else {
+                    sourceUrls.sort();
+                    sourceUrls.forEach(url => {
+                        const option = document.createElement('option');
+                        option.value = url;
+                        option.textContent = url;
+                        copySourceSeoUrlSelect.appendChild(option);
+                    });
+                    seoCopyButton.disabled = false;
+                }
+            }
+
+            seoCopyButton.addEventListener('click', () => {
+                const sourceUrl = copySourceSeoUrlSelect.value;
+                const destUrl = copyDestSeoUrlInput.value.trim();
+                if (!sourceUrl || !destUrl) { alert('コピー元とコピー先の両方を指定してください。'); return; }
+                if (sourceUrl === destUrl) { alert('コピー元とコピー先が同じです。'); return; }
+
+                const tasksToCopy = autoTasks.filter(task => task.type === 'seo' && task.url === sourceUrl);
+                if (!confirm(`「${sourceUrl}」の${tasksToCopy.length}個のキーワードを新しいURLにコピーしますか？`)) { return; }
+
+                tasksToCopy.forEach(task => {
+                    const newTaskId = `[seo]-${destUrl}-${task.keyword}`;
+                    if (!autoTasks.some(t => t.id === newTaskId)) {
+                        autoTasks.push({ id: newTaskId, type: 'seo', url: destUrl, keyword: task.keyword });
+                    }
+                });
+                saveAutoTasks();
+                renderAutoTasks();
+                alert('タスクのコピーが完了しました。');
+                copyDestSeoUrlInput.value = '';
+            });
+
             // --- 自動計測機能 ---
             let autoTasks = [];
             let autoRankChart = null;
@@ -1130,6 +1263,7 @@
                     updateCopySourceLocations(); // MEOコピー元のプルダウンも更新
                     updateHpbNormalCopySources(); // HPB通常コピー元のプルダウンも更新
                     updateHpbSpecialCopySources(); // HPB特集コピー元のプルダウンも更新
+                    updateSeoCopySources(); // SEOコピー元のプルダウンも更新
                     renderAutoTasks();
                 } catch (error) {
                     console.error('自動計測タスクの読み込みに失敗しました:', error);
@@ -1329,6 +1463,12 @@
                     taskText.textContent = `[${task.salonName}] ${pageTitle}`;
                 } else if (taskType === 'google') {
                     taskText.textContent = `${task.keyword} - ${task.salonName}`;
+                } else if (taskType === 'seo') {
+                    let displayText = `[${task.keyword}] ${task.url}`;
+                    if (task.searchLocation) {
+                        displayText = `[${task.keyword}] @${task.searchLocation} - ${task.url}`;
+                    }
+                    taskText.textContent = displayText;
                 }
 
                 taskLabel.appendChild(checkbox);
@@ -1370,18 +1510,11 @@
                 const activeSearchType = searchTypeToggle.querySelector('.toggle-button.active').dataset.type;
                 const salonName = salonNameInput.value.trim();
 
-                if (!salonName) {
-                    alert('サロン名を入力してください。');
-                    return;
-                }
-
                 let addedTasks = [];
                 let existingTasks = [];
 
                 if (activeSearchType === 'normal') {
                     const largeArea = largeAreaSelect.value;
-                    const middleArea = middleAreaSelect.value;
-                    const smallArea = smallAreaSelect.value;
                     const serviceKeywords = keywordInput.value.trim().split(/[\s,、]+/).filter(k => k);
 
                     if (!largeArea || serviceKeywords.length === 0) {
@@ -1389,6 +1522,13 @@
                         return;
                     }
 
+                    if (!salonName) {
+                        alert('サロン名を入力してください。');
+                        return;
+                    }
+
+                    const middleArea = middleAreaSelect.value;
+                    const smallArea = smallAreaSelect.value;
                     const areaCodes = {};
                     areaCodes.serviceAreaCd = areas[largeArea].code;
                     if (middleArea) areaCodes.middleAreaCd = areas[largeArea].middleAreas[middleArea].code;
@@ -1410,6 +1550,11 @@
                         alert('特集ページのURLを入力してください。');
                         return;
                     }
+                    if (!salonName) {
+                        alert('サロン名を入力してください。');
+                        return;
+                    }
+
                     const taskId = `${salonName}-${featureUrl}`;
                     if (autoTasks.some(t => t.id === taskId)) {
                         existingTasks.push(featureUrl);
@@ -1423,6 +1568,10 @@
                     const googleKeyword = document.getElementById('googleKeywordInput').value.trim();
                     if (!searchLocation || !googleKeyword) {
                         alert('検索地点と検索キーワードを入力してください。');
+                        return;
+                    }
+                    if (!salonName) {
+                        alert('サロン名を入力してください。');
                         return;
                     }
 
@@ -1444,6 +1593,23 @@
                         autoTasks.push({ id: taskId, type: 'google', salonName, searchLocation, keyword: cleanedKeyword });
                         addedTasks.push(`[${searchLocation}] ${cleanedKeyword}`);
                     }
+                } else if (activeSearchType === 'seo') {
+                    const seoUrl = document.getElementById('seoUrlInput').value.trim();
+                    const seoKeywords = document.getElementById('seoKeywordInput').value.trim().split(/[\s,、]+/).filter(k => k);
+                    const seoLocation = document.getElementById('seoLocationInput').value.trim(); // 任意
+                    if (!seoUrl || seoKeywords.length === 0) {
+                        alert('計測対象のURLとキーワードを入力してください。');
+                        return;
+                    }
+                    seoKeywords.forEach(keyword => {
+                        const taskId = `[seo]-${seoUrl}-${keyword}` + (seoLocation ? `-${seoLocation}` : '');
+                        if (autoTasks.some(t => t.id === taskId)) {
+                            existingTasks.push(seoLocation ? `[${keyword}] @${seoLocation}` : `[${keyword}]`);
+                        } else {
+                            autoTasks.push({ id: taskId, type: 'seo', url: seoUrl, keyword: keyword, searchLocation: seoLocation });
+                            addedTasks.push(seoLocation ? `[${keyword}] @${seoLocation}` : `[${keyword}]`);
+                        }
+                    });
                 }
 
                 if (addedTasks.length > 0) {
@@ -1506,6 +1672,10 @@
                     .filter(t => t.type === 'google')
                     .map(t => t.id);
 
+                const seoTaskIds = tasksToRun
+                    .filter(t => t.type === 'seo')
+                    .map(t => t.id);
+
                 const promises = [];
 
                 // --- 汎用的なストリーム処理関数 ---
@@ -1551,6 +1721,16 @@
                                     // MEOの場合
                                     const taskId = task.id;
                                     const fullKeyword = `[${task.searchLocation}] ${task.keyword}`;
+                                    const taskContainer = document.createElement('div');
+                                    taskContainer.id = `task-container-${taskId}`;
+                                    taskContainer.style.borderBottom = '1px solid #e5e5e7';
+                                    taskContainer.style.paddingBottom = '15px';
+                                    taskContainer.style.marginBottom = '15px';
+                                    taskContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${fullKeyword}」</h4><p>計測を開始します...</p>`;
+                                    resultArea.appendChild(taskContainer);
+                                } else if (task.type === 'seo') {
+                                    const taskId = task.id;
+                                    const fullKeyword = `[${task.keyword}] ${task.url}`;
                                     const taskContainer = document.createElement('div');
                                     taskContainer.id = `task-container-${taskId}`;
                                     taskContainer.style.borderBottom = '1px solid #e5e5e7';
@@ -1609,6 +1789,7 @@
                 promises.push(processStream(normalTaskIds));
                 promises.push(processStream(specialTaskIds));
                 promises.push(processStream(meoTaskIds));
+                promises.push(processStream(seoTaskIds));
 
                 try {
                     // すべてのストリーム処理が終わるのを待つ
@@ -1667,6 +1848,13 @@
                         } else if (activeSearchType === 'google') {
                             // MEOは、検索地点とサロン名でグループ化する
                             groupKey = `${historyItem.task.searchLocation} - ${historyItem.task.salonName}`;
+                        } else if (activeSearchType === 'seo') {
+                            // SEOは、URLでグループ化する
+                            if (historyItem.task.searchLocation) {
+                                groupKey = `${historyItem.task.url} (@${historyItem.task.searchLocation})`;
+                            } else {
+                                groupKey = historyItem.task.url;
+                            }
                         }
                         
                         if (!acc[groupKey]) { 
@@ -1712,6 +1900,9 @@
                             } else if (activeSearchType === 'google') {
                                 labelA = a.task.keyword;
                                 labelB = b.task.keyword;
+                            } else if (activeSearchType === 'seo') {
+                                labelA = a.task.keyword;
+                                labelB = b.task.keyword;
                             }
                             return labelA.localeCompare(labelB, 'ja');
                         });
@@ -1736,6 +1927,8 @@
                                 // 特集ページの場合、同じグラフに複数のサロンが表示される可能性があるため、サロン名を表示
                                 labelText = taskData.task.salonName;
                             } else if (activeSearchType === 'google') {
+                                labelText = taskData.task.keyword;
+                            } else if (activeSearchType === 'seo') {
                                 labelText = taskData.task.keyword;
                             }
 
