@@ -86,6 +86,19 @@
         .schedule-setting-inline {
             border-left: none !important; padding-left: 0 !important; margin-left: 0 !important;
         }
+        /* --- グラフ並び替えボタンのスタイル --- */
+        .graph-controls {
+            display: flex;
+            gap: 5px;
+        }
+        .graph-controls button {
+            background-color: #f0f2f5;
+            border: 1px solid #d1d1d6;
+            border-radius: 6px;
+            padding: 2px 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="common.js" defer></script>
@@ -1867,20 +1880,59 @@
                     // --- グラフの表示順をグループキー（タイトル）のあいうえお順にソート ---
                     const sortedGroupedHistory = Object.entries(groupedHistory).sort((a, b) => a[0].localeCompare(b[0], 'ja'));
 
-                    sortedGroupedHistory.forEach(([groupKey, groupData]) => {
+                    // --- 保存された順序でソートするロジックを追加 ---
+                    const savedOrder = JSON.parse(localStorage.getItem(`graphOrder_${activeSearchType}`) || '[]');
+                    const sortedWithSavedOrder = Object.entries(groupedHistory).sort((a, b) => {
+                        const indexA = savedOrder.indexOf(a[0]);
+                        const indexB = savedOrder.indexOf(b[0]);
+
+                        if (indexA !== -1 && indexB !== -1) {
+                            return indexA - indexB; // 両方とも保存されていればその順
+                        } else if (indexA !== -1) {
+                            return -1; // Aだけ保存されていればAが先
+                        } else if (indexB !== -1) {
+                            return 1; // Bだけ保存されていればBが先
+                        }
+                        return a[0].localeCompare(b[0], 'ja'); // どちらも保存されていなければ名前順
+                    });
+
+                    sortedWithSavedOrder.forEach(([groupKey, groupData]) => {
                         const graphWrapper = document.createElement('div');
+                        graphWrapper.className = 'graph-wrapper';
+                        graphWrapper.dataset.groupKey = groupKey;
                         graphWrapper.style.position = 'relative';
                         graphWrapper.style.height = '220px';
                         graphWrapper.style.marginBottom = '40px';
+
+                        const headerContainer = document.createElement('div');
+                        headerContainer.style.display = 'flex';
+                        headerContainer.style.justifyContent = 'space-between';
+                        headerContainer.style.alignItems = 'center';
+                        headerContainer.style.borderBottom = '1px solid #e5e5e7';
+                        headerContainer.style.paddingBottom = '8px';
+                        headerContainer.style.marginBottom = '15px';
 
                         const header = document.createElement('h5');
                         header.textContent = groupKey;
                         header.style.fontSize = '16px';
                         header.style.fontWeight = '600';
-                        header.style.borderBottom = '1px solid #e5e5e7';
-                        header.style.paddingBottom = '8px';
-                        header.style.marginBottom = '15px';
-                        graphWrapper.appendChild(header);
+                        header.style.margin = 0; // h5のデフォルトマージンをリセット
+                        headerContainer.appendChild(header);
+
+                        // --- 並び替えボタンを追加 ---
+                        const controls = document.createElement('div');
+                        controls.className = 'graph-controls';
+                        const upButton = document.createElement('button');
+                        upButton.textContent = '↑';
+                        upButton.onclick = () => moveGraph(graphWrapper, 'up');
+                        const downButton = document.createElement('button');
+                        downButton.textContent = '↓';
+                        downButton.onclick = () => moveGraph(graphWrapper, 'down');
+                        controls.appendChild(upButton);
+                        controls.appendChild(downButton);
+                        headerContainer.appendChild(controls);
+
+                        graphWrapper.appendChild(headerContainer);
 
                         const canvas = document.createElement('canvas');
                         graphWrapper.appendChild(canvas);
@@ -2042,6 +2094,33 @@
                     console.error('自動計測履歴の読み込みに失敗しました:', error);
                 }
             };
+
+            // --- グラフ並び替えと順序保存の関数 ---
+            function moveGraph(wrapper, direction) {
+                const parent = wrapper.parentNode;
+                if (direction === 'up') {
+                    const prevSibling = wrapper.previousElementSibling;
+                    if (prevSibling) {
+                        parent.insertBefore(wrapper, prevSibling);
+                    }
+                } else if (direction === 'down') {
+                    const nextSibling = wrapper.nextElementSibling;
+                    if (nextSibling) {
+                        parent.insertBefore(nextSibling, wrapper);
+                    }
+                }
+                saveGraphOrder();
+            }
+
+            function saveGraphOrder() {
+                const activeSearchType = searchTypeToggle.querySelector('.toggle-button.active').dataset.type;
+                const wrappers = document.querySelectorAll('#autoHistoryGraphs .graph-wrapper');
+                const newOrder = Array.from(wrappers).map(w => w.dataset.groupKey);
+                localStorage.setItem(`graphOrder_${activeSearchType}`, JSON.stringify(newOrder));
+            }
+
+
+
 
             // --- ページ読み込み時にタスク一覧の表示状態を復元 ---
             const taskListVisible = localStorage.getItem('taskListVisible');
