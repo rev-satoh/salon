@@ -217,7 +217,7 @@ def check_hotpepper_ranking(driver, keyword, salon_name, area_codes):
                     with Image.open(temp_png_path) as img:
                         if img.mode == 'RGBA': # JPEGは透明度をサポートしないためRGBに変換
                             img = img.convert('RGB')
-                        img.save(jpeg_filepath, 'jpeg', quality=1) # qualityは0-95の範囲で調整可能
+                        img.save(jpeg_filepath, 'jpeg', quality=15) # qualityは0-95の範囲で調整可能
                     screenshot_path = jpeg_filepath
                     app.logger.info(f"画質を調整したスクリーンショットを {jpeg_filepath} に保存しました。")
                 finally:
@@ -421,7 +421,7 @@ def check_meo_ranking(driver, keyword, location_name):
             with Image.open(temp_png_path) as img:
                 if img.mode == 'RGBA':
                     img = img.convert('RGB')
-                img.save(jpeg_filepath, 'jpeg', quality=1) # qualityは0-95の範囲で調整可能
+                img.save(jpeg_filepath, 'jpeg', quality=15) # qualityは0-95の範囲で調整可能
             screenshot_path = jpeg_filepath
         finally:
             if os.path.exists(temp_png_path):
@@ -544,7 +544,7 @@ def check_seo_ranking(driver, url_to_find, keyword, location_name=None):
                     try:
                         with Image.open(temp_png_path) as img:
                             if img.mode == 'RGBA': img = img.convert('RGB')
-                        img.save(jpeg_filepath, 'jpeg', quality=1)
+                        img.save(jpeg_filepath, 'jpeg', quality=15)
                         screenshot_path_local = jpeg_filepath
                     finally:
                         if os.path.exists(temp_png_path): os.remove(temp_png_path)

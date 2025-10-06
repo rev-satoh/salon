@@ -89,7 +89,7 @@ def check_feature_page_ranking(driver, feature_page_url, salon_names):
                     with Image.open(temp_png_path) as img:
                         if img.mode == 'RGBA':
                             img = img.convert('RGB')
-                        img.save(jpeg_filepath, 'jpeg', quality=1)
+                        img.save(jpeg_filepath, 'jpeg', quality=15)
                     screenshot_path = jpeg_filepath
                 finally:
                     if os.path.exists(temp_png_path):
