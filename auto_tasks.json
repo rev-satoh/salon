@@ -2017,86 +2017,130 @@
   },
   {
     "id": "[seo]-https://eyelash4.com/-まつげパーマ-福山駅",
-    "type": "seo",
-    "url": "https://eyelash4.com/",
     "keyword": "まつげパーマ",
-    "searchLocation": "福山駅"
+    "searchLocation": "福山駅",
+    "type": "seo",
+    "url": "https://eyelash4.com/"
   },
   {
     "id": "[seo]-https://eyelash4.com/-まつ毛パーマ-福山駅",
-    "type": "seo",
-    "url": "https://eyelash4.com/",
     "keyword": "まつ毛パーマ",
-    "searchLocation": "福山駅"
+    "searchLocation": "福山駅",
+    "type": "seo",
+    "url": "https://eyelash4.com/"
   },
   {
     "id": "[seo]-https://eyelash4.com/-マツパ-福山駅",
-    "type": "seo",
-    "url": "https://eyelash4.com/",
     "keyword": "マツパ",
-    "searchLocation": "福山駅"
+    "searchLocation": "福山駅",
+    "type": "seo",
+    "url": "https://eyelash4.com/"
   },
   {
     "id": "[seo]-https://eyelash4.com/-まつぱ-福山駅",
-    "type": "seo",
-    "url": "https://eyelash4.com/",
     "keyword": "まつぱ",
-    "searchLocation": "福山駅"
+    "searchLocation": "福山駅",
+    "type": "seo",
+    "url": "https://eyelash4.com/"
   },
   {
     "id": "[seo]-https://eyelash4.com/-パリジェンヌ-福山駅",
-    "type": "seo",
-    "url": "https://eyelash4.com/",
     "keyword": "パリジェンヌ",
-    "searchLocation": "福山駅"
+    "searchLocation": "福山駅",
+    "type": "seo",
+    "url": "https://eyelash4.com/"
   },
   {
     "id": "[seo]-https://eyelash4.com/-眉毛-福山駅",
-    "type": "seo",
-    "url": "https://eyelash4.com/",
     "keyword": "眉毛",
-    "searchLocation": "福山駅"
+    "searchLocation": "福山駅",
+    "type": "seo",
+    "url": "https://eyelash4.com/"
   },
   {
     "id": "[seo]-https://eyelash4.com/-眉毛WAX-福山駅",
-    "type": "seo",
-    "url": "https://eyelash4.com/",
     "keyword": "眉毛WAX",
-    "searchLocation": "福山駅"
+    "searchLocation": "福山駅",
+    "type": "seo",
+    "url": "https://eyelash4.com/"
   },
   {
     "id": "[seo]-https://eyelash4.com/-まつげ-福山駅",
-    "type": "seo",
-    "url": "https://eyelash4.com/",
     "keyword": "まつげ",
-    "searchLocation": "福山駅"
+    "searchLocation": "福山駅",
+    "type": "seo",
+    "url": "https://eyelash4.com/"
   },
   {
     "id": "[seo]-https://eyelash4.com/-まつ毛-福山駅",
-    "type": "seo",
-    "url": "https://eyelash4.com/",
     "keyword": "まつ毛",
-    "searchLocation": "福山駅"
+    "searchLocation": "福山駅",
+    "type": "seo",
+    "url": "https://eyelash4.com/"
   },
   {
     "id": "[seo]-https://eyelash4.com/-眉毛ワックス-福山駅",
-    "type": "seo",
-    "url": "https://eyelash4.com/",
     "keyword": "眉毛ワックス",
-    "searchLocation": "福山駅"
+    "searchLocation": "福山駅",
+    "type": "seo",
+    "url": "https://eyelash4.com/"
   },
   {
     "id": "[seo]-https://eyelash4.com/-HBL-福山駅",
-    "type": "seo",
-    "url": "https://eyelash4.com/",
     "keyword": "HBL",
-    "searchLocation": "福山駅"
+    "searchLocation": "福山駅",
+    "type": "seo",
+    "url": "https://eyelash4.com/"
   },
   {
     "id": "[seo]-https://eyelash4.com/-ハリウッドブロウ-福山駅",
-    "type": "seo",
-    "url": "https://eyelash4.com/",
     "keyword": "ハリウッドブロウ",
-    "searchLocation": "福山駅"
+    "searchLocation": "福山駅",
+    "type": "seo",
+    "url": "https://eyelash4.com/"
+  },
+  {
+    "id": "ケイトステージラッシュ-福山・尾道-まつげパーマ＆パリジェンヌ",
+    "type": "normal",
+    "salonName": "ケイトステージラッシュ",
+    "areaName": "福山・尾道",
+    "areaCodes": {
+      "serviceAreaCd": "SF",
+      "middleAreaCd": "FC"
+    },
+    "serviceKeyword": "まつげパーマ＆パリジェンヌ"
+  },
+  {
+    "id": "ケイトステージラッシュ-広島-まつげパーマ＆パリジェンヌ",
+    "type": "normal",
+    "salonName": "ケイトステージラッシュ",
+    "areaName": "広島",
+    "areaCodes": {
+      "serviceAreaCd": "SF",
+      "middleAreaCd": "FA"
+    },
+    "serviceKeyword": "まつげパーマ＆パリジェンヌ"
+  },
+  {
+    "id": "ケイトステージラッシュ-池袋・目白-まつげパーマ＆パリジェンヌ",
+    "type": "normal",
+    "salonName": "ケイトステージラッシュ",
+    "areaName": "池袋・目白",
+    "areaCodes": {
+      "serviceAreaCd": "SA",
+      "middleAreaCd": "AB"
+    },
+    "serviceKeyword": "まつげパーマ＆パリジェンヌ"
+  },
+  {
+    "id": "ケイトステージラッシュ-岐阜-まつげパーマ＆パリジェンヌ",
+    "type": "normal",
+    "salonName": "ケイトステージラッシュ",
+    "areaName": "岐阜",
+    "areaCodes": {
+      "serviceAreaCd": "SC",
+      "middleAreaCd": "CB"
+    },
+    "serviceKeyword": "まつげパーマ＆パリジェンヌ"
   }
 ]

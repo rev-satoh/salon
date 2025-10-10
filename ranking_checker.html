@@ -47,22 +47,17 @@
                 flex-direction: column; /* 縦積みに変更 */
                 align-items: stretch; /* 幅を親要素に合わせる */
             }
-            .search-type-toggle {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .search-type-toggle .toggle-button {
-                text-align: center;
-            }
         }
         /* --- トグルボタンのスタイル --- */
         .search-type-toggle {
             display: flex;
             gap: 10px;
+            flex-wrap: nowrap; /* ボタンが折り返さないようにする */
+            overflow-x: auto;  /* はみ出した場合に横スクロールできるようにする */
             background-color: #e5e5e7;
             padding: 4px;
             border-radius: 8px;
-            width: fit-content;
+            width: auto;
         }
         .toggle-button {
             padding: 6px 16px;
