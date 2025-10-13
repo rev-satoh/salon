@@ -1,4 +1,12 @@
-.env
+# 生成されるスクリーンショットを無視
+screenshots/
+
+# Pythonのキャッシュファイル
 __pycache__/
 *.pyc
+
+# 環境変数ファイル
+.env
+
+# OS固有のファイル
 .DS_Store
