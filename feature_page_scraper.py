@@ -115,7 +115,13 @@ def check_feature_page_ranking(driver, feature_page_url, salon_names):
                         found_salons_map[salon_name].append({"rank": rank, "foundSalonName": current_salon_name})
 
     except Exception as e:
-        yield sse_format({"error": f"特集ページ解析中にエラー: {e}"})
+        # エラー発生時にも、それまでに取得した情報を返す
+        yield sse_format({
+            "error": f"特集ページ解析中にエラー: {e}",
+            "url": last_url_checked,
+            "html": last_html_content,
+            "screenshot_path": screenshot_path
+        })
         return
 
     final_result = {

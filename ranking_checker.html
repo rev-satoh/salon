@@ -94,6 +94,58 @@
             cursor: pointer;
             font-size: 16px;
         }
+        .graph-controls button.excel-button {
+            background-color: #e5e5e7;
+            color: #1c1c1e;
+            font-size: 13px;
+            padding: 4px 10px;
+        }
+
+        /* --- 印刷用のスタイル --- */
+        @media print {
+            /* ヘッダー、フッター、ナビゲーションを非表示 */
+            header, #footer-placeholder, #header-nav {
+                display: none !important;
+            }
+
+            /* 印刷ボタン自体を非表示 */
+            #printButton {
+                display: none !important;
+            }
+
+            /* ページタイトルと自動計測のヘッダーも非表示に */
+            main > div:first-child, /* 「順位チェッカー」と印刷ボタンのコンテナ */
+            .card > h3, /* 「自動計測 - 履歴グラフ」などの小見出し */
+            #noAutoHistoryMessage /* 「履歴はありません」のメッセージ */
+             {
+                display: none !important;
+            }
+
+            /* 計測タイプ選択、手動計測フォーム、タスク一覧、コピー機能など不要なUIを非表示 */
+            #searchTypeToggle,
+            .card:has(#checkRankButton), /* 手動計測セクション */
+            #autoTaskListToggle,
+            #autoTaskListContent,
+            #meoTaskCopySection,
+            #hpbNormalTaskCopySection, 
+            #hpbSpecialTaskCopySection,
+            #hpbSpecialTaskCopySection,
+            .graph-controls { /* グラフの並び替えボタン */
+                display: none !important;
+            }
+
+            /* メインコンテンツの余白を調整 */
+            main {
+                padding: 0 !important;
+            }
+
+            /* グラフと表がページをまたいで分割されないようにする */
+            .graph-wrapper {
+                page-break-inside: avoid;
+                border: 1px solid #ddd; /* 印刷時に境界線が見えるように */
+                padding: 15px;
+            }
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="common.js" defer></script>
@@ -114,14 +166,20 @@
     </header>
 
     <main>
-        <h2 style="font-weight: 600; margin-bottom: 16px;">順位チェッカー</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h2 style="font-weight: 600; margin: 0;">順位チェッカー</h2>
+            <div style="display: flex; gap: 8px;">
+                <button type="button" id="printButton" class="button-secondary" style="padding: 6px 12px; font-size: 14px;">🖨️ 印刷</button>
+                <button type="button" id="scrollToManualCheckButton" class="button-secondary" style="padding: 6px 12px; font-size: 14px;">手動計測へ移動</button>
+                <button type="button" id="modeHelpButton" class="button-secondary" style="padding: 6px 12px; font-size: 14px;">モード説明</button>
+            </div>
+        </div>
 
         <!-- 計測タイプ選択UI -->
         <div id="searchTypeToggle" class="search-type-toggle" style="margin-bottom: 16px;">
             <button type="button" class="toggle-button active" data-type="normal">HPB 通常</button>
             <button type="button" class="toggle-button" data-type="special">HPB 特集</button>
             <button type="button" class="toggle-button" data-type="google">MEO</button>
-            <button type="button" class="toggle-button" data-type="seo">SEO</button>
         </div>
 
         <!-- 自動計測セクション -->
@@ -191,23 +249,10 @@
                     コピー元の特集ページに登録されている全てのサロンを、新しい特集ページのタスクとして一括で追加します。
                 </small>
             </div>
-            <!-- SEOタスク一括コピー機能 -->
-            <div id="seoTaskCopySection" style="display: none; padding-top: 15px; margin-top: 15px; border-top: 1px solid #e5e5e7;">
-                <h4 style="margin-top: 0; margin-bottom: 10px; font-size: 16px; font-weight: 600;">SEOタスクを別URLにコピー</h4>
-                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                    <select id="copySourceSeoUrl" style="padding: 6px 10px; font-size: 14px; border-radius: 6px;"></select>
-                    <span style="font-weight: bold;">→</span>
-                    <input type="text" id="copyDestSeoUrl" placeholder="コピー先のURL" style="padding: 6px 10px; font-size: 14px; flex-grow: 1;">
-                    <button type="button" id="executeSeoCopyButton" class="button-secondary" style="padding: 6px 12px; font-size: 13px;">コピー実行</button>
-                </div>
-                <small style="display: block; margin-top: 8px; color: #6c6c70; font-size: 12px;">
-                    コピー元のURLに登録されている全てのキーワードを、新しいURLのタスクとして一括で追加します。
-                </small>
-            </div>
         </div>
 
         <!-- 手動計測セクション -->
-        <div class="card">
+        <div class="card" id="manualCheckSection">
             <h3>手動計測・タスク追加</h3>
             <div class="checker-container">
                 <div class="form-group">
@@ -266,21 +311,6 @@
                     </div>
                 </div>
 
-                <!-- SEO検索用の入力フォーム -->
-                <div id="seoSearchInputs" style="display: none;">
-                    <div class="form-group">
-                        <label for="seoUrlInput">順位を調べたいページのURL</label>
-                        <input type="text" id="seoUrlInput" placeholder="例: https://your-salon.com/blog/post-123">
-                    </div>
-                    <div class="form-group">
-                        <label for="seoLocationInput">検索地点（任意）</label>
-                        <input type="text" id="seoLocationInput" placeholder="例: 福山駅, 広島市">
-                    </div>
-                    <div class="form-group">
-                        <label for="seoKeywordInput">検索キーワード</label>
-                        <input type="text" id="seoKeywordInput" placeholder="Googleで検索するキーワードを入力">
-                    </div>
-                </div>
                 <div class="button-container">
                     <button type="button" id="checkRankButton" class="button-primary">順位を計測</button>
                     <button type="button" id="addAutoTaskButton" class="button-secondary">自動計測に追加</button>
@@ -332,12 +362,13 @@
             const normalSearchInputs = document.getElementById('normalSearchInputs');
             const specialSearchInputs = document.getElementById('specialSearchInputs');
             const googleMapSearchInputs = document.getElementById('googleMapSearchInputs');
-            const seoSearchInputs = document.getElementById('seoSearchInputs'); // SEO入力フォーム
             const searchTypeToggle = document.getElementById('searchTypeToggle');
             const meoCopySection = document.getElementById('meoTaskCopySection');
             const hpbNormalTaskCopySection = document.getElementById('hpbNormalTaskCopySection');
             const hpbSpecialTaskCopySection = document.getElementById('hpbSpecialTaskCopySection');
-            const seoTaskCopySection = document.getElementById('seoTaskCopySection'); // SEOコピーセクション
+            const printButton = document.getElementById('printButton');
+            const modeHelpButton = document.getElementById('modeHelpButton');
+            const scrollToManualCheckButton = document.getElementById('scrollToManualCheckButton');
 
 
 
@@ -513,7 +544,6 @@
                 normalSearchInputs.style.display = 'none';
                 specialSearchInputs.style.display = 'none';
                 googleMapSearchInputs.style.display = 'none';
-                seoSearchInputs.style.display = 'none';
                 // SEO以外ではサロン名入力欄を表示
                 salonNameFormGroup.style.display = 'block';
 
@@ -523,10 +553,6 @@
                     specialSearchInputs.style.display = 'block';
                 } else if (clickedButton.dataset.type === 'google') {
                     googleMapSearchInputs.style.display = 'block';
-                } else if (clickedButton.dataset.type === 'seo') {
-                    seoSearchInputs.style.display = 'block';
-                    // SEOではサロン名入力欄を非表示にする
-                    salonNameFormGroup.style.display = 'none';
                 }
 
                 // グラフの表示を切り替えるために履歴を再読み込み・再描画する
@@ -537,7 +563,6 @@
                 meoCopySection.style.display = 'none';
                 hpbNormalTaskCopySection.style.display = 'none';
                 hpbSpecialTaskCopySection.style.display = 'none';
-                seoTaskCopySection.style.display = 'none';
 
                 if (clickedButton.dataset.type === 'google') {
                     meoCopySection.style.display = 'block';
@@ -548,14 +573,111 @@
                 } else if (clickedButton.dataset.type === 'special') {
                     hpbSpecialTaskCopySection.style.display = 'block';
                     updateHpbSpecialCopySources();
-                } else if (clickedButton.dataset.type === 'seo') {
-                    seoTaskCopySection.style.display = 'block';
-                    updateSeoCopySources();
                 }
 
                 renderAutoTasks();
             });
+            
+            // モード説明ボタンのイベントリスナー
+            modeHelpButton.addEventListener('click', () => {
+                const activeMode = searchTypeToggle.querySelector('.toggle-button.active').dataset.type;
+                let helpText = '';
+
+                if (activeMode === 'normal') {
+                    helpText = `■ HPB通常検索モードについて
+
+このモードは、ホットペッパービューティーの通常の検索結果ページでの掲載順位を計測します。
+
+【計測方法】
+ユーザーがフリーワード（例：「まつげパーマ」）とエリア（例：「福山・尾道」）を指定して検索した際の結果をシミュレートします。
+
+【用途】
+特定のキーワードとエリアの組み合わせにおける、自店のオーガニックな検索順位を確認したい場合に使用します。`;
+                } else if (activeMode === 'special') {
+                    helpText = `■ HPB特集検索モードについて
+
+このモードは、「〇〇駅で人気のサロン特集」のような、ホットペッパービューティーが独自に編集した「特集ページ」での掲載順位を計測します。
+
+【計測方法】
+指定された特集ページのURLに直接アクセスし、そのページ内でのサロンの掲載順位を確認します。
+
+【用途】
+HPBの特集企画に掲載されている場合の順位を確認したい場合に使用します。代理店様などが「LP（ランディングページ）」と呼ぶページも、多くはこの特集ページに該当します。`;
+                } else if (activeMode === 'google') {
+                    helpText = `■ MEO検索モードについて
+
+このモードは、Googleマップでの検索結果（MEO）における掲載順位を計測します。
+
+【パーソナライズの排除】
+Googleマップの検索結果は、検索場所や履歴によって変動しますが、このシステムでは以下の方法で客観的な順位を計測しています。
+
+1. クリーンな環境: 履歴のないブラウザで計測します。
+2. 検索場所の固定: あなたのPCの場所ではなく、指定された検索地点（例：「福山駅」）の座標を仮想的に設定して検索します。
+
+これにより、誰がどこで計測しても、常に「指定した地点の周辺での検索結果」という同じ条件下での順位を確認できます。`;
+                }
+
+                alert(helpText);
+            });
+
+            // 手動計測セクションへのスクロールボタン
+            scrollToManualCheckButton.addEventListener('click', () => {
+                const manualCheckSection = document.getElementById('manualCheckSection');
+                manualCheckSection.scrollIntoView({ behavior: 'smooth' });
+            });
             let rankChart = null; // グラフのインスタンスを保持する変数
+
+            // --- CSVエクスポート機能 ---
+            function exportToCsv(groupKey, groupData, activeSearchType) {
+                // 1. 全日付のリストを作成し、ソートする
+                const allDates = new Set();
+                groupData.forEach(task => task.log.forEach(entry => allDates.add(entry.date)));
+                const sortedDates = Array.from(allDates).sort((a, b) => new Date(a) - new Date(b));
+
+                // 2. ヘッダー行を作成
+                let headerLabel = 'キーワード';
+                if (activeSearchType === 'special') headerLabel = 'サロン名';
+                let csvContent = `"${headerLabel}",` + sortedDates.join(',') + '\n';
+
+                // 3. データ行を作成
+                groupData.forEach(taskData => {
+                    let rowLabel = '';
+                    if (activeSearchType === 'normal') {
+                        rowLabel = taskData.task.serviceKeyword;
+                    } else if (activeSearchType === 'special') {
+                        rowLabel = taskData.task.salonName;
+                    } else if (activeSearchType === 'google') {
+                        rowLabel = taskData.task.keyword;
+                    }
+
+                    const dataMap = new Map(taskData.log.map(entry => [entry.date, entry.rank]));
+                    const rowData = sortedDates.map(date => dataMap.get(date) || '').join(',');
+                    csvContent += `"${rowLabel}",${rowData}\n`;
+                });
+
+                // 4. BOMを追加して文字化けを防ぐ
+                const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+                const blob = new Blob([bom, csvContent], { type: 'text/csv;charset=utf-8;' });
+
+                // 5. ダウンロードリンクを作成してクリック
+                const link = document.createElement("a");
+                const url = URL.createObjectURL(blob);
+                link.setAttribute("href", url);
+
+                // ファイル名の生成
+                const safeGroupKey = groupKey.replace(/[\\/:*?"<>|]/g, '_');
+                let typeName = '';
+                if (activeSearchType === 'normal') typeName = 'HPB通常';
+                else if (activeSearchType === 'special') typeName = 'HPB特集';
+                else if (activeSearchType === 'google') typeName = 'MEO';
+                const fileName = `${safeGroupKey}_${typeName}履歴.csv`;
+
+                link.setAttribute("download", fileName);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
 
             // --- ヘルパー関数 ---
             function escapeHtml(unsafe) {
@@ -602,8 +724,12 @@
 
             // 順位をグラフのY軸座標に変換する（線形補間）
             function convertRankToY(rank) {
-                if (rank === '圏外' || typeof rank !== 'number' || rank > 100) {
-                    return 1.5; // '圏外' (100位以上) のY座標を1.5に変更
+                if (typeof rank !== 'number') {
+                    if (rank === '圏外') {
+                        return 1.5; // '圏外' のY座標
+                    }
+                    // 「枠無」「エラー」「スキップ」などはグラフに表示しない
+                    return NaN;
                 }
 
                 const points = [
@@ -679,19 +805,15 @@
                     }
                     serviceKeywords.push(googleKeyword); // MEOではキーワードは1つずつ
                 } else if (activeSearchType === 'seo') {
-                    const seoUrl = document.getElementById('seoUrlInput').value.trim();
-                    const seoKeyword = document.getElementById('seoKeywordInput').value.trim();
-                    // searchLocationは任意
-                    if (!seoUrl || !seoKeyword) {
-                        alert('SEO検索では、計測対象のURLと検索キーワードを入力してください。');
-                        return;
-                    }
-                    serviceKeywords.push(seoKeyword);
                 }
 
                 checkRankButton.disabled = true; // ボタンを無効化
                 checkRankButton.textContent = '計測中...';
                 resultArea.innerHTML = ''; // 以前の結果をクリア
+
+                // --- 所要時間計測開始 ---
+                const startTime = performance.now();
+                let timerInterval = null;
 
                 // 全体のステータスを表示するコンテナを作成
                 const overallStatusContainer = document.createElement('div');
@@ -701,6 +823,20 @@
                 overallStatusContainer.style.borderBottom = '1px solid #ddd';
                 overallStatusContainer.style.fontWeight = '500';
                 resultArea.appendChild(overallStatusContainer);
+
+                // --- 経過時間表示タイマーを開始 ---
+                timerInterval = setInterval(() => {
+                    const elapsedTotalSeconds = Math.floor((performance.now() - startTime) / 1000);
+                    const minutes = Math.floor(elapsedTotalSeconds / 60);
+                    const seconds = elapsedTotalSeconds % 60;
+                    const durationString = minutes > 0 ? `${minutes}分${seconds}秒` : `${seconds}秒`;
+                    const currentText = overallStatusContainer.textContent;
+                    // 最後の括弧部分を時間表示で置き換える
+                    const baseText = currentText.replace(/\s*\([^)]*\)$/, '');
+                    if (baseText) { // 計測完了メッセージには追記しない
+                        overallStatusContainer.textContent = `${baseText} (経過時間: ${durationString})`;
+                    }
+                }, 1000);
 
                 for (const [index, serviceKeyword] of serviceKeywords.entries()) {
                     // 各キーワードの結果を表示するコンテナを作成
@@ -727,14 +863,6 @@
                             location: searchLocation,
                             // salonName: salonName // バックエンドでの照合は不要になったため削除
                         });
-                    } else if (activeSearchType === 'seo') {
-                        const seoUrl = document.getElementById('seoUrlInput').value.trim();
-                        const seoKeyword = serviceKeyword;
-                        const seoLocation = document.getElementById('seoLocationInput').value.trim();
-                        fullKeyword = seoLocation ? `[${seoKeyword}] @${seoLocation}` : `[${seoKeyword}]`;
-                        eventSourceUrl = `/check-seo-ranking?` + new URLSearchParams({
-                            url: seoUrl, keyword: seoKeyword, location: seoLocation
-                        });
                     } else { // special
                         fullKeyword = serviceKeyword; // この時点ではURLそのもの
                         eventSourceUrl = `/check-feature-page-ranking?` + new URLSearchParams({
@@ -743,7 +871,7 @@
                     }
                     
                     // 全体ステータスを更新
-                    overallStatusContainer.textContent = `${index + 1} / ${serviceKeywords.length} 件目: 「${fullKeyword}」を計測中...`;
+                    overallStatusContainer.textContent = `${index + 1} / ${serviceKeywords.length} 件目: 「${fullKeyword}」を計測中... `; // 末尾にスペース
                     // 個別の結果エリアにも初期メッセージを表示
                     keywordResultContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${fullKeyword}」</h4><p>計測しています...</p>`;
 
@@ -816,32 +944,6 @@
                                     } else {
                                         resultMessageHtml = `<p>検索結果に店舗が見つかりませんでした。</p>`;
                                     }
-                                } else if (activeSearchType === 'seo') {
-                                    if (result.results && result.results.length > 0) {
-                                        const firstResult = result.results[0];
-                                        resultMessageHtml = `<p style="margin: 0; font-size: 18px; font-weight: bold;"><span style="color: #007aff; font-size: 1.3em;">${firstResult.rank}</span> 位</p>`;
-                                        
-                                        // --- SEOの履歴保存処理 ---
-                                        const seoUrl = document.getElementById('seoUrlInput').value.trim();
-                                        const seoKeyword = serviceKeyword;
-                                        const seoLocation = document.getElementById('seoLocationInput').value.trim();
-                                        const taskId = `[seo]-${seoUrl}-${seoKeyword}` + (seoLocation ? `-${seoLocation}` : '');
-                                        const taskPayload = { id: taskId, type: 'seo', url: seoUrl, keyword: seoKeyword, searchLocation: seoLocation };
-                                        const historyPayload = {
-                                            task: taskPayload,
-                                            result: { rank: firstResult.rank, screenshot_path: result.screenshot_path }
-                                        };
-                                        saveManualHistory(historyPayload);
-                                    } else {
-                                        resultMessageHtml = `<p>100位以内に見つかりませんでした (圏外)</p>`;
-                                        const seoUrl = document.getElementById('seoUrlInput').value.trim();
-                                        const seoKeyword = serviceKeyword;
-                                        const seoLocation = document.getElementById('seoLocationInput').value.trim();
-                                        const taskId = `[seo]-${seoUrl}-${seoKeyword}` + (seoLocation ? `-${seoLocation}` : '');
-                                        const taskPayload = { id: taskId, type: 'seo', url: seoUrl, keyword: seoKeyword, searchLocation: seoLocation };
-                                        const historyPayload = { task: taskPayload, result: { rank: '圏外', screenshot_path: result.screenshot_path } };
-                                        saveManualHistory(historyPayload);
-                                    } 
                                 } else { // 通常検索と特集ページ検索の場合
                                     if (result.results && result.results.length > 0) {
                                         const resultsListHtml = result.results.map((item, index) => {
@@ -927,8 +1029,18 @@
                     });
                 }
 
+                // --- タイマーを停止 ---
+                clearInterval(timerInterval);
+
+                // --- 所要時間計測終了 ---
+                const endTime = performance.now();
+                const elapsedTotalSeconds = Math.floor((endTime - startTime) / 1000);
+                const minutes = Math.floor(elapsedTotalSeconds / 60);
+                const seconds = elapsedTotalSeconds % 60;
+                const durationString = minutes > 0 ? `${minutes}分${seconds}秒` : `${seconds}秒`;
+
                 // 全ての計測が完了したことを通知
-                overallStatusContainer.textContent = `すべての計測が完了しました。（${serviceKeywords.length}件）`;
+                overallStatusContainer.textContent = `すべての計測が完了しました。（${serviceKeywords.length}件 / 所要時間: ${durationString}）`;
                 // 全ての処理が完了したらボタンを元に戻す
                 checkRankButton.disabled = false;
                 checkRankButton.textContent = '順位を計測';
@@ -1211,55 +1323,6 @@
                 copyDestSpecialPageUrlInput.value = '';
             });
 
-            // --- SEOタスクコピー機能 ---
-            const copySourceSeoUrlSelect = document.getElementById('copySourceSeoUrl');
-            const copyDestSeoUrlInput = document.getElementById('copyDestSeoUrl');
-            const seoCopyButton = document.getElementById('executeSeoCopyButton');
-
-            function updateSeoCopySources() {
-                const seoTasks = autoTasks.filter(task => task.type === 'seo');
-                const sourceUrls = [...new Set(seoTasks.map(task => task.url))];
-
-                copySourceSeoUrlSelect.innerHTML = '';
-                if (sourceUrls.length === 0) {
-                    const option = document.createElement('option');
-                    option.textContent = 'コピー元のURLがありません';
-                    option.disabled = true;
-                    copySourceSeoUrlSelect.appendChild(option);
-                    seoCopyButton.disabled = true;
-                } else {
-                    sourceUrls.sort();
-                    sourceUrls.forEach(url => {
-                        const option = document.createElement('option');
-                        option.value = url;
-                        option.textContent = url;
-                        copySourceSeoUrlSelect.appendChild(option);
-                    });
-                    seoCopyButton.disabled = false;
-                }
-            }
-
-            seoCopyButton.addEventListener('click', () => {
-                const sourceUrl = copySourceSeoUrlSelect.value;
-                const destUrl = copyDestSeoUrlInput.value.trim();
-                if (!sourceUrl || !destUrl) { alert('コピー元とコピー先の両方を指定してください。'); return; }
-                if (sourceUrl === destUrl) { alert('コピー元とコピー先が同じです。'); return; }
-
-                const tasksToCopy = autoTasks.filter(task => task.type === 'seo' && task.url === sourceUrl);
-                if (!confirm(`「${sourceUrl}」の${tasksToCopy.length}個のキーワードを新しいURLにコピーしますか？`)) { return; }
-
-                tasksToCopy.forEach(task => {
-                    const newTaskId = `[seo]-${destUrl}-${task.keyword}`;
-                    if (!autoTasks.some(t => t.id === newTaskId)) {
-                        autoTasks.push({ id: newTaskId, type: 'seo', url: destUrl, keyword: task.keyword });
-                    }
-                });
-                saveAutoTasks();
-                renderAutoTasks();
-                alert('タスクのコピーが完了しました。');
-                copyDestSeoUrlInput.value = '';
-            });
-
             // --- 自動計測機能 ---
             let autoTasks = [];
             let autoRankChart = null;
@@ -1271,7 +1334,6 @@
                     updateCopySourceLocations(); // MEOコピー元のプルダウンも更新
                     updateHpbNormalCopySources(); // HPB通常コピー元のプルダウンも更新
                     updateHpbSpecialCopySources(); // HPB特集コピー元のプルダウンも更新
-                    updateSeoCopySources(); // SEOコピー元のプルダウンも更新
                     renderAutoTasks();
                 } catch (error) {
                     console.error('自動計測タスクの読み込みに失敗しました:', error);
@@ -1471,12 +1533,6 @@
                     taskText.textContent = `[${task.salonName}] ${pageTitle}`;
                 } else if (taskType === 'google') {
                     taskText.textContent = `${task.keyword} - ${task.salonName}`;
-                } else if (taskType === 'seo') {
-                    let displayText = `[${task.keyword}] ${task.url}`;
-                    if (task.searchLocation) {
-                        displayText = `[${task.keyword}] @${task.searchLocation} - ${task.url}`;
-                    }
-                    taskText.textContent = displayText;
                 }
 
                 taskLabel.appendChild(checkbox);
@@ -1601,23 +1657,6 @@
                         autoTasks.push({ id: taskId, type: 'google', salonName, searchLocation, keyword: cleanedKeyword });
                         addedTasks.push(`[${searchLocation}] ${cleanedKeyword}`);
                     }
-                } else if (activeSearchType === 'seo') {
-                    const seoUrl = document.getElementById('seoUrlInput').value.trim();
-                    const seoKeywords = document.getElementById('seoKeywordInput').value.trim().split(/[\s,、]+/).filter(k => k);
-                    const seoLocation = document.getElementById('seoLocationInput').value.trim(); // 任意
-                    if (!seoUrl || seoKeywords.length === 0) {
-                        alert('計測対象のURLとキーワードを入力してください。');
-                        return;
-                    }
-                    seoKeywords.forEach(keyword => {
-                        const taskId = `[seo]-${seoUrl}-${keyword}` + (seoLocation ? `-${seoLocation}` : '');
-                        if (autoTasks.some(t => t.id === taskId)) {
-                            existingTasks.push(seoLocation ? `[${keyword}] @${seoLocation}` : `[${keyword}]`);
-                        } else {
-                            autoTasks.push({ id: taskId, type: 'seo', url: seoUrl, keyword: keyword, searchLocation: seoLocation });
-                            addedTasks.push(seoLocation ? `[${keyword}] @${seoLocation}` : `[${keyword}]`);
-                        }
-                    });
                 }
 
                 if (addedTasks.length > 0) {
@@ -1667,6 +1706,10 @@
 
                 overallStatusContainer.textContent = `選択された ${selectedTaskIds.size} 件のタスクを実行します...`;
 
+                // --- 所要時間計測開始 ---
+                const startTime = performance.now();
+                let timerInterval = null;
+
                 // --- 処理を通常検索と特集ページ検索に分割 ---
                 const normalTaskIds = tasksToRun
                     .filter(t => (t.type || 'normal') === 'normal')
@@ -1680,9 +1723,19 @@
                     .filter(t => t.type === 'google')
                     .map(t => t.id);
 
-                const seoTaskIds = tasksToRun
-                    .filter(t => t.type === 'seo')
-                    .map(t => t.id);
+                // --- 経過時間表示タイマーを開始 ---
+                timerInterval = setInterval(() => {
+                    const elapsedTotalSeconds = Math.floor((performance.now() - startTime) / 1000);
+                    const minutes = Math.floor(elapsedTotalSeconds / 60);
+                    const seconds = elapsedTotalSeconds % 60;
+                    const durationString = minutes > 0 ? `${minutes}分${seconds}秒` : `${seconds}秒`;
+                    const currentText = overallStatusContainer.textContent;
+                    // 最後の括弧部分を時間表示で置き換える
+                    const baseText = currentText.replace(/\s*\([^)]*\)$/, '');
+                    if (baseText && !baseText.includes('完了')) { // 計測完了メッセージには追記しない
+                        overallStatusContainer.textContent = `${baseText} (経過時間: ${durationString})`;
+                    }
+                }, 1000);
 
                 const promises = [];
 
@@ -1710,6 +1763,22 @@
 
                             if (data.progress) {
                                 const { current, total, task } = data.progress;
+
+                                // --- 全体の進捗状況を更新 ---
+                                let taskNameForStatus = '';
+                                if (task.type === 'special') {
+                                    taskNameForStatus = task.featurePageName || task.featurePageUrl;
+                                } else if (task.type === 'google') {
+                                    taskNameForStatus = `[${task.searchLocation}] ${task.keyword}`;
+                                } else { // normal
+                                    taskNameForStatus = `[${task.areaName}] ${task.serviceKeyword}`;
+                                }
+                                
+                                const overallStatusContainer = document.getElementById('overallStatus');
+                                if (overallStatusContainer) {
+                                    overallStatusContainer.textContent = `${current} / ${total} 件目: 「${taskNameForStatus}」を計測中... `; // 末尾にスペース
+                                }
+                                // --- ここまで追加 ---
                                 
                                 if (task.type === 'special') {
                                     // 特集ページの場合
@@ -1729,16 +1798,6 @@
                                     // MEOの場合
                                     const taskId = task.id;
                                     const fullKeyword = `[${task.searchLocation}] ${task.keyword}`;
-                                    const taskContainer = document.createElement('div');
-                                    taskContainer.id = `task-container-${taskId}`;
-                                    taskContainer.style.borderBottom = '1px solid #e5e5e7';
-                                    taskContainer.style.paddingBottom = '15px';
-                                    taskContainer.style.marginBottom = '15px';
-                                    taskContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${fullKeyword}」</h4><p>計測を開始します...</p>`;
-                                    resultArea.appendChild(taskContainer);
-                                } else if (task.type === 'seo') {
-                                    const taskId = task.id;
-                                    const fullKeyword = `[${task.keyword}] ${task.url}`;
                                     const taskContainer = document.createElement('div');
                                     taskContainer.id = `task-container-${taskId}`;
                                     taskContainer.style.borderBottom = '1px solid #e5e5e7';
@@ -1797,15 +1856,29 @@
                 promises.push(processStream(normalTaskIds));
                 promises.push(processStream(specialTaskIds));
                 promises.push(processStream(meoTaskIds));
-                promises.push(processStream(seoTaskIds));
 
                 try {
                     // すべてのストリーム処理が終わるのを待つ
                     await Promise.all(promises);
-                    overallStatusContainer.textContent = `すべての計測が完了しました。（${selectedTaskIds.size}件）`;
+                    // --- タイマーを停止 ---
+                    clearInterval(timerInterval);
+                    // --- 所要時間計測終了 ---
+                    const endTime = performance.now();
+                    const elapsedTotalSeconds = Math.floor((endTime - startTime) / 1000);
+                    const minutes = Math.floor(elapsedTotalSeconds / 60);
+                    const seconds = elapsedTotalSeconds % 60;
+                    const durationString = minutes > 0 ? `${minutes}分${seconds}秒` : `${seconds}秒`;
+                    overallStatusContainer.textContent = `すべての計測が完了しました。（${selectedTaskIds.size}件 / 所要時間: ${durationString}）`;
                 } catch (error) {
                     console.error('手動実行中にエラーが発生しました:', error);
-                    overallStatusContainer.textContent = '計測中にエラーが発生しました。詳細はコンソールを確認してください。';
+                    const endTime = performance.now();
+                    const elapsedTotalSeconds = Math.floor((endTime - startTime) / 1000);
+                    const minutes = Math.floor(elapsedTotalSeconds / 60);
+                    const seconds = elapsedTotalSeconds % 60;
+                    const durationString = minutes > 0 ? `${minutes}分${seconds}秒` : `${seconds}秒`;
+                    // --- タイマーを停止 ---
+                    clearInterval(timerInterval);
+                    overallStatusContainer.textContent = `計測中にエラーが発生しました。（所要時間: ${durationString}）詳細はコンソールを確認してください。`;
                 } finally {
                     // 全ての処理が終わったらボタンを元に戻す
                     manualTriggerButton.disabled = false;
@@ -1856,13 +1929,6 @@
                         } else if (activeSearchType === 'google') {
                             // MEOは、検索地点とサロン名でグループ化する
                             groupKey = `${historyItem.task.searchLocation} - ${historyItem.task.salonName}`;
-                        } else if (activeSearchType === 'seo') {
-                            // SEOは、URLでグループ化する
-                            if (historyItem.task.searchLocation) {
-                                groupKey = `${historyItem.task.url} (@${historyItem.task.searchLocation})`;
-                            } else {
-                                groupKey = historyItem.task.url;
-                            }
                         }
                         
                         if (!acc[groupKey]) { 
@@ -1895,8 +1961,8 @@
                         const graphWrapper = document.createElement('div');
                         graphWrapper.className = 'graph-wrapper';
                         graphWrapper.dataset.groupKey = groupKey;
-                        graphWrapper.style.position = 'relative';
-                        graphWrapper.style.height = '220px';
+                        graphWrapper.style.position = 'relative'; // グラフのツールチップ表示に必要
+                        graphWrapper.style.height = 'auto'; // 高さを自動調整に変更
                         graphWrapper.style.marginBottom = '40px';
 
                         const headerContainer = document.createElement('div');
@@ -1923,14 +1989,25 @@
                         const downButton = document.createElement('button');
                         downButton.textContent = '↓';
                         downButton.onclick = () => moveGraph(graphWrapper, 'down');
+                        
+                        const excelButton = document.createElement('button');
+                        excelButton.textContent = 'Excel出力';
+                        excelButton.className = 'excel-button'; // スタイル適用のためクラス追加
+                        excelButton.onclick = () => exportToCsv(groupKey, groupData, activeSearchType);
+
                         controls.appendChild(upButton);
                         controls.appendChild(downButton);
+                        controls.appendChild(excelButton);
                         headerContainer.appendChild(controls);
 
                         graphWrapper.appendChild(headerContainer);
 
+                        const canvasContainer = document.createElement('div'); // canvasを囲むdivを追加
+                        canvasContainer.style.height = '220px'; // グラフの高さはここで指定
+
                         const canvas = document.createElement('canvas');
-                        graphWrapper.appendChild(canvas);
+                        canvasContainer.appendChild(canvas); // canvasをコンテナに入れる
+                        graphWrapper.appendChild(canvasContainer); // コンテナをラッパーに入れる
                         autoHistoryGraphs.appendChild(graphWrapper);
 
                         const allDates = new Set();
@@ -1945,9 +2022,6 @@
                                 labelA = a.task.serviceKeyword;
                                 labelB = b.task.serviceKeyword;
                             } else if (activeSearchType === 'google') {
-                                labelA = a.task.keyword;
-                                labelB = b.task.keyword;
-                            } else if (activeSearchType === 'seo') {
                                 labelA = a.task.keyword;
                                 labelB = b.task.keyword;
                             }
@@ -1974,8 +2048,6 @@
                                 // 特集ページの場合、同じグラフに複数のサロンが表示される可能性があるため、サロン名を表示
                                 labelText = taskData.task.salonName;
                             } else if (activeSearchType === 'google') {
-                                labelText = taskData.task.keyword;
-                            } else if (activeSearchType === 'seo') {
                                 labelText = taskData.task.keyword;
                             }
 
@@ -2084,6 +2156,322 @@
                                 }
                             }
                         });
+
+                        // --- HPB通常検索の場合のみ、表形式の履歴も表示 ---
+                        if (activeSearchType === 'normal') {
+                            const tableContainer = document.createElement('div');
+                            tableContainer.style.marginTop = '20px';
+                            tableContainer.style.overflowX = 'auto'; // 横に長くなる可能性があるのでスクロール可能に
+
+                            const table = document.createElement('table');
+                            table.style.width = '100%';
+                            table.style.borderCollapse = 'collapse';
+                            table.style.fontSize = '13px';
+
+                            // ヘッダー行
+                            const thead = document.createElement('thead');
+                            const headerRow = document.createElement('tr');
+                            const thKeyword = document.createElement('th');
+                            thKeyword.textContent = 'キーワード';
+                            thKeyword.style.padding = '8px';
+                            thKeyword.style.border = '1px solid #ddd';
+                            thKeyword.style.backgroundColor = '#f8f8f8';
+                            thKeyword.style.textAlign = 'left';
+                            thKeyword.style.minWidth = '100px';
+                            headerRow.appendChild(thKeyword);
+
+                            sortedLabels.forEach(date => {
+                                const th = document.createElement('th');
+                                const d = new Date(date);
+                                th.textContent = `${d.getMonth() + 1}/${d.getDate()}`;
+                                th.style.padding = '8px';
+                                th.style.border = '1px solid #ddd';
+                                th.style.backgroundColor = '#f8f8f8';
+                                th.style.minWidth = '50px';
+                                headerRow.appendChild(th);
+                            });
+                            thead.appendChild(headerRow);
+                            table.appendChild(thead);
+
+                            // データ行
+                            const tbody = document.createElement('tbody');
+                            groupData.forEach((taskData, rowIndex) => {
+                                const dataMap = new Map(taskData.log.map(entry => [entry.date, { rank: entry.rank, screenshot: entry.screenshot }]));
+                                const row = document.createElement('tr');
+
+                                // --- 縞模様のスタイルを適用 ---
+                                if (rowIndex % 2 === 1) { // 奇数行に背景色を設定
+                                    row.style.backgroundColor = '#f9f9f9';
+                                }
+
+                                const tdKeyword = document.createElement('td');
+                                tdKeyword.textContent = taskData.task.serviceKeyword;
+                                tdKeyword.style.padding = '8px';
+                                tdKeyword.style.border = '1px solid #ddd';
+                                tdKeyword.style.fontWeight = '500';
+                                row.appendChild(tdKeyword);
+
+                                sortedLabels.forEach((date, index) => {
+                                    const td = document.createElement('td');
+                                    const currentEntry = dataMap.get(date);
+                                    const currentRank = currentEntry ? currentEntry.rank : null;
+
+                                    let rankHtml = currentRank !== null ? String(currentRank) : '-';
+
+                                    // 2日目以降のデータで、かつ当日のデータがある場合のみ比較
+                                    if (index > 0 && currentRank !== null) {
+                                        const prevDate = sortedLabels[index - 1];
+                                        const prevEntry = dataMap.get(prevDate);
+                                        const prevRank = prevEntry ? prevEntry.rank : null;
+
+                                        const getNumericRank = (rank) => {
+                                            if (rank === null || rank === '-') return Infinity; // データなし
+                                            if (rank === '圏外' || typeof rank !== 'number') return 101; // 圏外は101位として扱う
+                                            return rank;
+                                        };
+                                        const numericCurrent = getNumericRank(currentRank);
+                                        const numericPrev = getNumericRank(prevRank);
+
+                                        if (numericPrev !== Infinity) { // 前日のデータがある場合のみ矢印を表示
+                                            const diff = numericPrev - numericCurrent;
+                                            let color = '#1c1c1e'; // デフォルト色
+                                            let fontWeight = 'normal';
+                                            let arrow = '';
+
+                                            if (diff >= 5)      { color = '#34c759'; fontWeight = 'bold'; arrow = '↑'; }  // 急上昇
+                                            else if (diff > 0)  { color = '#007aff'; arrow = '↗'; }  // 上昇
+                                            else if (diff === 0)  { color = '#8e8e93'; arrow = '→'; }  // 横ばい
+                                            else if (diff > -5) { color = '#ff9500'; arrow = '↘'; }  // 下降
+                                            else                { color = '#ff3b30'; fontWeight = 'bold'; arrow = '↓'; }  // 急下降
+
+                                            if (arrow) {
+                                                rankHtml = `<span style="color: ${color}; font-weight: ${fontWeight};">` +
+                                                           `<span style="display: inline-block; width: 1.2em; text-align: right; margin-right: 2px;">${arrow}</span>` +
+                                                           `${currentRank}` +
+                                                           `</span>`;
+                                            }
+                                        }
+                                    }
+
+                                    td.innerHTML = rankHtml;
+                                    td.style.padding = '8px';
+                                    td.style.border = '1px solid #ddd';
+                                    td.style.textAlign = 'center';
+                                    if (currentEntry && currentEntry.screenshot) {
+                                        td.style.cursor = 'pointer';
+                                        td.style.textDecoration = 'underline';
+                                        td.onclick = () => window.open(currentEntry.screenshot, '_blank');
+                                    }
+                                    row.appendChild(td);
+                                });
+                                tbody.appendChild(row);
+                            });
+                            table.appendChild(tbody);
+                            tableContainer.appendChild(table);
+                            graphWrapper.appendChild(tableContainer);
+                        }
+                        // --- HPB特集検索の場合も、表形式の履歴も表示 ---
+                        else if (activeSearchType === 'special') {
+                            const tableContainer = document.createElement('div');
+                            tableContainer.style.marginTop = '20px';
+                            tableContainer.style.overflowX = 'auto';
+
+                            const table = document.createElement('table');
+                            table.style.width = '100%';
+                            table.style.borderCollapse = 'collapse';
+                            table.style.fontSize = '13px';
+
+                            // ヘッダー行
+                            const thead = document.createElement('thead');
+                            const headerRow = document.createElement('tr');
+                            const thSalonName = document.createElement('th');
+                            thSalonName.textContent = 'サロン名'; // ヘッダーを変更
+                            thSalonName.style.padding = '8px';
+                            thSalonName.style.border = '1px solid #ddd';
+                            thSalonName.style.backgroundColor = '#f8f8f8';
+                            thSalonName.style.textAlign = 'left';
+                            thSalonName.style.minWidth = '100px';
+                            headerRow.appendChild(thSalonName);
+
+                            sortedLabels.forEach(date => {
+                                const th = document.createElement('th');
+                                const d = new Date(date);
+                                th.textContent = `${d.getMonth() + 1}/${d.getDate()}`;
+                                th.style.padding = '8px';
+                                th.style.border = '1px solid #ddd';
+                                th.style.backgroundColor = '#f8f8f8';
+                                th.style.minWidth = '50px';
+                                headerRow.appendChild(th);
+                            });
+                            thead.appendChild(headerRow);
+                            table.appendChild(thead);
+
+                            // データ行
+                            const tbody = document.createElement('tbody');
+                            groupData.forEach((taskData, rowIndex) => {
+                                const dataMap = new Map(taskData.log.map(entry => [entry.date, { rank: entry.rank, screenshot: entry.screenshot }]));
+                                const row = document.createElement('tr');
+
+                                if (rowIndex % 2 === 1) {
+                                    row.style.backgroundColor = '#f9f9f9';
+                                }
+
+                                const tdSalonName = document.createElement('td');
+                                tdSalonName.textContent = taskData.task.salonName; // 表示内容をサロン名に変更
+                                tdSalonName.style.padding = '8px';
+                                tdSalonName.style.border = '1px solid #ddd';
+                                tdSalonName.style.fontWeight = '500';
+                                row.appendChild(tdSalonName);
+
+                                sortedLabels.forEach((date, index) => {
+                                    const td = document.createElement('td');
+                                    const currentEntry = dataMap.get(date);
+                                    const currentRank = currentEntry ? currentEntry.rank : null;
+                                    let rankHtml = currentRank !== null ? String(currentRank) : '-';
+
+                                    if (index > 0 && currentRank !== null) {
+                                        const prevDate = sortedLabels[index - 1];
+                                        const prevEntry = dataMap.get(prevDate);
+                                        const prevRank = prevEntry ? prevEntry.rank : null;
+                                        const getNumericRank = (rank) => (rank === null || rank === '-' || typeof rank !== 'number') ? Infinity : rank;
+                                        const numericCurrent = getNumericRank(currentRank);
+                                        const numericPrev = getNumericRank(prevRank);
+
+                                        if (numericPrev !== Infinity) {
+                                            const diff = numericPrev - numericCurrent;
+                                            let color = '#1c1c1e', fontWeight = 'normal', arrow = '';
+                                            if (diff >= 5)      { color = '#34c759'; fontWeight = 'bold'; arrow = '↑'; }
+                                            else if (diff > 0)  { color = '#007aff'; arrow = '↗'; }
+                                            else if (diff === 0)  { color = '#8e8e93'; arrow = '→'; }
+                                            else if (diff > -5) { color = '#ff9500'; arrow = '↘'; }
+                                            else                { color = '#ff3b30'; fontWeight = 'bold'; arrow = '↓'; }
+
+                                            if (arrow) {
+                                                rankHtml = `<span style="color: ${color}; font-weight: ${fontWeight};"><span style="display: inline-block; width: 1.2em; text-align: right; margin-right: 2px;">${arrow}</span>${currentRank}</span>`;
+                                            }
+                                        }
+                                    }
+
+                                    td.innerHTML = rankHtml;
+                                    td.style.padding = '8px';
+                                    td.style.border = '1px solid #ddd';
+                                    td.style.textAlign = 'center';
+                                    if (currentEntry && currentEntry.screenshot) {
+                                        td.style.cursor = 'pointer';
+                                        td.style.textDecoration = 'underline';
+                                        td.onclick = () => window.open(currentEntry.screenshot, '_blank');
+                                    }
+                                    row.appendChild(td);
+                                });
+                                tbody.appendChild(row);
+                            });
+                            table.appendChild(tbody);
+                            tableContainer.appendChild(table);
+                            graphWrapper.appendChild(tableContainer);
+                        }
+                        // --- MEO検索の場合も、表形式の履歴も表示 ---
+                        else if (activeSearchType === 'google') {
+                            const tableContainer = document.createElement('div');
+                            tableContainer.style.marginTop = '20px';
+                            tableContainer.style.overflowX = 'auto';
+
+                            const table = document.createElement('table');
+                            table.style.width = '100%';
+                            table.style.borderCollapse = 'collapse';
+                            table.style.fontSize = '13px';
+
+                            // ヘッダー行
+                            const thead = document.createElement('thead');
+                            const headerRow = document.createElement('tr');
+                            const thKeyword = document.createElement('th');
+                            thKeyword.textContent = 'キーワード'; // ヘッダーを変更
+                            thKeyword.style.padding = '8px';
+                            thKeyword.style.border = '1px solid #ddd';
+                            thKeyword.style.backgroundColor = '#f8f8f8';
+                            thKeyword.style.textAlign = 'left';
+                            thKeyword.style.minWidth = '100px';
+                            headerRow.appendChild(thKeyword);
+
+                            sortedLabels.forEach(date => {
+                                const th = document.createElement('th');
+                                const d = new Date(date);
+                                th.textContent = `${d.getMonth() + 1}/${d.getDate()}`;
+                                th.style.padding = '8px';
+                                th.style.border = '1px solid #ddd';
+                                th.style.backgroundColor = '#f8f8f8';
+                                th.style.minWidth = '50px';
+                                headerRow.appendChild(th);
+                            });
+                            thead.appendChild(headerRow);
+                            table.appendChild(thead);
+
+                            // データ行
+                            const tbody = document.createElement('tbody');
+                            groupData.forEach((taskData, rowIndex) => {
+                                const dataMap = new Map(taskData.log.map(entry => [entry.date, { rank: entry.rank, screenshot: entry.screenshot }]));
+                                const row = document.createElement('tr');
+
+                                if (rowIndex % 2 === 1) {
+                                    row.style.backgroundColor = '#f9f9f9';
+                                }
+
+                                const tdKeyword = document.createElement('td');
+                                tdKeyword.textContent = taskData.task.keyword; // 表示内容をキーワードに変更
+                                tdKeyword.style.padding = '8px';
+                                tdKeyword.style.border = '1px solid #ddd';
+                                tdKeyword.style.fontWeight = '500';
+                                row.appendChild(tdKeyword);
+
+                                sortedLabels.forEach((date, index) => {
+                                    const td = document.createElement('td');
+                                    const currentEntry = dataMap.get(date);
+                                    const currentRank = currentEntry ? currentEntry.rank : null;
+                                    let rankHtml = currentRank !== null ? String(currentRank) : '-';
+
+                                    if (index > 0 && currentRank !== null) {
+                                        const prevDate = sortedLabels[index - 1];
+                                        const prevEntry = dataMap.get(prevDate);
+                                        const prevRank = prevEntry ? prevEntry.rank : null;
+                                        const getNumericRank = (rank) => {
+                                            if (rank === null || rank === '-') return Infinity;
+                                            if (rank === '圏外' || typeof rank !== 'number') return 101; // 圏外は101位として扱う
+                                            return rank;
+                                        };
+                                        const numericCurrent = getNumericRank(currentRank);
+                                        const numericPrev = getNumericRank(prevRank);
+
+                                        if (numericPrev !== Infinity) {
+                                            const diff = numericPrev - numericCurrent;
+                                            let color = '#1c1c1e', fontWeight = 'normal', arrow = '';
+                                            if (diff >= 5)      { color = '#34c759'; fontWeight = 'bold'; arrow = '↑'; }
+                                            else if (diff > 0)  { color = '#007aff'; arrow = '↗'; }
+                                            else if (diff === 0)  { color = '#8e8e93'; arrow = '→'; }
+                                            else if (diff > -5) { color = '#ff9500'; arrow = '↘'; }
+                                            else                { color = '#ff3b30'; fontWeight = 'bold'; arrow = '↓'; }
+
+                                            if (arrow) {
+                                                rankHtml = `<span style="color: ${color}; font-weight: ${fontWeight};"><span style="display: inline-block; width: 1.2em; text-align: right; margin-right: 2px;">${arrow}</span>${currentRank}</span>`;
+                                            }
+                                        }
+                                    }
+
+                                    td.innerHTML = rankHtml;
+                                    td.style.padding = '8px';
+                                    td.style.border = '1px solid #ddd';
+                                    td.style.textAlign = 'center';
+                                    if (currentEntry && currentEntry.screenshot) {
+                                        td.style.cursor = 'pointer';
+                                        td.style.textDecoration = 'underline';
+                                        td.onclick = () => window.open(currentEntry.screenshot, '_blank');
+                                    }
+                                    row.appendChild(td);
+                                });
+                                tbody.appendChild(row);
+                            });
+                            table.appendChild(tbody);
+                            tableContainer.appendChild(table);
+                            graphWrapper.appendChild(tableContainer);
+                        }
                     });
                 } catch (error) {
                     console.error('自動計測履歴の読み込みに失敗しました:', error);
@@ -2126,6 +2514,11 @@
                 taskListToggleIcon.style.transform = 'rotate(0deg)';
             }
             fetchSchedule();
+
+            // --- 印刷ボタンのイベントリスナー ---
+            printButton.addEventListener('click', () => {
+                window.print();
+            });
             fetchAutoTasks();
             fetchAndDisplayAutoHistory();
         }); // End of main DOMContentLoaded listener

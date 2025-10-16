@@ -1,8 +1,8 @@
 [
   {
-    "id": "ケイトステージラッシュ-福山駅-まつげパーマ",
+    "id": "[google]-ケイトステージラッシュ-福山駅-まつげパーマ",
     "task": {
-      "id": "ケイトステージラッシュ-福山駅-まつげパーマ",
+      "id": "[google]-ケイトステージラッシュ-福山駅-まつげパーマ",
       "type": "google",
       "salonName": "ケイトステージラッシュ",
       "searchLocation": "福山駅",
@@ -13,6 +13,21 @@
         "date": "2025/09/30",
         "rank": 4,
         "screenshot": "screenshots/screenshot_meo_20250930_163335.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 1,
+        "screenshot": "screenshots/251014_172442_福山駅_まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 1,
+        "screenshot": "screenshots/251015_102309_福山駅_まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 1,
+        "screenshot": "screenshots/251016_174417_福山駅_まつげパーマ.jpg"
       }
     ]
   },
@@ -80,6 +95,36 @@
         "date": "2025/10/10",
         "rank": 2,
         "screenshot": "screenshots/251010_132242_福山駅_福山　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 2,
+        "screenshot": "screenshots/251011_095901_福山駅_福山　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 1,
+        "screenshot": "screenshots/251012_153810_福山駅_福山　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 2,
+        "screenshot": "screenshots/251013_095140_福山駅_福山　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 1,
+        "screenshot": "screenshots/251014_155457_福山駅_福山　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 2,
+        "screenshot": "screenshots/251015_102253_福山駅_福山　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 3,
+        "screenshot": "screenshots/251016_174403_福山駅_福山　まつげパーマ.jpg"
       }
     ]
   },
@@ -147,6 +192,36 @@
         "date": "2025/10/10",
         "rank": 1,
         "screenshot": "screenshots/251010_132258_福山駅_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 3,
+        "screenshot": "screenshots/251011_095917_福山駅_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 1,
+        "screenshot": "screenshots/251012_153827_福山駅_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 2,
+        "screenshot": "screenshots/251013_095157_福山駅_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 1,
+        "screenshot": "screenshots/251014_155513_福山駅_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 1,
+        "screenshot": "screenshots/251015_102325_福山駅_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 1,
+        "screenshot": "screenshots/251016_174432_福山駅_まつ毛パーマ.jpg"
       }
     ]
   },
@@ -214,6 +289,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_132315_福山駅_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_095934_福山駅_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_153843_福山駅_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_095213_福山駅_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_155530_福山駅_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_102342_福山駅_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_174449_福山駅_マツパ.jpg"
       }
     ]
   },
@@ -281,6 +386,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_132332_福山駅_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_095951_福山駅_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_153901_福山駅_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_095231_福山駅_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_155547_福山駅_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_102358_福山駅_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_174505_福山駅_まつぱ.jpg"
       }
     ]
   },
@@ -348,6 +483,36 @@
         "date": "2025/10/10",
         "rank": 1,
         "screenshot": "screenshots/251010_132349_福山駅_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 1,
+        "screenshot": "screenshots/251011_100007_福山駅_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 1,
+        "screenshot": "screenshots/251012_153917_福山駅_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 2,
+        "screenshot": "screenshots/251013_095249_福山駅_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 1,
+        "screenshot": "screenshots/251014_155604_福山駅_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 1,
+        "screenshot": "screenshots/251015_102415_福山駅_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 1,
+        "screenshot": "screenshots/251016_174521_福山駅_まつげ.jpg"
       }
     ]
   },
@@ -415,6 +580,36 @@
         "date": "2025/10/10",
         "rank": 3,
         "screenshot": "screenshots/251010_132405_福山駅_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 3,
+        "screenshot": "screenshots/251011_100024_福山駅_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 2,
+        "screenshot": "screenshots/251012_153934_福山駅_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 3,
+        "screenshot": "screenshots/251013_095307_福山駅_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 2,
+        "screenshot": "screenshots/251014_155621_福山駅_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 3,
+        "screenshot": "screenshots/251015_102431_福山駅_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 2,
+        "screenshot": "screenshots/251016_174537_福山駅_眉毛.jpg"
       }
     ]
   },
@@ -482,6 +677,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_132422_福山駅_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_100040_福山駅_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_153951_福山駅_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_095324_福山駅_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_155637_福山駅_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_102448_福山駅_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_174553_福山駅_眉毛ワックス.jpg"
       }
     ]
   },
@@ -549,6 +774,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_132438_福山駅_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_100057_福山駅_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_154008_福山駅_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_095340_福山駅_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_155654_福山駅_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_102504_福山駅_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_174609_福山駅_眉毛WAX.jpg"
       }
     ]
   },
@@ -616,6 +871,36 @@
         "date": "2025/10/10",
         "rank": 4,
         "screenshot": "screenshots/251010_132454_福山駅_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 4,
+        "screenshot": "screenshots/251011_100114_福山駅_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 3,
+        "screenshot": "screenshots/251012_154024_福山駅_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 6,
+        "screenshot": "screenshots/251013_095356_福山駅_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 3,
+        "screenshot": "screenshots/251014_155710_福山駅_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 5,
+        "screenshot": "screenshots/251015_102521_福山駅_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 4,
+        "screenshot": "screenshots/251016_174625_福山駅_アイラッシュ.jpg"
       }
     ]
   },
@@ -683,6 +968,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_132512_福山駅_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_100132_福山駅_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_154041_福山駅_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_095412_福山駅_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_155726_福山駅_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_102537_福山駅_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "枠無",
+        "screenshot": null
       }
     ]
   },
@@ -750,6 +1065,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_132528_福山駅_HBL.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_100149_福山駅_HBL.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_154058_福山駅_HBL.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_095430_福山駅_HBL.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_155743_福山駅_HBL.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_102553_福山駅_HBL.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_174655_福山駅_HBL.jpg"
       }
     ]
   },
@@ -817,6 +1162,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_132544_福山駅_ハリウッドブロウリフト.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_100205_福山駅_ハリウッドブロウリフト.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_154114_福山駅_ハリウッドブロウリフト.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_095446_福山駅_ハリウッドブロウリフト.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_155759_福山駅_ハリウッドブロウリフト.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_102609_福山駅_ハリウッドブロウリフト.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_174710_福山駅_ハリウッドブロウリフト.jpg"
       }
     ]
   },
@@ -884,6 +1259,36 @@
         "date": "2025/10/10",
         "rank": 1,
         "screenshot": "screenshots/251010_132602_福山駅_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 1,
+        "screenshot": "screenshots/251011_100222_福山駅_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 1,
+        "screenshot": "screenshots/251012_154131_福山駅_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 1,
+        "screenshot": "screenshots/251013_095503_福山駅_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 1,
+        "screenshot": "screenshots/251014_155816_福山駅_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 1,
+        "screenshot": "screenshots/251015_102625_福山駅_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 1,
+        "screenshot": "screenshots/251016_174726_福山駅_パリジェンヌ.jpg"
       }
     ]
   },
@@ -951,6 +1356,36 @@
         "date": "2025/10/10",
         "rank": 1,
         "screenshot": "screenshots/251010_132625_福山駅_福山　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 1,
+        "screenshot": "screenshots/251011_100243_福山駅_福山　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 1,
+        "screenshot": "screenshots/251012_154154_福山駅_福山　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 1,
+        "screenshot": "screenshots/251013_095527_福山駅_福山　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 1,
+        "screenshot": "screenshots/251014_155838_福山駅_福山　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 1,
+        "screenshot": "screenshots/251015_102647_福山駅_福山　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 1,
+        "screenshot": "screenshots/251016_174750_福山駅_福山　パリジェンヌ.jpg"
       }
     ]
   },
@@ -1018,6 +1453,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_132702_福山駅_福山　HBL.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_100308_福山駅_福山　HBL.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_154218_福山駅_福山　HBL.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_095550_福山駅_福山　HBL.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_155901_福山駅_福山　HBL.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_102711_福山駅_福山　HBL.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_174812_福山駅_福山　HBL.jpg"
       }
     ]
   },
@@ -1084,6 +1549,36 @@
       {
         "date": "2025/10/10",
         "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "枠無",
         "screenshot": null
       }
     ]
@@ -1152,6 +1647,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_132754_福山駅_福山　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_100358_福山駅_福山　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_154308_福山駅_福山　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_095636_福山駅_福山　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_155950_福山駅_福山　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_102801_福山駅_福山　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_174848_福山駅_福山　眉毛ワックス.jpg"
       }
     ]
   },
@@ -1219,6 +1744,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_132817_福山駅_福山　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_100421_福山駅_福山　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_154332_福山駅_福山　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_095700_福山駅_福山　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_160014_福山駅_福山　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_102824_福山駅_福山　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_174911_福山駅_福山　眉毛WAX.jpg"
       }
     ]
   },
@@ -1286,6 +1841,36 @@
         "date": "2025/10/10",
         "rank": 3,
         "screenshot": "screenshots/251010_132842_福山駅_福山　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 3,
+        "screenshot": "screenshots/251011_100447_福山駅_福山　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 3,
+        "screenshot": "screenshots/251012_154357_福山駅_福山　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 2,
+        "screenshot": "screenshots/251013_095726_福山駅_福山　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 2,
+        "screenshot": "screenshots/251014_160039_福山駅_福山　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 3,
+        "screenshot": "screenshots/251015_102849_福山駅_福山　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 2,
+        "screenshot": "screenshots/251016_174936_福山駅_福山　眉毛.jpg"
       }
     ]
   },
@@ -1353,6 +1938,36 @@
         "date": "2025/10/10",
         "rank": 1,
         "screenshot": "screenshots/251010_132906_福山駅_福山　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 1,
+        "screenshot": "screenshots/251011_100511_福山駅_福山　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 1,
+        "screenshot": "screenshots/251012_154421_福山駅_福山　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 2,
+        "screenshot": "screenshots/251013_095751_福山駅_福山　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 12,
+        "screenshot": "screenshots/251014_160105_福山駅_福山　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 1,
+        "screenshot": "screenshots/251015_102912_福山駅_福山　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 1,
+        "screenshot": "screenshots/251016_175000_福山駅_福山　まつげ.jpg"
       }
     ]
   },
@@ -1420,6 +2035,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_132929_福山駅_福山　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_100535_福山駅_福山　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_154444_福山駅_福山　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_095815_福山駅_福山　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_160129_福山駅_福山　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_102935_福山駅_福山　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_175022_福山駅_福山　マツパ.jpg"
       }
     ]
   },
@@ -1487,6 +2132,36 @@
         "date": "2025/10/10",
         "rank": 1,
         "screenshot": "screenshots/251010_132953_福山駅_福山　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 1,
+        "screenshot": "screenshots/251011_100557_福山駅_福山　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 1,
+        "screenshot": "screenshots/251012_154507_福山駅_福山　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 2,
+        "screenshot": "screenshots/251013_095838_福山駅_福山　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 1,
+        "screenshot": "screenshots/251014_160152_福山駅_福山　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 2,
+        "screenshot": "screenshots/251015_102959_福山駅_福山　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 1,
+        "screenshot": "screenshots/251016_175044_福山駅_福山　まつ毛パーマ.jpg"
       }
     ]
   },
@@ -1554,6 +2229,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_133010_福山市_HBL.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_100614_福山市_HBL.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_154524_福山市_HBL.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_095855_福山市_HBL.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_160216_福山市_HBL.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_103022_福山市_HBL.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_175101_福山市_HBL.jpg"
       }
     ]
   },
@@ -1621,6 +2326,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_133036_福山市_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_100638_福山市_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_154549_福山市_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_095917_福山市_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_160239_福山市_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_103045_福山市_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_175123_福山市_アイブロウ.jpg"
       }
     ]
   },
@@ -1688,6 +2423,36 @@
         "date": "2025/10/10",
         "rank": 4,
         "screenshot": "screenshots/251010_133100_福山市_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 4,
+        "screenshot": "screenshots/251011_100701_福山市_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 3,
+        "screenshot": "screenshots/251012_154613_福山市_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 6,
+        "screenshot": "screenshots/251013_095940_福山市_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 3,
+        "screenshot": "screenshots/251014_160303_福山市_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 5,
+        "screenshot": "screenshots/251015_103107_福山市_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 4,
+        "screenshot": "screenshots/251016_175145_福山市_アイラッシュ.jpg"
       }
     ]
   },
@@ -1755,6 +2520,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_133122_福山市_ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_100723_福山市_ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_154637_福山市_ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_100004_福山市_ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_160330_福山市_ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_103129_福山市_ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_175206_福山市_ハリウッドブロウ.jpg"
       }
     ]
   },
@@ -1822,6 +2617,36 @@
         "date": "2025/10/10",
         "rank": 1,
         "screenshot": "screenshots/251010_133145_福山市_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 1,
+        "screenshot": "screenshots/251011_100747_福山市_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 1,
+        "screenshot": "screenshots/251012_154700_福山市_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 1,
+        "screenshot": "screenshots/251013_100029_福山市_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 1,
+        "screenshot": "screenshots/251014_160354_福山市_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 1,
+        "screenshot": "screenshots/251015_103152_福山市_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 1,
+        "screenshot": "screenshots/251016_175228_福山市_パリジェンヌ.jpg"
       }
     ]
   },
@@ -1889,6 +2714,36 @@
         "date": "2025/10/10",
         "rank": 1,
         "screenshot": "screenshots/251010_133203_福山市_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 1,
+        "screenshot": "screenshots/251011_100805_福山市_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 1,
+        "screenshot": "screenshots/251012_154721_福山市_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 1,
+        "screenshot": "screenshots/251013_100053_福山市_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 1,
+        "screenshot": "screenshots/251014_160417_福山市_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 1,
+        "screenshot": "screenshots/251015_103211_福山市_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 1,
+        "screenshot": "screenshots/251016_175246_福山市_まつげ.jpg"
       }
     ]
   },
@@ -1956,6 +2811,36 @@
         "date": "2025/10/10",
         "rank": 1,
         "screenshot": "screenshots/251010_133226_福山市_まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 1,
+        "screenshot": "screenshots/251011_100828_福山市_まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 1,
+        "screenshot": "screenshots/251012_154745_福山市_まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 1,
+        "screenshot": "screenshots/251013_100118_福山市_まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 1,
+        "screenshot": "screenshots/251014_160440_福山市_まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 1,
+        "screenshot": "screenshots/251015_103234_福山市_まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 1,
+        "screenshot": "screenshots/251016_175307_福山市_まつげパーマ.jpg"
       }
     ]
   },
@@ -2023,6 +2908,36 @@
         "date": "2025/10/10",
         "rank": 1,
         "screenshot": "screenshots/251010_133248_福山市_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 1,
+        "screenshot": "screenshots/251011_100851_福山市_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 1,
+        "screenshot": "screenshots/251012_154807_福山市_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 1,
+        "screenshot": "screenshots/251013_100142_福山市_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 1,
+        "screenshot": "screenshots/251014_160502_福山市_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 1,
+        "screenshot": "screenshots/251015_103255_福山市_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 1,
+        "screenshot": "screenshots/251016_175326_福山市_まつ毛パーマ.jpg"
       }
     ]
   },
@@ -2090,6 +3005,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_133311_福山市_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_100914_福山市_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_154831_福山市_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_100206_福山市_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_160525_福山市_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_103318_福山市_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_175349_福山市_マツパ.jpg"
       }
     ]
   },
@@ -2157,6 +3102,36 @@
         "date": "2025/10/10",
         "rank": 3,
         "screenshot": "screenshots/251010_133329_福山市_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 3,
+        "screenshot": "screenshots/251011_100932_福山市_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 2,
+        "screenshot": "screenshots/251012_154849_福山市_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 3,
+        "screenshot": "screenshots/251013_100229_福山市_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 2,
+        "screenshot": "screenshots/251014_160548_福山市_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 3,
+        "screenshot": "screenshots/251015_103337_福山市_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 2,
+        "screenshot": "screenshots/251016_175406_福山市_眉毛.jpg"
       }
     ]
   },
@@ -2224,6 +3199,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_133352_福山市_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_100952_福山市_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_154913_福山市_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_100253_福山市_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_160612_福山市_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_103400_福山市_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_175429_福山市_眉毛ワックス.jpg"
       }
     ]
   },
@@ -2291,6 +3296,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_133415_福山市_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_101015_福山市_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_154937_福山市_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_100316_福山市_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_160635_福山市_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_103423_福山市_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_175451_福山市_眉毛WAX.jpg"
       }
     ]
   },
@@ -2358,6 +3393,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_133439_福山駅_福山　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_101039_福山駅_福山　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_155001_福山駅_福山　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_100339_福山駅_福山　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_160658_福山駅_福山　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_103446_福山駅_福山　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_175513_福山駅_福山　アイブロウ.jpg"
       }
     ]
   },
@@ -2425,6 +3490,36 @@
         "date": "2025/10/10",
         "rank": 2,
         "screenshot": "screenshots/251010_133502_福山駅_福山　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 2,
+        "screenshot": "screenshots/251011_101104_福山駅_福山　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 1,
+        "screenshot": "screenshots/251012_155026_福山駅_福山　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 2,
+        "screenshot": "screenshots/251013_100404_福山駅_福山　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 2,
+        "screenshot": "screenshots/251014_160721_福山駅_福山　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 3,
+        "screenshot": "screenshots/251015_103509_福山駅_福山　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 2,
+        "screenshot": "screenshots/251016_175536_福山駅_福山　アイラッシュ.jpg"
       }
     ]
   },
@@ -2492,6 +3587,36 @@
         "date": "2025/10/10",
         "rank": 1,
         "screenshot": "screenshots/251010_133521_福山市_福山　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 1,
+        "screenshot": "screenshots/251011_101122_福山市_福山　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 1,
+        "screenshot": "screenshots/251012_155048_福山市_福山　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 1,
+        "screenshot": "screenshots/251013_100427_福山市_福山　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 1,
+        "screenshot": "screenshots/251014_160744_福山市_福山　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 1,
+        "screenshot": "screenshots/251015_103527_福山市_福山　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 1,
+        "screenshot": "screenshots/251016_175558_福山市_福山　パリジェンヌ.jpg"
       }
     ]
   },
@@ -2559,6 +3684,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_133541_福山市_福山　HBL.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_101140_福山市_福山　HBL.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_155106_福山市_福山　HBL.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_100449_福山市_福山　HBL.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_160803_福山市_福山　HBL.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_103544_福山市_福山　HBL.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_175619_福山市_福山　HBL.jpg"
       }
     ]
   },
@@ -2626,6 +3781,36 @@
         "date": "2025/10/10",
         "rank": 2,
         "screenshot": "screenshots/251010_133603_福山市_福山　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 1,
+        "screenshot": "screenshots/251011_101203_福山市_福山　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 1,
+        "screenshot": "screenshots/251012_155129_福山市_福山　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 1,
+        "screenshot": "screenshots/251013_100511_福山市_福山　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 1,
+        "screenshot": "screenshots/251014_160828_福山市_福山　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 2,
+        "screenshot": "screenshots/251015_103606_福山市_福山　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 2,
+        "screenshot": "screenshots/251016_175640_福山市_福山　まつげパーマ.jpg"
       }
     ]
   },
@@ -2693,6 +3878,36 @@
         "date": "2025/10/10",
         "rank": 1,
         "screenshot": "screenshots/251010_133622_福山市_福山　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 1,
+        "screenshot": "screenshots/251011_101222_福山市_福山　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 1,
+        "screenshot": "screenshots/251012_155148_福山市_福山　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 1,
+        "screenshot": "screenshots/251013_100534_福山市_福山　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 1,
+        "screenshot": "screenshots/251014_160847_福山市_福山　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 2,
+        "screenshot": "screenshots/251015_103624_福山市_福山　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 1,
+        "screenshot": "screenshots/251016_175658_福山市_福山　まつ毛パーマ.jpg"
       }
     ]
   },
@@ -2760,6 +3975,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_133640_福山市_福山　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_101242_福山市_福山　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_155207_福山市_福山　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_100557_福山市_福山　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_160906_福山市_福山　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_103642_福山市_福山　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_175716_福山市_福山　マツパ.jpg"
       }
     ]
   },
@@ -2827,6 +4072,36 @@
         "date": "2025/10/10",
         "rank": 1,
         "screenshot": "screenshots/251010_133659_福山市_福山　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 1,
+        "screenshot": "screenshots/251011_101300_福山市_福山　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 1,
+        "screenshot": "screenshots/251012_155225_福山市_福山　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 1,
+        "screenshot": "screenshots/251013_100620_福山市_福山　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 1,
+        "screenshot": "screenshots/251014_160931_福山市_福山　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 1,
+        "screenshot": "screenshots/251015_103701_福山市_福山　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 1,
+        "screenshot": "screenshots/251016_175733_福山市_福山　まつげ.jpg"
       }
     ]
   },
@@ -2894,6 +4169,36 @@
         "date": "2025/10/10",
         "rank": 3,
         "screenshot": "screenshots/251010_133717_福山市_福山　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 3,
+        "screenshot": "screenshots/251011_101319_福山市_福山　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 3,
+        "screenshot": "screenshots/251012_155244_福山市_福山　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 3,
+        "screenshot": "screenshots/251013_100644_福山市_福山　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 2,
+        "screenshot": "screenshots/251014_160949_福山市_福山　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 3,
+        "screenshot": "screenshots/251015_103720_福山市_福山　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 2,
+        "screenshot": "screenshots/251016_175750_福山市_福山　眉毛.jpg"
       }
     ]
   },
@@ -2961,6 +4266,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_133741_福山市_福山　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_101343_福山市_福山　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_155308_福山市_福山　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_100707_福山市_福山　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_161012_福山市_福山　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_103743_福山市_福山　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_175813_福山市_福山　眉毛ワックス.jpg"
       }
     ]
   },
@@ -3028,6 +4363,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_133806_福山市_福山　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_101408_福山市_福山　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_155331_福山市_福山　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_100730_福山市_福山　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_161035_福山市_福山　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_103805_福山市_福山　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": null
       }
     ]
   },
@@ -3095,6 +4460,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_133829_福山市_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_101431_福山市_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_155354_福山市_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_100754_福山市_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_161058_福山市_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_103828_福山市_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_175907_福山市_まつぱ.jpg"
       }
     ]
   },
@@ -3162,6 +4557,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_133853_福山市_福山　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_101448_福山市_福山　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_155412_福山市_福山　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_100812_福山市_福山　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_161116_福山市_福山　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_103853_福山市_福山　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_175929_福山市_福山　アイブロウ.jpg"
       }
     ]
   },
@@ -3229,6 +4654,36 @@
         "date": "2025/10/10",
         "rank": 2,
         "screenshot": "screenshots/251010_133914_福山市_福山　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 2,
+        "screenshot": "screenshots/251011_101506_福山市_福山　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 1,
+        "screenshot": "screenshots/251012_155431_福山市_福山　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 2,
+        "screenshot": "screenshots/251013_100830_福山市_福山　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 2,
+        "screenshot": "screenshots/251014_161134_福山市_福山　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 3,
+        "screenshot": "screenshots/251015_103912_福山市_福山　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 2,
+        "screenshot": "screenshots/251016_175948_福山市_福山　アイラッシュ.jpg"
       }
     ]
   },
@@ -3296,6 +4751,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": null
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "枠無",
+        "screenshot": null
       }
     ]
   },
@@ -3358,6 +4843,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_135144_岐阜駅_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_102739_岐阜駅_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_160645_岐阜駅_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_102015_岐阜駅_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_162349_岐阜駅_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_105153_岐阜駅_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_151743_岐阜駅_まつ毛パーマ.jpg"
       }
     ]
   },
@@ -3420,6 +4935,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_135211_岐阜駅_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_102805_岐阜駅_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_160711_岐阜駅_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_102041_岐阜駅_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_162415_岐阜駅_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_105220_岐阜駅_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_151809_岐阜駅_マツパ.jpg"
       }
     ]
   },
@@ -3482,6 +5027,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_135238_岐阜駅_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_102831_岐阜駅_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_160737_岐阜駅_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_102106_岐阜駅_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_162440_岐阜駅_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_105246_岐阜駅_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_151836_岐阜駅_まつぱ.jpg"
       }
     ]
   },
@@ -3544,6 +5119,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_135305_岐阜駅_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_102856_岐阜駅_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_160802_岐阜駅_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_102131_岐阜駅_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_162505_岐阜駅_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_105311_岐阜駅_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_151902_岐阜駅_まつげ.jpg"
       }
     ]
   },
@@ -3606,6 +5211,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_135501_岐阜駅_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_103044_岐阜駅_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_160949_岐阜駅_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_102319_岐阜駅_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_162651_岐阜駅_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_105501_岐阜駅_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_152046_岐阜駅_アイラッシュ.jpg"
       }
     ]
   },
@@ -3668,6 +5303,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_135530_岐阜駅_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_103110_岐阜駅_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_161016_岐阜駅_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_102346_岐阜駅_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_162718_岐阜駅_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_105526_岐阜駅_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_152113_岐阜駅_アイブロウ.jpg"
       }
     ]
   },
@@ -3730,6 +5395,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_135558_岐阜駅_HBL.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_103136_岐阜駅_HBL.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_161045_岐阜駅_HBL.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_102407_岐阜駅_HBL.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_162744_岐阜駅_HBL.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_105551_岐阜駅_HBL.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_152145_岐阜駅_HBL.jpg"
       }
     ]
   },
@@ -3792,6 +5487,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_135626_岐阜駅_ハリウッドブロウリフト.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_103202_岐阜駅_ハリウッドブロウリフト.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_161111_岐阜駅_ハリウッドブロウリフト.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_102432_岐阜駅_ハリウッドブロウリフト.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_162810_岐阜駅_ハリウッドブロウリフト.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_105617_岐阜駅_ハリウッドブロウリフト.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_152215_岐阜駅_ハリウッドブロウリフト.jpg"
       }
     ]
   },
@@ -3854,6 +5579,36 @@
         "date": "2025/10/10",
         "rank": 32,
         "screenshot": "screenshots/251010_135654_岐阜駅_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 32,
+        "screenshot": "screenshots/251011_103229_岐阜駅_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 32,
+        "screenshot": "screenshots/251012_161138_岐阜駅_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 32,
+        "screenshot": "screenshots/251013_102459_岐阜駅_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 32,
+        "screenshot": "screenshots/251015_105648_岐阜駅_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 32,
+        "screenshot": "screenshots/251016_152244_岐阜駅_パリジェンヌ.jpg"
       }
     ]
   },
@@ -3916,6 +5671,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_135118_岐阜駅_岐阜　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_102712_岐阜駅_岐阜　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_160619_岐阜駅_岐阜　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_101949_岐阜駅_岐阜　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_162323_岐阜駅_岐阜　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_105127_岐阜駅_岐阜　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_151714_岐阜駅_岐阜　まつげパーマ.jpg"
       }
     ]
   },
@@ -3973,6 +5758,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_135720_岐阜駅_岐阜　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_103255_岐阜駅_岐阜　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_161204_岐阜駅_岐阜　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_102524_岐阜駅_岐阜　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_162909_岐阜駅_岐阜　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_105715_岐阜駅_岐阜　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_152311_岐阜駅_岐阜　パリジェンヌ.jpg"
       }
     ]
   },
@@ -4030,6 +5845,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_135746_岐阜駅_岐阜　HBL.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_103320_岐阜駅_岐阜　HBL.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_161229_岐阜駅_岐阜　HBL.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_102549_岐阜駅_岐阜　HBL.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_162934_岐阜駅_岐阜　HBL.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_105748_岐阜駅_岐阜　HBL.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_152337_岐阜駅_岐阜　HBL.jpg"
       }
     ]
   },
@@ -4087,6 +5932,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_135810_岐阜駅_岐阜　ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_103343_岐阜駅_岐阜　ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_161253_岐阜駅_岐阜　ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_102609_岐阜駅_岐阜　ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_162957_岐阜駅_岐阜　ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_105811_岐阜駅_岐阜　ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_152401_岐阜駅_岐阜　ハリウッドブロウ.jpg"
       }
     ]
   },
@@ -4144,6 +6019,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_135835_岐阜駅_岐阜　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_103407_岐阜駅_岐阜　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_161317_岐阜駅_岐阜　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_102633_岐阜駅_岐阜　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_163022_岐阜駅_岐阜　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_105838_岐阜駅_岐阜　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_152427_岐阜駅_岐阜　眉毛ワックス.jpg"
       }
     ]
   },
@@ -4201,6 +6106,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_135859_岐阜駅_岐阜　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_103431_岐阜駅_岐阜　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_161342_岐阜駅_岐阜　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_102657_岐阜駅_岐阜　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_163047_岐阜駅_岐阜　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_105903_岐阜駅_岐阜　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_152453_岐阜駅_岐阜　眉毛WAX.jpg"
       }
     ]
   },
@@ -4258,6 +6193,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_135925_岐阜駅_岐阜　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_103458_岐阜駅_岐阜　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_161406_岐阜駅_岐阜　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_102722_岐阜駅_岐阜　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_163112_岐阜駅_岐阜　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_105927_岐阜駅_岐阜　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_152518_岐阜駅_岐阜　眉毛.jpg"
       }
     ]
   },
@@ -4315,6 +6280,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_135950_岐阜駅_岐阜　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_103523_岐阜駅_岐阜　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_161431_岐阜駅_岐阜　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_102747_岐阜駅_岐阜　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_163136_岐阜駅_岐阜　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_105951_岐阜駅_岐阜　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_152543_岐阜駅_岐阜　まつげ.jpg"
       }
     ]
   },
@@ -4372,6 +6367,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_140016_岐阜駅_岐阜　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_103548_岐阜駅_岐阜　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_161456_岐阜駅_岐阜　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_102812_岐阜駅_岐阜　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_163201_岐阜駅_岐阜　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_110016_岐阜駅_岐阜　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_152608_岐阜駅_岐阜　マツパ.jpg"
       }
     ]
   },
@@ -4429,6 +6454,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_140041_岐阜駅_岐阜　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_103612_岐阜駅_岐阜　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_161522_岐阜駅_岐阜　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_102837_岐阜駅_岐阜　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_163227_岐阜駅_岐阜　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_110042_岐阜駅_岐阜　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_152634_岐阜駅_岐阜　まつ毛パーマ.jpg"
       }
     ]
   },
@@ -4486,6 +6541,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_140106_岐阜駅_岐阜　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_103635_岐阜駅_岐阜　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_161547_岐阜駅_岐阜　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_102901_岐阜駅_岐阜　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_163252_岐阜駅_岐阜　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_110105_岐阜駅_岐阜　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_152657_岐阜駅_岐阜　アイブロウ.jpg"
       }
     ]
   },
@@ -4543,6 +6628,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_140129_岐阜駅_岐阜　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_103659_岐阜駅_岐阜　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_161612_岐阜駅_岐阜　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_102924_岐阜駅_岐阜　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_163315_岐阜駅_岐阜　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_110128_岐阜駅_岐阜　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_152721_岐阜駅_岐阜　アイラッシュ.jpg"
       }
     ]
   },
@@ -4605,6 +6720,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_140154_岐阜市_HBL.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_103722_岐阜市_HBL.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_161636_岐阜市_HBL.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_102944_岐阜市_HBL.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_163339_岐阜市_HBL.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_110152_岐阜市_HBL.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_152746_岐阜市_HBL.jpg"
       }
     ]
   },
@@ -4662,6 +6807,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_140220_岐阜市_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_103747_岐阜市_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_161700_岐阜市_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_103008_岐阜市_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_163404_岐阜市_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_110216_岐阜市_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_152811_岐阜市_アイブロウ.jpg"
       }
     ]
   },
@@ -4719,6 +6894,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_140245_岐阜市_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_103812_岐阜市_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_161725_岐阜市_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_103032_岐阜市_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_163428_岐阜市_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_110239_岐阜市_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_152836_岐阜市_アイラッシュ.jpg"
       }
     ]
   },
@@ -4776,6 +6981,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_140312_岐阜市_ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_103838_岐阜市_ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_161748_岐阜市_ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_103057_岐阜市_ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_163453_岐阜市_ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_110305_岐阜市_ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_152905_岐阜市_ハリウッドブロウ.jpg"
       }
     ]
   },
@@ -4833,6 +7068,36 @@
         "date": "2025/10/10",
         "rank": 29,
         "screenshot": "screenshots/251010_140337_岐阜市_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 29,
+        "screenshot": "screenshots/251011_103903_岐阜市_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 29,
+        "screenshot": "screenshots/251012_161813_岐阜市_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 29,
+        "screenshot": "screenshots/251013_103123_岐阜市_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 29,
+        "screenshot": "screenshots/251014_163518_岐阜市_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 29,
+        "screenshot": "screenshots/251015_110330_岐阜市_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 29,
+        "screenshot": "screenshots/251016_152933_岐阜市_パリジェンヌ.jpg"
       }
     ]
   },
@@ -4890,6 +7155,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_140402_岐阜市_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_103929_岐阜市_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_161838_岐阜市_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_103147_岐阜市_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_163542_岐阜市_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_110354_岐阜市_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_153002_岐阜市_まつげ.jpg"
       }
     ]
   },
@@ -4947,6 +7242,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_140427_岐阜市_まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_103953_岐阜市_まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_161903_岐阜市_まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_103211_岐阜市_まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_163606_岐阜市_まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_110419_岐阜市_まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_153029_岐阜市_まつげパーマ.jpg"
       }
     ]
   },
@@ -5004,6 +7329,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_140452_岐阜市_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_104018_岐阜市_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_161927_岐阜市_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_103236_岐阜市_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_163631_岐阜市_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_110443_岐阜市_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_153055_岐阜市_まつ毛パーマ.jpg"
       }
     ]
   },
@@ -5061,6 +7416,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_140517_岐阜市_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_104042_岐阜市_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_161952_岐阜市_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_103300_岐阜市_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_163655_岐阜市_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_110508_岐阜市_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_153120_岐阜市_マツパ.jpg"
       }
     ]
   },
@@ -5118,6 +7503,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_140544_岐阜市_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_104108_岐阜市_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_162018_岐阜市_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_103324_岐阜市_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_163720_岐阜市_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_110532_岐阜市_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_153146_岐阜市_眉毛.jpg"
       }
     ]
   },
@@ -5175,6 +7590,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_140609_岐阜市_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_104134_岐阜市_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_162043_岐阜市_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_103348_岐阜市_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_163744_岐阜市_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_110557_岐阜市_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_153212_岐阜市_眉毛ワックス.jpg"
       }
     ]
   },
@@ -5232,6 +7677,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_140634_岐阜市_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_104200_岐阜市_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_162108_岐阜市_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_103413_岐阜市_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_163810_岐阜市_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_110622_岐阜市_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_153236_岐阜市_眉毛WAX.jpg"
       }
     ]
   },
@@ -5289,6 +7764,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_140658_岐阜市_岐阜　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_104225_岐阜市_岐阜　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_162133_岐阜市_岐阜　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_103437_岐阜市_岐阜　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_163834_岐阜市_岐阜　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_110646_岐阜市_岐阜　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_153301_岐阜市_岐阜　パリジェンヌ.jpg"
       }
     ]
   },
@@ -5346,6 +7851,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_140723_岐阜市_岐阜　HBL.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_104249_岐阜市_岐阜　HBL.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_162157_岐阜市_岐阜　HBL.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_103500_岐阜市_岐阜　HBL.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_163857_岐阜市_岐阜　HBL.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_110710_岐阜市_岐阜　HBL.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_153326_岐阜市_岐阜　HBL.jpg"
       }
     ]
   },
@@ -5403,6 +7938,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_140748_岐阜市_岐阜　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_104313_岐阜市_岐阜　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_162221_岐阜市_岐阜　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_103524_岐阜市_岐阜　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_163921_岐阜市_岐阜　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_110733_岐阜市_岐阜　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_153349_岐阜市_岐阜　まつげパーマ.jpg"
       }
     ]
   },
@@ -5460,6 +8025,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_140813_岐阜市_岐阜　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_104337_岐阜市_岐阜　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_162246_岐阜市_岐阜　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_103549_岐阜市_岐阜　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_163945_岐阜市_岐阜　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_110757_岐阜市_岐阜　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_153414_岐阜市_岐阜　まつ毛パーマ.jpg"
       }
     ]
   },
@@ -5517,6 +8112,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_140838_岐阜市_岐阜　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_104401_岐阜市_岐阜　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_162311_岐阜市_岐阜　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_103614_岐阜市_岐阜　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_164009_岐阜市_岐阜　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_110820_岐阜市_岐阜　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_153439_岐阜市_岐阜　マツパ.jpg"
       }
     ]
   },
@@ -5574,6 +8199,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_140902_岐阜市_岐阜　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_104426_岐阜市_岐阜　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_162338_岐阜市_岐阜　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_103637_岐阜市_岐阜　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_164033_岐阜市_岐阜　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_110845_岐阜市_岐阜　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_153505_岐阜市_岐阜　まつげ.jpg"
       }
     ]
   },
@@ -5631,6 +8286,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_140926_岐阜市_岐阜　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_104450_岐阜市_岐阜　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_162402_岐阜市_岐阜　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_103701_岐阜市_岐阜　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_164056_岐阜市_岐阜　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_110909_岐阜市_岐阜　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_153529_岐阜市_岐阜　眉毛.jpg"
       }
     ]
   },
@@ -5688,6 +8373,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_140951_岐阜市_岐阜　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_104515_岐阜市_岐阜　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_162428_岐阜市_岐阜　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_103725_岐阜市_岐阜　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_164120_岐阜市_岐阜　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_110934_岐阜市_岐阜　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_153552_岐阜市_岐阜　眉毛ワックス.jpg"
       }
     ]
   },
@@ -5745,6 +8460,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_141016_岐阜市_岐阜　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_104541_岐阜市_岐阜　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_162454_岐阜市_岐阜　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_103750_岐阜市_岐阜　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_164145_岐阜市_岐阜　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_110959_岐阜市_岐阜　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_153616_岐阜市_岐阜　眉毛WAX.jpg"
       }
     ]
   },
@@ -5802,6 +8547,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_141041_岐阜市_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_104605_岐阜市_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_162518_岐阜市_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_103814_岐阜市_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_164209_岐阜市_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_111024_岐阜市_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_153641_岐阜市_まつぱ.jpg"
       }
     ]
   },
@@ -5859,6 +8634,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_141104_岐阜市_岐阜　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_104629_岐阜市_岐阜　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_162543_岐阜市_岐阜　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_103837_岐阜市_岐阜　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_164233_岐阜市_岐阜　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_111047_岐阜市_岐阜　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_153703_岐阜市_岐阜　アイブロウ.jpg"
       }
     ]
   },
@@ -5916,6 +8721,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_141127_岐阜市_岐阜　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_104653_岐阜市_岐阜　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_162606_岐阜市_岐阜　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_103900_岐阜市_岐阜　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_164257_岐阜市_岐阜　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_111110_岐阜市_岐阜　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_153725_岐阜市_岐阜　アイラッシュ.jpg"
       }
     ]
   },
@@ -5973,6 +8808,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_141145_岐阜市_岐阜　ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_104716_岐阜市_岐阜　ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_162630_岐阜市_岐阜　ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_103920_岐阜市_岐阜　ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_164315_岐阜市_岐阜　ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_111128_岐阜市_岐阜　ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_153742_岐阜市_岐阜　ハリウッドブロウ.jpg"
       }
     ]
   },
@@ -6035,6 +8900,36 @@
         "date": "2025/10/10",
         "rank": 9,
         "screenshot": "screenshots/251010_134002_池袋駅_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 13,
+        "screenshot": "screenshots/251011_101557_池袋駅_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 9,
+        "screenshot": "screenshots/251012_155521_池袋駅_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 13,
+        "screenshot": "screenshots/251013_100921_池袋駅_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 9,
+        "screenshot": "screenshots/251014_161224_池袋駅_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 13,
+        "screenshot": "screenshots/251015_104007_池袋駅_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 9,
+        "screenshot": "screenshots/251016_150630_池袋駅_まつ毛パーマ.jpg"
       }
     ]
   },
@@ -6097,6 +8992,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_134032_池袋駅_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_101626_池袋駅_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_155550_池袋駅_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_100949_池袋駅_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_161252_池袋駅_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_104045_池袋駅_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_150659_池袋駅_マツパ.jpg"
       }
     ]
   },
@@ -6159,6 +9084,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_134100_池袋駅_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_101655_池袋駅_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_155620_池袋駅_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_101016_池袋駅_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_161320_池袋駅_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_104113_池袋駅_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_150727_池袋駅_まつぱ.jpg"
       }
     ]
   },
@@ -6221,6 +9176,36 @@
         "date": "2025/10/10",
         "rank": 12,
         "screenshot": "screenshots/251010_134128_池袋駅_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 20,
+        "screenshot": "screenshots/251011_101722_池袋駅_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 11,
+        "screenshot": "screenshots/251012_155648_池袋駅_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 19,
+        "screenshot": "screenshots/251013_101043_池袋駅_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 11,
+        "screenshot": "screenshots/251014_161348_池袋駅_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 18,
+        "screenshot": "screenshots/251015_104140_池袋駅_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 10,
+        "screenshot": "screenshots/251016_150753_池袋駅_まつげ.jpg"
       }
     ]
   },
@@ -6283,6 +9268,36 @@
         "date": "2025/10/10",
         "rank": 30,
         "screenshot": "screenshots/251010_134158_池袋駅_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 31,
+        "screenshot": "screenshots/251011_101752_池袋駅_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 30,
+        "screenshot": "screenshots/251012_155717_池袋駅_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 32,
+        "screenshot": "screenshots/251013_101112_池袋駅_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 31,
+        "screenshot": "screenshots/251014_161417_池袋駅_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 32,
+        "screenshot": "screenshots/251015_104209_池袋駅_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 31,
+        "screenshot": "screenshots/251016_150822_池袋駅_眉毛.jpg"
       }
     ]
   },
@@ -6345,6 +9360,36 @@
         "date": "2025/10/10",
         "rank": 40,
         "screenshot": "screenshots/251010_134228_池袋駅_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_101820_池袋駅_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_155746_池袋駅_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_101140_池袋駅_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_104243_池袋駅_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_150850_池袋駅_眉毛ワックス.jpg"
       }
     ]
   },
@@ -6407,6 +9452,36 @@
         "date": "2025/10/10",
         "rank": 27,
         "screenshot": "screenshots/251010_134257_池袋駅_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 35,
+        "screenshot": "screenshots/251011_101849_池袋駅_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 29,
+        "screenshot": "screenshots/251012_155814_池袋駅_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 32,
+        "screenshot": "screenshots/251013_101208_池袋駅_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 32,
+        "screenshot": "screenshots/251014_161518_池袋駅_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 33,
+        "screenshot": "screenshots/251015_104310_池袋駅_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 31,
+        "screenshot": "screenshots/251016_150918_池袋駅_眉毛WAX.jpg"
       }
     ]
   },
@@ -6469,6 +9544,36 @@
         "date": "2025/10/10",
         "rank": 17,
         "screenshot": "screenshots/251010_134326_池袋駅_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 20,
+        "screenshot": "screenshots/251011_101919_池袋駅_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 15,
+        "screenshot": "screenshots/251012_155842_池袋駅_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 19,
+        "screenshot": "screenshots/251013_101235_池袋駅_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 20,
+        "screenshot": "screenshots/251015_104339_池袋駅_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 18,
+        "screenshot": "screenshots/251016_150946_池袋駅_アイラッシュ.jpg"
       }
     ]
   },
@@ -6531,6 +9636,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_134354_池袋駅_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_101950_池袋駅_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_155909_池袋駅_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_101302_池袋駅_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_161618_池袋駅_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_104406_池袋駅_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_151013_池袋駅_アイブロウ.jpg"
       }
     ]
   },
@@ -6593,6 +9728,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_134421_池袋駅_HBL.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_102019_池袋駅_HBL.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_155937_池袋駅_HBL.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_101322_池袋駅_HBL.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_161645_池袋駅_HBL.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_104437_池袋駅_HBL.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_151038_池袋駅_HBL.jpg"
       }
     ]
   },
@@ -6655,6 +9820,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_134451_池袋駅_ハリウッドブロウリフト.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_102047_池袋駅_ハリウッドブロウリフト.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_160004_池袋駅_ハリウッドブロウリフト.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_101349_池袋駅_ハリウッドブロウリフト.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_161714_池袋駅_ハリウッドブロウリフト.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_104515_池袋駅_ハリウッドブロウリフト.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_151108_池袋駅_ハリウッドブロウリフト.jpg"
       }
     ]
   },
@@ -6717,6 +9912,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_134519_池袋駅_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_102117_池袋駅_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_160032_池袋駅_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_101417_池袋駅_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_161741_池袋駅_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_104545_池袋駅_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_151135_池袋駅_パリジェンヌ.jpg"
       }
     ]
   },
@@ -6779,6 +10004,36 @@
         "date": "2025/10/10",
         "rank": 21,
         "screenshot": "screenshots/251010_134547_池袋駅_池袋　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 30,
+        "screenshot": "screenshots/251011_102144_池袋駅_池袋　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 23,
+        "screenshot": "screenshots/251012_160059_池袋駅_池袋　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 27,
+        "screenshot": "screenshots/251013_101443_池袋駅_池袋　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 19,
+        "screenshot": "screenshots/251014_161807_池袋駅_池袋　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 27,
+        "screenshot": "screenshots/251015_104612_池袋駅_池袋　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 19,
+        "screenshot": "screenshots/251016_151201_池袋駅_池袋　まつげパーマ.jpg"
       }
     ]
   },
@@ -6841,6 +10096,36 @@
         "date": "2025/10/10",
         "rank": 25,
         "screenshot": "screenshots/251010_134615_池袋駅_池袋　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 28,
+        "screenshot": "screenshots/251011_102213_池袋駅_池袋　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 22,
+        "screenshot": "screenshots/251012_160127_池袋駅_池袋　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 26,
+        "screenshot": "screenshots/251013_101510_池袋駅_池袋　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 24,
+        "screenshot": "screenshots/251014_161834_池袋駅_池袋　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 27,
+        "screenshot": "screenshots/251015_104639_池袋駅_池袋　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 24,
+        "screenshot": "screenshots/251016_151230_池袋駅_池袋　パリジェンヌ.jpg"
       }
     ]
   },
@@ -6903,6 +10188,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_134642_池袋駅_池袋　HBL.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_102241_池袋駅_池袋　HBL.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_160154_池袋駅_池袋　HBL.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_101536_池袋駅_池袋　HBL.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_161900_池袋駅_池袋　HBL.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_104704_池袋駅_池袋　HBL.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_151256_池袋駅_池袋　HBL.jpg"
       }
     ]
   },
@@ -6965,6 +10280,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_134708_池袋駅_池袋　ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_102308_池袋駅_池袋　ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_160220_池袋駅_池袋　ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_101557_池袋駅_池袋　ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_161924_池袋駅_池袋　ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_104728_池袋駅_池袋　ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_151320_池袋駅_池袋　ハリウッドブロウ.jpg"
       }
     ]
   },
@@ -7027,6 +10372,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_134735_池袋駅_池袋　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_102337_池袋駅_池袋　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_160246_池袋駅_池袋　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_101622_池袋駅_池袋　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_161950_池袋駅_池袋　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_104754_池袋駅_池袋　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_151345_池袋駅_池袋　眉毛ワックス.jpg"
       }
     ]
   },
@@ -7089,6 +10464,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_134801_池袋駅_池袋　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_102404_池袋駅_池袋　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_160313_池袋駅_池袋　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_101648_池袋駅_池袋　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_162016_池袋駅_池袋　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_104820_池袋駅_池袋　眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_151410_池袋駅_池袋　眉毛WAX.jpg"
       }
     ]
   },
@@ -7151,6 +10556,36 @@
         "date": "2025/10/10",
         "rank": 40,
         "screenshot": "screenshots/251010_134829_池袋駅_池袋　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_102430_池袋駅_池袋　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 38,
+        "screenshot": "screenshots/251012_160339_池袋駅_池袋　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_101713_池袋駅_池袋　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_162043_池袋駅_池袋　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_104846_池袋駅_池袋　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_151436_池袋駅_池袋　眉毛.jpg"
       }
     ]
   },
@@ -7213,6 +10648,36 @@
         "date": "2025/10/10",
         "rank": 23,
         "screenshot": "screenshots/251010_134858_池袋駅_池袋　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 32,
+        "screenshot": "screenshots/251011_102457_池袋駅_池袋　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 19,
+        "screenshot": "screenshots/251012_160406_池袋駅_池袋　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 30,
+        "screenshot": "screenshots/251013_101739_池袋駅_池袋　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 18,
+        "screenshot": "screenshots/251014_162110_池袋駅_池袋　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 29,
+        "screenshot": "screenshots/251015_104914_池袋駅_池袋　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 17,
+        "screenshot": "screenshots/251016_151502_池袋駅_池袋　まつげ.jpg"
       }
     ]
   },
@@ -7275,6 +10740,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_134927_池袋駅_池袋　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_102524_池袋駅_池袋　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_160432_池袋駅_池袋　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_101805_池袋駅_池袋　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_162137_池袋駅_池袋　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_104940_池袋駅_池袋　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_151530_池袋駅_池袋　マツパ.jpg"
       }
     ]
   },
@@ -7337,6 +10832,36 @@
         "date": "2025/10/10",
         "rank": 23,
         "screenshot": "screenshots/251010_134955_池袋駅_池袋　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 30,
+        "screenshot": "screenshots/251011_102551_池袋駅_池袋　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 22,
+        "screenshot": "screenshots/251012_160459_池袋駅_池袋　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 27,
+        "screenshot": "screenshots/251013_101831_池袋駅_池袋　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 21,
+        "screenshot": "screenshots/251014_162203_池袋駅_池袋　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 25,
+        "screenshot": "screenshots/251015_105007_池袋駅_池袋　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 19,
+        "screenshot": "screenshots/251016_151556_池袋駅_池袋　まつ毛パーマ.jpg"
       }
     ]
   },
@@ -7399,6 +10924,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_135022_池袋駅_池袋　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_102618_池袋駅_池袋　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_160527_池袋駅_池袋　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_101857_池袋駅_池袋　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_162229_池袋駅_池袋　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_105033_池袋駅_池袋　アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_151622_池袋駅_池袋　アイブロウ.jpg"
       }
     ]
   },
@@ -7461,6 +11016,36 @@
         "date": "2025/10/10",
         "rank": 20,
         "screenshot": "screenshots/251010_135049_池袋駅_池袋　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 27,
+        "screenshot": "screenshots/251011_102644_池袋駅_池袋　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 16,
+        "screenshot": "screenshots/251012_160552_池袋駅_池袋　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 26,
+        "screenshot": "screenshots/251013_101921_池袋駅_池袋　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 19,
+        "screenshot": "screenshots/251014_162255_池袋駅_池袋　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 27,
+        "screenshot": "screenshots/251015_105058_池袋駅_池袋　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 19,
+        "screenshot": "screenshots/251016_151646_池袋駅_池袋　アイラッシュ.jpg"
       }
     ]
   },
@@ -7518,6 +11103,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_135333_岐阜駅_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_102924_岐阜駅_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_160829_岐阜駅_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_102157_岐阜駅_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_162532_岐阜駅_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_105338_岐阜駅_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_151928_岐阜駅_眉毛.jpg"
       }
     ]
   },
@@ -7575,6 +11190,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_135403_岐阜駅_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_102951_岐阜駅_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_160856_岐阜駅_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_102224_岐阜駅_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_162559_岐阜駅_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_105406_岐阜駅_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_151954_岐阜駅_眉毛ワックス.jpg"
       }
     ]
   },
@@ -7632,6 +11277,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_135431_岐阜駅_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_103018_岐阜駅_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_160922_岐阜駅_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_102252_岐阜駅_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_162625_岐阜駅_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_105433_岐阜駅_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_152020_岐阜駅_眉毛WAX.jpg"
       }
     ]
   },
@@ -7679,6 +11354,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_141210_香椎駅_香椎　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_104741_香椎駅_香椎　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_162654_香椎駅_香椎　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_103944_香椎駅_香椎　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_164342_香椎駅_香椎　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_111154_香椎駅_香椎　まつげパーマ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_153806_香椎駅_香椎　まつげパーマ.jpg"
       }
     ]
   },
@@ -7726,6 +11431,36 @@
         "date": "2025/10/10",
         "rank": 28,
         "screenshot": "screenshots/251010_141235_香椎駅_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 28,
+        "screenshot": "screenshots/251011_104807_香椎駅_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 28,
+        "screenshot": "screenshots/251012_162718_香椎駅_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 28,
+        "screenshot": "screenshots/251013_104009_香椎駅_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 28,
+        "screenshot": "screenshots/251014_164406_香椎駅_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 28,
+        "screenshot": "screenshots/251015_111218_香椎駅_まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 28,
+        "screenshot": "screenshots/251016_153831_香椎駅_まつ毛パーマ.jpg"
       }
     ]
   },
@@ -7773,6 +11508,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_141302_香椎駅_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_104834_香椎駅_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_162744_香椎駅_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_104035_香椎駅_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_164431_香椎駅_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_111244_香椎駅_マツパ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_153857_香椎駅_マツパ.jpg"
       }
     ]
   },
@@ -7820,6 +11585,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_141332_香椎駅_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_104900_香椎駅_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_162811_香椎駅_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_104101_香椎駅_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_164456_香椎駅_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_111310_香椎駅_まつぱ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_153922_香椎駅_まつぱ.jpg"
       }
     ]
   },
@@ -7867,6 +11662,36 @@
         "date": "2025/10/10",
         "rank": 25,
         "screenshot": "screenshots/251010_141357_香椎駅_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 26,
+        "screenshot": "screenshots/251011_104925_香椎駅_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 25,
+        "screenshot": "screenshots/251012_162844_香椎駅_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 25,
+        "screenshot": "screenshots/251013_104126_香椎駅_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 25,
+        "screenshot": "screenshots/251014_164524_香椎駅_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 25,
+        "screenshot": "screenshots/251015_111335_香椎駅_まつげ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 25,
+        "screenshot": "screenshots/251016_153946_香椎駅_まつげ.jpg"
       }
     ]
   },
@@ -7914,6 +11739,36 @@
         "date": "2025/10/10",
         "rank": 31,
         "screenshot": "screenshots/251010_141423_香椎駅_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 31,
+        "screenshot": "screenshots/251011_104951_香椎駅_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 24,
+        "screenshot": "screenshots/251012_162912_香椎駅_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 29,
+        "screenshot": "screenshots/251013_104151_香椎駅_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 30,
+        "screenshot": "screenshots/251014_164549_香椎駅_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 30,
+        "screenshot": "screenshots/251015_111359_香椎駅_眉毛.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 30,
+        "screenshot": "screenshots/251016_154011_香椎駅_眉毛.jpg"
       }
     ]
   },
@@ -7961,6 +11816,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_141450_香椎駅_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_105014_香椎駅_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_162935_香椎駅_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_104213_香椎駅_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_164611_香椎駅_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_111422_香椎駅_眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_154033_香椎駅_眉毛ワックス.jpg"
       }
     ]
   },
@@ -8008,6 +11893,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_141518_香椎駅_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_105040_香椎駅_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_163002_香椎駅_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_104238_香椎駅_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_164637_香椎駅_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_111447_香椎駅_眉毛WAX.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_154100_香椎駅_眉毛WAX.jpg"
       }
     ]
   },
@@ -8055,6 +11970,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_141544_香椎駅_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_105104_香椎駅_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_163030_香椎駅_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_104258_香椎駅_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_164701_香椎駅_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_111511_香椎駅_アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_154123_香椎駅_アイラッシュ.jpg"
       }
     ]
   },
@@ -8102,6 +12047,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_141613_香椎駅_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_105132_香椎駅_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_163055_香椎駅_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_104322_香椎駅_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_164726_香椎駅_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_111538_香椎駅_アイブロウ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_154148_香椎駅_アイブロウ.jpg"
       }
     ]
   },
@@ -8147,6 +12122,36 @@
       },
       {
         "date": "2025/10/10",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_163121_香椎駅_HBL.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/16",
         "rank": "圏外",
         "screenshot": null
       }
@@ -8196,6 +12201,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_141704_香椎駅_ハリウッドブロウリフト.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_105223_香椎駅_ハリウッドブロウリフト.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_163142_香椎駅_ハリウッドブロウリフト.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_104408_香椎駅_ハリウッドブロウリフト.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_164817_香椎駅_ハリウッドブロウリフト.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_111628_香椎駅_ハリウッドブロウリフト.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_154236_香椎駅_ハリウッドブロウリフト.jpg"
       }
     ]
   },
@@ -8243,6 +12278,36 @@
         "date": "2025/10/10",
         "rank": 14,
         "screenshot": "screenshots/251010_141731_香椎駅_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": 14,
+        "screenshot": "screenshots/251011_105250_香椎駅_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": 14,
+        "screenshot": "screenshots/251012_163208_香椎駅_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": 14,
+        "screenshot": "screenshots/251013_104434_香椎駅_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": 13,
+        "screenshot": "screenshots/251014_164845_香椎駅_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": 14,
+        "screenshot": "screenshots/251015_111654_香椎駅_パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": 14,
+        "screenshot": "screenshots/251016_154302_香椎駅_パリジェンヌ.jpg"
       }
     ]
   },
@@ -8290,6 +12355,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_141755_香椎駅_香椎　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_105313_香椎駅_香椎　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_163232_香椎駅_香椎　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_104457_香椎駅_香椎　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_164909_香椎駅_香椎　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_111717_香椎駅_香椎　パリジェンヌ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_154325_香椎駅_香椎　パリジェンヌ.jpg"
       }
     ]
   },
@@ -8337,6 +12432,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_141819_香椎駅_香椎　HBL.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_105336_香椎駅_香椎　HBL.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_163255_香椎駅_香椎　HBL.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_104518_香椎駅_香椎　HBL.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_164933_香椎駅_香椎　HBL.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_111741_香椎駅_香椎　HBL.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_154352_香椎駅_香椎　HBL.jpg"
       }
     ]
   },
@@ -8384,6 +12509,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_141845_香椎駅_香椎　ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_105401_香椎駅_香椎　ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_163320_香椎駅_香椎　ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_104541_香椎駅_香椎　ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_164957_香椎駅_香椎　ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_111806_香椎駅_香椎　ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_154417_香椎駅_香椎　ハリウッドブロウ.jpg"
       }
     ]
   },
@@ -8431,6 +12586,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_141907_香椎駅_香椎　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_105423_香椎駅_香椎　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_163342_香椎駅_香椎　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_104600_香椎駅_香椎　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_165019_香椎駅_香椎　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_111829_香椎駅_香椎　眉毛ワックス.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_154438_香椎駅_香椎　眉毛ワックス.jpg"
       }
     ]
   },
@@ -8476,6 +12661,36 @@
       },
       {
         "date": "2025/10/10",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/16",
         "rank": "圏外",
         "screenshot": null
       }
@@ -8525,6 +12740,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_141957_香椎駅_香椎　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_105513_香椎駅_香椎　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_163436_香椎駅_香椎　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_104642_香椎駅_香椎　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_165110_香椎駅_香椎　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_111923_香椎駅_香椎　眉毛.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_154525_香椎駅_香椎　眉毛.jpg"
       }
     ]
   },
@@ -8572,6 +12817,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_142022_香椎駅_香椎　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_105537_香椎駅_香椎　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_163458_香椎駅_香椎　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_104704_香椎駅_香椎　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_165133_香椎駅_香椎　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_111946_香椎駅_香椎　まつげ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_154548_香椎駅_香椎　まつげ.jpg"
       }
     ]
   },
@@ -8619,6 +12894,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_142044_香椎駅_香椎　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_105558_香椎駅_香椎　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_163520_香椎駅_香椎　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_104725_香椎駅_香椎　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_165154_香椎駅_香椎　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_112008_香椎駅_香椎　マツパ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_154609_香椎駅_香椎　マツパ.jpg"
       }
     ]
   },
@@ -8666,6 +12971,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_142108_香椎駅_香椎　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_105622_香椎駅_香椎　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_163544_香椎駅_香椎　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_104746_香椎駅_香椎　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_165216_香椎駅_香椎　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_112031_香椎駅_香椎　まつ毛パーマ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_154631_香椎駅_香椎　まつ毛パーマ.jpg"
       }
     ]
   },
@@ -8711,6 +13046,36 @@
       },
       {
         "date": "2025/10/10",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": null
+      },
+      {
+        "date": "2025/10/16",
         "rank": "圏外",
         "screenshot": null
       }
@@ -8760,6 +13125,36 @@
         "date": "2025/10/10",
         "rank": "圏外",
         "screenshot": "screenshots/251010_142150_香椎駅_香椎　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/11",
+        "rank": "圏外",
+        "screenshot": "screenshots/251011_105703_香椎駅_香椎　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/12",
+        "rank": "圏外",
+        "screenshot": "screenshots/251012_163626_香椎駅_香椎　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/13",
+        "rank": "圏外",
+        "screenshot": "screenshots/251013_104829_香椎駅_香椎　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/14",
+        "rank": "圏外",
+        "screenshot": "screenshots/251014_165257_香椎駅_香椎　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/15",
+        "rank": "圏外",
+        "screenshot": "screenshots/251015_112114_香椎駅_香椎　アイラッシュ.jpg"
+      },
+      {
+        "date": "2025/10/16",
+        "rank": "圏外",
+        "screenshot": "screenshots/251016_154712_香椎駅_香椎　アイラッシュ.jpg"
       }
     ]
   }

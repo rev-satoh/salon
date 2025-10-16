@@ -805,6 +805,13 @@
     "type": "google"
   },
   {
+    "id": "[google]-ケイトステージラッシュ-福山駅-まつげパーマ",
+    "keyword": "まつげパーマ",
+    "salonName": "ケイトステージラッシュ",
+    "searchLocation": "福山駅",
+    "type": "google"
+  },
+  {
     "id": "[google]-ケイトステージラッシュ-福山駅-まつ毛パーマ",
     "keyword": "まつ毛パーマ",
     "salonName": "ケイトステージラッシュ",
@@ -2100,47 +2107,91 @@
     "url": "https://eyelash4.com/"
   },
   {
-    "id": "ケイトステージラッシュ-福山・尾道-まつげパーマ＆パリジェンヌ",
-    "type": "normal",
-    "salonName": "ケイトステージラッシュ",
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF"
+    },
     "areaName": "福山・尾道",
-    "areaCodes": {
-      "serviceAreaCd": "SF",
-      "middleAreaCd": "FC"
-    },
-    "serviceKeyword": "まつげパーマ＆パリジェンヌ"
+    "id": "ケイトステージラッシュ-福山・尾道-まつげパーマ＆パリジェンヌ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつげパーマ＆パリジェンヌ",
+    "type": "normal"
   },
   {
-    "id": "ケイトステージラッシュ-広島-まつげパーマ＆パリジェンヌ",
-    "type": "normal",
-    "salonName": "ケイトステージラッシュ",
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
     "areaName": "広島",
-    "areaCodes": {
-      "serviceAreaCd": "SF",
-      "middleAreaCd": "FA"
-    },
-    "serviceKeyword": "まつげパーマ＆パリジェンヌ"
+    "id": "ケイトステージラッシュ-広島-まつげパーマ＆パリジェンヌ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつげパーマ＆パリジェンヌ",
+    "type": "normal"
   },
   {
-    "id": "ケイトステージラッシュ-池袋・目白-まつげパーマ＆パリジェンヌ",
-    "type": "normal",
-    "salonName": "ケイトステージラッシュ",
+    "areaCodes": {
+      "middleAreaCd": "AB",
+      "serviceAreaCd": "SA"
+    },
     "areaName": "池袋・目白",
+    "id": "ケイトステージラッシュ-池袋・目白-まつげパーマ＆パリジェンヌ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつげパーマ＆パリジェンヌ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "CB",
+      "serviceAreaCd": "SC"
+    },
+    "areaName": "岐阜",
+    "id": "ケイトステージラッシュ-岐阜-まつげパーマ＆パリジェンヌ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつげパーマ＆パリジェンヌ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG"
+    },
+    "areaName": "福岡",
+    "id": "ケイトステージラッシュ-福岡-まつげパーマ＆パリジェンヌ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつげパーマ＆パリジェンヌ",
+    "type": "normal"
+  },
+  {
+    "id": "ロレインブロウ-明大前・千歳烏山・調布・府中-まつげパーマ",
+    "type": "normal",
+    "salonName": "ロレインブロウ",
+    "areaName": "明大前・千歳烏山・調布・府中",
     "areaCodes": {
       "serviceAreaCd": "SA",
-      "middleAreaCd": "AB"
+      "middleAreaCd": "JG"
     },
-    "serviceKeyword": "まつげパーマ＆パリジェンヌ"
+    "serviceKeyword": "まつげパーマ"
   },
   {
-    "id": "ケイトステージラッシュ-岐阜-まつげパーマ＆パリジェンヌ",
+    "id": "ロレインブロウ-明大前・千歳烏山・調布・府中-パリジェンヌ",
     "type": "normal",
-    "salonName": "ケイトステージラッシュ",
-    "areaName": "岐阜",
+    "salonName": "ロレインブロウ",
+    "areaName": "明大前・千歳烏山・調布・府中",
     "areaCodes": {
-      "serviceAreaCd": "SC",
-      "middleAreaCd": "CB"
+      "serviceAreaCd": "SA",
+      "middleAreaCd": "JG"
     },
-    "serviceKeyword": "まつげパーマ＆パリジェンヌ"
+    "serviceKeyword": "パリジェンヌ"
+  },
+  {
+    "id": "ロレインブロウ-明大前・千歳烏山・調布・府中-マツパ",
+    "type": "normal",
+    "salonName": "ロレインブロウ",
+    "areaName": "明大前・千歳烏山・調布・府中",
+    "areaCodes": {
+      "serviceAreaCd": "SA",
+      "middleAreaCd": "JG"
+    },
+    "serviceKeyword": "マツパ"
   }
 ]
