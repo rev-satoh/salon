@@ -146,6 +146,20 @@
                 padding: 15px;
             }
         }
+
+        /* --- テーブルの固定列スタイル --- */
+        .sticky-table-container {
+            overflow-x: auto;
+            position: relative;
+        }
+        .sticky-table th:first-child,
+        .sticky-table td:first-child {
+            position: -webkit-sticky; /* Safari用 */
+            position: sticky;
+            left: 0;
+            z-index: 1;
+            background-color: #f8f8f8; /* ヘッダーの背景色に合わせる (デフォルト) */
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="common.js" defer></script>
@@ -2160,10 +2174,11 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                         // --- HPB通常検索の場合のみ、表形式の履歴も表示 ---
                         if (activeSearchType === 'normal') {
                             const tableContainer = document.createElement('div');
+                            tableContainer.className = 'sticky-table-container'; // クラスを適用
                             tableContainer.style.marginTop = '20px';
-                            tableContainer.style.overflowX = 'auto'; // 横に長くなる可能性があるのでスクロール可能に
 
                             const table = document.createElement('table');
+                            table.className = 'sticky-table'; // クラスを適用
                             table.style.width = '100%';
                             table.style.borderCollapse = 'collapse';
                             table.style.fontSize = '13px';
@@ -2201,7 +2216,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
 
                                 // --- 縞模様のスタイルを適用 ---
                                 if (rowIndex % 2 === 1) { // 奇数行に背景色を設定
-                                    row.style.backgroundColor = '#f9f9f9';
+                                    row.style.backgroundColor = '#f0f0f5'; // 固定列の背景色と合わせる
                                 }
 
                                 const tdKeyword = document.createElement('td');
@@ -2209,6 +2224,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                                 tdKeyword.style.padding = '8px';
                                 tdKeyword.style.border = '1px solid #ddd';
                                 tdKeyword.style.fontWeight = '500';
+                                if (rowIndex % 2 === 1) tdKeyword.style.backgroundColor = '#f0f0f5';
                                 row.appendChild(tdKeyword);
 
                                 sortedLabels.forEach((date, index) => {
@@ -2273,10 +2289,11 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                         // --- HPB特集検索の場合も、表形式の履歴も表示 ---
                         else if (activeSearchType === 'special') {
                             const tableContainer = document.createElement('div');
+                            tableContainer.className = 'sticky-table-container';
                             tableContainer.style.marginTop = '20px';
-                            tableContainer.style.overflowX = 'auto';
 
                             const table = document.createElement('table');
+                            table.className = 'sticky-table';
                             table.style.width = '100%';
                             table.style.borderCollapse = 'collapse';
                             table.style.fontSize = '13px';
@@ -2313,7 +2330,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                                 const row = document.createElement('tr');
 
                                 if (rowIndex % 2 === 1) {
-                                    row.style.backgroundColor = '#f9f9f9';
+                                    row.style.backgroundColor = '#f0f0f5';
                                 }
 
                                 const tdSalonName = document.createElement('td');
@@ -2321,6 +2338,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                                 tdSalonName.style.padding = '8px';
                                 tdSalonName.style.border = '1px solid #ddd';
                                 tdSalonName.style.fontWeight = '500';
+                                if (rowIndex % 2 === 1) tdSalonName.style.backgroundColor = '#f0f0f5';
                                 row.appendChild(tdSalonName);
 
                                 sortedLabels.forEach((date, index) => {
@@ -2372,10 +2390,11 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                         // --- MEO検索の場合も、表形式の履歴も表示 ---
                         else if (activeSearchType === 'google') {
                             const tableContainer = document.createElement('div');
+                            tableContainer.className = 'sticky-table-container';
                             tableContainer.style.marginTop = '20px';
-                            tableContainer.style.overflowX = 'auto';
 
                             const table = document.createElement('table');
+                            table.className = 'sticky-table';
                             table.style.width = '100%';
                             table.style.borderCollapse = 'collapse';
                             table.style.fontSize = '13px';
@@ -2412,7 +2431,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                                 const row = document.createElement('tr');
 
                                 if (rowIndex % 2 === 1) {
-                                    row.style.backgroundColor = '#f9f9f9';
+                                    row.style.backgroundColor = '#f0f0f5';
                                 }
 
                                 const tdKeyword = document.createElement('td');
@@ -2420,6 +2439,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                                 tdKeyword.style.padding = '8px';
                                 tdKeyword.style.border = '1px solid #ddd';
                                 tdKeyword.style.fontWeight = '500';
+                                if (rowIndex % 2 === 1) tdKeyword.style.backgroundColor = '#f0f0f5';
                                 row.appendChild(tdKeyword);
 
                                 sortedLabels.forEach((date, index) => {
