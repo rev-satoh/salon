@@ -94,6 +94,12 @@ def load_json_file(filename):
 def index():
     return app.send_static_file('index.html')
 
+# --- スクリーンショット配信用エンドポイント ---
+@app.route('/screenshots/<path:filename>')
+def serve_screenshot(filename):
+    """screenshotsディレクトリから画像を配信する"""
+    return app.send_static_file(os.path.join('screenshots', filename))
+
 # --- ホットペッパー順位計測 ---
 def check_hotpepper_ranking(driver, keyword, salon_name, area_codes):
     """
