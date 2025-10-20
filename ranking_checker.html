@@ -944,6 +944,9 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                                         const finalRank = mySalonRankItem ? mySalonRankItem.rank : '圏外';
                                         const searchLocation = document.getElementById('searchLocationInput').value.trim();
                                         const googleKeyword = document.getElementById('googleKeywordInput').value.trim();
+                                        if (result.rank === "エリア不一致") {
+                                            resultMessageHtml = `<p style="color: #ff9500;">検索地点と結果が一致しませんでした (エリア不一致)</p>`;
+                                        }
                                         // IDの形式を統一する
                                         // 古い形式のIDが "[google]-" プレフィックスなしで作成されていたため、
                                         // 新しく作成する際は必ずプレフィックスを付けるようにする。
@@ -1417,8 +1420,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                         const groupLabel = document.createElement('label');
                         groupLabel.textContent = groupKey;
                         groupLabel.style.cursor = 'pointer';
-                        groupLabel.style.flexGrow = '1';
-                        groupLabel.onclick = () => groupCheckbox.click();
+                        groupLabel.style.flexGrow = '1'; // この行は変更なし
                         groupHeader.appendChild(groupLabel);
 
                         autoTaskList.appendChild(groupHeader);
@@ -1571,16 +1573,18 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                 parentElement.appendChild(li);
 
                 // グループチェックボックスのイベントリスナー
-                const groupCheckbox = parentElement.querySelector(`input[type="checkbox"][data-group-key="${groupKey}"]`);
-                if (groupCheckbox) {
-                    groupCheckbox.addEventListener('change', (e) => {
-                        const isChecked = e.target.checked;
-                        const key = e.target.dataset.groupKey;
-                        // 同じ親要素内の、同じグループキーを持つタスクチェックボックスの状態を同期
-                        parentElement.querySelectorAll(`.auto-task-checkbox[data-group-key="${key}"]`).forEach(cb => {
-                            cb.checked = isChecked;
+                if (groupKey) {
+                    const groupCheckbox = document.querySelector(`input[type="checkbox"][data-group-key="${groupKey}"]`);
+                    if (groupCheckbox) {
+                        groupCheckbox.addEventListener('change', (e) => {
+                            const isChecked = e.target.checked;
+                            const key = e.target.dataset.groupKey;
+                            // 同じ親要素内の、同じグループキーを持つタスクチェックボックスの状態を同期
+                            parentElement.querySelectorAll(`.auto-task-checkbox[data-group-key="${key}"]`).forEach(cb => {
+                                cb.checked = isChecked;
+                            });
                         });
-                    });
+                    }
                 }
             };
 

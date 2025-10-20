@@ -397,6 +397,23 @@ def check_meo_ranking(driver, keyword, location_name):
             yield sse_format({"final_result": final_result, "status": "完了"})
             return
 
+        # --- 検索結果の妥当性チェックを追加 ---
+        # 検索結果のヘッダーをチェックして、意図したエリアでの検索か確認
+        soup_for_header = BeautifulSoup(driver.page_source, 'lxml')
+        # 検索結果のタイトルが含まれる可能性のある要素を複数指定
+        header_element = soup_for_header.select_one('h1.fontHeadlineLarge, div.q2v3id-E7g49d') 
+        header_text = header_element.get_text(strip=True) if header_element else ""
+        
+        # location_nameから「駅」や「市」を除いた地名ベースを取得
+        location_base_name = location_name.replace('駅', '').replace('市', '').strip()
+
+        if location_base_name and location_base_name not in header_text:
+            app.logger.warning(f"MEO計測でエリア不一致を検出。検索地点: '{location_name}', ヘッダー: '{header_text}'")
+            final_result = {"rank": "エリア不一致", "results": [], "total_count": 0, "screenshot_path": None, "url": driver.current_url, "html": driver.page_source}
+            yield sse_format({"final_result": final_result, "status": "完了"})
+            return
+        # --- ここまで ---
+
         last_url_checked = driver.current_url
 
         # --- スクリーンショット撮影処理の修正: ウィンドウリサイズ方式に戻す ---
@@ -409,6 +426,11 @@ def check_meo_ranking(driver, keyword, location_name):
             # ウィンドウの高さをパネルの高さに合わせる（最小800px、最大8000pxの制限を追加）
             window_height = max(800, min(panel_height, 8000))
             driver.set_window_size(1200, window_height)
+            time.sleep(0.5)
+
+            # スクリーンショット撮影前に、スクロール位置を一番上に戻して検索バーを確実に表示させる
+            driver.execute_script("arguments[0].scrollTop = 0", scrollable_element)
+            app.logger.info("スクリーンショット撮影のため、スクロール位置をトップに戻しました。")
             time.sleep(0.5)
         except Exception as e:
             app.logger.warning(f"スクリーンショットのためのリサイズ中にエラーが発生: {e}")
