@@ -394,25 +394,16 @@ def check_meo_ranking(driver, keyword, location_name):
             # マップ枠が表示されなかった場合
             app.logger.info(f"MEO計測でマップ枠が表示されませんでした。キーワード: {keyword}")
             final_result = {"rank": "枠無", "results": [], "total_count": 0, "screenshot_path": None, "url": driver.current_url, "html": driver.page_source}
+            # --- 修正: 「枠無」を「枠外」に変更 ---
+            final_result["rank"] = "枠外"
             yield sse_format({"final_result": final_result, "status": "完了"})
             return
 
-        # --- 検索結果の妥当性チェックを追加 ---
-        # 検索結果のヘッダーをチェックして、意図したエリアでの検索か確認
-        soup_for_header = BeautifulSoup(driver.page_source, 'lxml')
-        # 検索結果のタイトルが含まれる可能性のある要素を複数指定
-        header_element = soup_for_header.select_one('h1.fontHeadlineLarge, div.q2v3id-E7g49d') 
-        header_text = header_element.get_text(strip=True) if header_element else ""
-        
-        # location_nameから「駅」や「市」を除いた地名ベースを取得
-        location_base_name = location_name.replace('駅', '').replace('市', '').strip()
-
-        if location_base_name and location_base_name not in header_text:
-            app.logger.warning(f"MEO計測でエリア不一致を検出。検索地点: '{location_name}', ヘッダー: '{header_text}'")
-            final_result = {"rank": "エリア不一致", "results": [], "total_count": 0, "screenshot_path": None, "url": driver.current_url, "html": driver.page_source}
-            yield sse_format({"final_result": final_result, "status": "完了"})
-            return
-        # --- ここまで ---
+        # --- 検索結果の妥当性チェックを一旦無効化 ---
+        # Googleマップの仕様変更により、ヘッダーから正確な地名を取得するのが困難になったため、
+        # 「エリア不一致」の判定が誤動作するケースが増えていました。
+        # このため、このチェックを一旦削除し、検索が実行された結果を正として処理を続行します。
+        app.logger.info("MEO計測のエリア一致チェックは現在無効化されています。")
 
         last_url_checked = driver.current_url
 
