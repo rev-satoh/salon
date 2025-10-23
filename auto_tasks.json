@@ -2195,168 +2195,175 @@
     "type": "normal"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
     "id": "elua 紙屋町店-広島-パリジェンヌ",
-    "type": "normal",
     "salonName": "elua 紙屋町店",
-    "areaName": "広島",
-    "areaCodes": {
-      "serviceAreaCd": "SF",
-      "middleAreaCd": "FA"
-    },
-    "serviceKeyword": "パリジェンヌ"
+    "serviceKeyword": "パリジェンヌ",
+    "type": "normal"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
     "id": "elua 紙屋町店-広島-まつげ",
-    "type": "normal",
     "salonName": "elua 紙屋町店",
-    "areaName": "広島",
-    "areaCodes": {
-      "serviceAreaCd": "SF",
-      "middleAreaCd": "FA"
-    },
-    "serviceKeyword": "まつげ"
+    "serviceKeyword": "まつげ",
+    "type": "normal"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
     "id": "elua 紙屋町店-広島-まつ毛パーマ",
-    "type": "normal",
     "salonName": "elua 紙屋町店",
-    "areaName": "広島",
-    "areaCodes": {
-      "serviceAreaCd": "SF",
-      "middleAreaCd": "FA"
-    },
-    "serviceKeyword": "まつ毛パーマ"
+    "serviceKeyword": "まつ毛パーマ",
+    "type": "normal"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
     "id": "elua 紙屋町店-広島-まつげパーマ",
-    "type": "normal",
     "salonName": "elua 紙屋町店",
-    "areaName": "広島",
-    "areaCodes": {
-      "serviceAreaCd": "SF",
-      "middleAreaCd": "FA"
-    },
-    "serviceKeyword": "まつげパーマ"
+    "serviceKeyword": "まつげパーマ",
+    "type": "normal"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
     "id": "elua 紙屋町店-広島-マツパ",
-    "type": "normal",
     "salonName": "elua 紙屋町店",
-    "areaName": "広島",
-    "areaCodes": {
-      "serviceAreaCd": "SF",
-      "middleAreaCd": "FA"
-    },
-    "serviceKeyword": "マツパ"
+    "serviceKeyword": "マツパ",
+    "type": "normal"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
     "id": "elua 紙屋町店-広島-まつぱ",
-    "type": "normal",
     "salonName": "elua 紙屋町店",
-    "areaName": "広島",
-    "areaCodes": {
-      "serviceAreaCd": "SF",
-      "middleAreaCd": "FA"
-    },
-    "serviceKeyword": "まつぱ"
+    "serviceKeyword": "まつぱ",
+    "type": "normal"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
     "id": "elua 紙屋町店-広島-アイラッシュ",
-    "type": "normal",
     "salonName": "elua 紙屋町店",
-    "areaName": "広島",
-    "areaCodes": {
-      "serviceAreaCd": "SF",
-      "middleAreaCd": "FA"
-    },
-    "serviceKeyword": "アイラッシュ"
+    "serviceKeyword": "アイラッシュ",
+    "type": "normal"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
     "id": "elua 紙屋町店-広島-アイブロウ",
-    "type": "normal",
     "salonName": "elua 紙屋町店",
-    "areaName": "広島",
-    "areaCodes": {
-      "serviceAreaCd": "SF",
-      "middleAreaCd": "FA"
-    },
-    "serviceKeyword": "アイブロウ"
+    "serviceKeyword": "アイブロウ",
+    "type": "normal"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
     "id": "elua 紙屋町店-広島-眉毛",
-    "type": "normal",
     "salonName": "elua 紙屋町店",
-    "areaName": "広島",
-    "areaCodes": {
-      "serviceAreaCd": "SF",
-      "middleAreaCd": "FA"
-    },
-    "serviceKeyword": "眉毛"
+    "serviceKeyword": "眉毛",
+    "type": "normal"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
     "id": "elua 紙屋町店-広島-眉毛WAX",
-    "type": "normal",
     "salonName": "elua 紙屋町店",
-    "areaName": "広島",
-    "areaCodes": {
-      "serviceAreaCd": "SF",
-      "middleAreaCd": "FA"
-    },
-    "serviceKeyword": "眉毛WAX"
+    "serviceKeyword": "眉毛WAX",
+    "type": "normal"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
     "id": "elua 紙屋町店-広島-眉毛ワックス",
-    "type": "normal",
     "salonName": "elua 紙屋町店",
-    "areaName": "広島",
-    "areaCodes": {
-      "serviceAreaCd": "SF",
-      "middleAreaCd": "FA"
-    },
-    "serviceKeyword": "眉毛ワックス"
+    "serviceKeyword": "眉毛ワックス",
+    "type": "normal"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
     "id": "elua 紙屋町店-広島-HBL",
-    "type": "normal",
     "salonName": "elua 紙屋町店",
-    "areaName": "広島",
-    "areaCodes": {
-      "serviceAreaCd": "SF",
-      "middleAreaCd": "FA"
-    },
-    "serviceKeyword": "HBL"
+    "serviceKeyword": "HBL",
+    "type": "normal"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
     "id": "elua 紙屋町店-広島-ハリウッドブロウ",
-    "type": "normal",
     "salonName": "elua 紙屋町店",
-    "areaName": "広島",
-    "areaCodes": {
-      "serviceAreaCd": "SF",
-      "middleAreaCd": "FA"
-    },
-    "serviceKeyword": "ハリウッドブロウ"
+    "serviceKeyword": "ハリウッドブロウ",
+    "type": "normal"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
     "id": "elua 紙屋町店-広島-まつげパーマ＆パリジェンヌ",
-    "type": "normal",
     "salonName": "elua 紙屋町店",
-    "areaName": "広島",
-    "areaCodes": {
-      "serviceAreaCd": "SF",
-      "middleAreaCd": "FA"
-    },
-    "serviceKeyword": "まつげパーマ＆パリジェンヌ"
+    "serviceKeyword": "まつげパーマ＆パリジェンヌ",
+    "type": "normal"
   },
   {
-    "id": "elua 紙屋町店-広島-マツエク",
-    "type": "normal",
-    "salonName": "elua 紙屋町店",
-    "areaName": "広島",
     "areaCodes": {
-      "serviceAreaCd": "SF",
-      "middleAreaCd": "FA"
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
     },
-    "serviceKeyword": "マツエク"
+    "areaName": "広島",
+    "id": "elua 紙屋町店-広島-マツエク",
+    "salonName": "elua 紙屋町店",
+    "serviceKeyword": "マツエク",
+    "type": "normal"
+  },
+  {
+    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw092/pre34/city20700000/",
+    "type": "special",
+    "salonName": "ケイトステージラッシュ",
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw092/pre34/city20700000/",
+    "featurePageName": "福山市でまつげカールが人気のまつげサロン｜ホットペッパービューティー"
   }
 ]

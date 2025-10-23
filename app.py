@@ -393,9 +393,8 @@ def check_meo_ranking(driver, keyword, location_name):
         except TimeoutException:
             # マップ枠が表示されなかった場合
             app.logger.info(f"MEO計測でマップ枠が表示されませんでした。キーワード: {keyword}")
+            # --- 修正: 結果を「枠無」に戻す ---
             final_result = {"rank": "枠無", "results": [], "total_count": 0, "screenshot_path": None, "url": driver.current_url, "html": driver.page_source}
-            # --- 修正: 「枠無」を「枠外」に変更 ---
-            final_result["rank"] = "枠外"
             yield sse_format({"final_result": final_result, "status": "完了"})
             return
 
@@ -996,7 +995,9 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
                             result = data['final_result']
 
                     # MEOの結果から自店の順位を特定
+                    # --- 修正: 「枠無」の場合を正しく処理する ---
                     if result.get("rank") == "枠無":
+                        # 地図枠自体が表示されなかった場合
                         rank_to_save = "枠無"
                     else:
                         my_salon_result = next((r for r in result.get('results', []) if task['salonName'].lower() in r.get('foundSalonName', '').lower()), None)
