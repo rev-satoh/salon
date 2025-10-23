@@ -2360,10 +2360,82 @@
     "type": "normal"
   },
   {
-    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw092/pre34/city20700000/",
-    "type": "special",
-    "salonName": "ケイトステージラッシュ",
+    "featurePageName": "福山市でまつげカールが人気のまつげサロン｜ホットペッパービューティー",
     "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw092/pre34/city20700000/",
-    "featurePageName": "福山市でまつげカールが人気のまつげサロン｜ホットペッパービューティー"
+    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw092/pre34/city20700000/",
+    "salonName": "ケイトステージラッシュ",
+    "type": "special"
+  },
+  {
+    "id": "ディアロ-京橋・都島-まつげパーマ",
+    "type": "normal",
+    "salonName": "ディアロ",
+    "areaName": "京橋・都島",
+    "areaCodes": {
+      "serviceAreaCd": "SB",
+      "middleAreaCd": "BA",
+      "smallAreaCd": "X075"
+    },
+    "serviceKeyword": "まつげパーマ"
+  },
+  {
+    "id": "ディアロ-京橋・都島-パリジェンヌ",
+    "type": "normal",
+    "salonName": "ディアロ",
+    "areaName": "京橋・都島",
+    "areaCodes": {
+      "serviceAreaCd": "SB",
+      "middleAreaCd": "BA",
+      "smallAreaCd": "X075"
+    },
+    "serviceKeyword": "パリジェンヌ"
+  },
+  {
+    "id": "ディアロ-京橋・都島-マツパ",
+    "type": "normal",
+    "salonName": "ディアロ",
+    "areaName": "京橋・都島",
+    "areaCodes": {
+      "serviceAreaCd": "SB",
+      "middleAreaCd": "BA",
+      "smallAreaCd": "X075"
+    },
+    "serviceKeyword": "マツパ"
+  },
+  {
+    "id": "ディアロ-京橋・都島-眉毛",
+    "type": "normal",
+    "salonName": "ディアロ",
+    "areaName": "京橋・都島",
+    "areaCodes": {
+      "serviceAreaCd": "SB",
+      "middleAreaCd": "BA",
+      "smallAreaCd": "X075"
+    },
+    "serviceKeyword": "眉毛"
+  },
+  {
+    "id": "ディアロ-京橋・都島-まつげ",
+    "type": "normal",
+    "salonName": "ディアロ",
+    "areaName": "京橋・都島",
+    "areaCodes": {
+      "serviceAreaCd": "SB",
+      "middleAreaCd": "BA",
+      "smallAreaCd": "X075"
+    },
+    "serviceKeyword": "まつげ"
+  },
+  {
+    "id": "ディアロ-京橋・都島-眉毛ワックス",
+    "type": "normal",
+    "salonName": "ディアロ",
+    "areaName": "京橋・都島",
+    "areaCodes": {
+      "serviceAreaCd": "SB",
+      "middleAreaCd": "BA",
+      "smallAreaCd": "X075"
+    },
+    "serviceKeyword": "眉毛ワックス"
   }
 ]

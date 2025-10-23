@@ -10987,5 +10987,137 @@
         "screenshot": "screenshots/251023_104806__まつげパーマ＆パリジェンヌ.jpg"
       }
     ]
+  },
+  {
+    "id": "ディアロ-京橋・都島-マツパ",
+    "task": {
+      "id": "ディアロ-京橋・都島-マツパ",
+      "type": "normal",
+      "salonName": "ディアロ",
+      "areaName": "京橋・都島",
+      "areaCodes": {
+        "serviceAreaCd": "SB",
+        "middleAreaCd": "BA",
+        "smallAreaCd": "X075"
+      },
+      "serviceKeyword": "マツパ"
+    },
+    "log": [
+      {
+        "date": "2025/10/23",
+        "rank": 7,
+        "screenshot": "screenshots/251023_170713__マツパ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "ディアロ-京橋・都島-まつげパーマ",
+    "task": {
+      "id": "ディアロ-京橋・都島-まつげパーマ",
+      "type": "normal",
+      "salonName": "ディアロ",
+      "areaName": "京橋・都島",
+      "areaCodes": {
+        "serviceAreaCd": "SB",
+        "middleAreaCd": "BA",
+        "smallAreaCd": "X075"
+      },
+      "serviceKeyword": "まつげパーマ"
+    },
+    "log": [
+      {
+        "date": "2025/10/23",
+        "rank": 18,
+        "screenshot": "screenshots/251023_170644__まつげパーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "ディアロ-京橋・都島-パリジェンヌ",
+    "task": {
+      "id": "ディアロ-京橋・都島-パリジェンヌ",
+      "type": "normal",
+      "salonName": "ディアロ",
+      "areaName": "京橋・都島",
+      "areaCodes": {
+        "serviceAreaCd": "SB",
+        "middleAreaCd": "BA",
+        "smallAreaCd": "X075"
+      },
+      "serviceKeyword": "パリジェンヌ"
+    },
+    "log": [
+      {
+        "date": "2025/10/23",
+        "rank": 3,
+        "screenshot": "screenshots/251023_170659__パリジェンヌ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "ディアロ-京橋・都島-眉毛",
+    "task": {
+      "id": "ディアロ-京橋・都島-眉毛",
+      "type": "normal",
+      "salonName": "ディアロ",
+      "areaName": "京橋・都島",
+      "areaCodes": {
+        "serviceAreaCd": "SB",
+        "middleAreaCd": "BA",
+        "smallAreaCd": "X075"
+      },
+      "serviceKeyword": "眉毛"
+    },
+    "log": [
+      {
+        "date": "2025/10/23",
+        "rank": 36,
+        "screenshot": "screenshots/251023_170728__眉毛.jpg"
+      }
+    ]
+  },
+  {
+    "id": "ディアロ-京橋・都島-まつげ",
+    "task": {
+      "id": "ディアロ-京橋・都島-まつげ",
+      "type": "normal",
+      "salonName": "ディアロ",
+      "areaName": "京橋・都島",
+      "areaCodes": {
+        "serviceAreaCd": "SB",
+        "middleAreaCd": "BA",
+        "smallAreaCd": "X075"
+      },
+      "serviceKeyword": "まつげ"
+    },
+    "log": [
+      {
+        "date": "2025/10/23",
+        "rank": 14,
+        "screenshot": "screenshots/251023_170744__まつげ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "ディアロ-京橋・都島-眉毛ワックス",
+    "task": {
+      "id": "ディアロ-京橋・都島-眉毛ワックス",
+      "type": "normal",
+      "salonName": "ディアロ",
+      "areaName": "京橋・都島",
+      "areaCodes": {
+        "serviceAreaCd": "SB",
+        "middleAreaCd": "BA",
+        "smallAreaCd": "X075"
+      },
+      "serviceKeyword": "眉毛ワックス"
+    },
+    "log": [
+      {
+        "date": "2025/10/23",
+        "rank": "圏外",
+        "screenshot": "screenshots/251023_170800__眉毛ワックス.jpg"
+      }
+    ]
   }
 ]

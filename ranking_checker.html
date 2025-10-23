@@ -449,14 +449,10 @@
                         "梅田・京橋・福島・本町": {
                             code: "BA",
                             smallAreas: {
+                                "梅田・西梅田": { code: "X074" },
                                 "芝田・茶屋町・中崎町": { code: "X506" },
-                                "北新地・堂島・中之島": { code: "X035" },
-                                "西梅田・本町・淀屋橋・肥後橋": { code: "X036" },
-                                "東梅田・お初天神・南森町": { code: "X037" },
-                                "京橋・ＯＢＰ": { code: "X038" },
                                 "福島・野田": { code: "X507" },
                                 "天神橋筋": { code: "X508" },
-                                "梅田・西梅田": { code: "X074" },
                                 "京橋・都島": { code: "X075" },
                                 "北浜・肥後橋・本町": { code: "X509" }
                             }
@@ -1623,13 +1619,16 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                         return;
                     }
 
-                    const middleArea = middleAreaSelect.value;
-                    const smallArea = smallAreaSelect.value;
+                    const middleArea = middleAreaSelect.value; // 中エリアの値を取得
+                    const smallArea = smallAreaSelect.value; // 小エリアの値を取得
                     const areaCodes = {};
-                    areaCodes.serviceAreaCd = areas[largeArea].code;
-                    if (middleArea) areaCodes.middleAreaCd = areas[largeArea].middleAreas[middleArea].code;
-                    if (smallArea) areaCodes.smallAreaCd = areas[largeArea].middleAreas[smallArea].smallAreas[smallArea].code;
-                    const areaName = smallArea || middleArea || largeArea;
+                    if (largeArea) areaCodes.serviceAreaCd = areas[largeArea].code; // 大エリアコード
+                    if (middleArea) areaCodes.middleAreaCd = areas[largeArea].middleAreas[middleArea].code; // 中エリアコード
+                    // 小エリアが選択されている場合、そのコードを追加
+                    if (smallArea) areaCodes.smallAreaCd = areas[largeArea].middleAreas[middleArea].smallAreas[smallArea].code;
+
+                    // 表示用のエリア名は、最も詳細なエリア名を使用
+                    const areaName = smallArea || middleArea || largeArea; 
 
                     serviceKeywords.forEach(keyword => {
                         const taskId = `${salonName}-${areaName}-${keyword}`;
