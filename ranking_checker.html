@@ -224,45 +224,6 @@
                     <ul id="autoTaskList" style="list-style: none; padding: 0;"></ul>
                 </div>
             </div>
-            <!-- MEOタスク一括コピー機能 -->
-            <div id="meoTaskCopySection" style="display: none; padding-top: 15px; margin-top: 15px; border-top: 1px solid #e5e5e7;">
-                <h4 style="margin-top: 0; margin-bottom: 10px; font-size: 16px; font-weight: 600;">MEOタスクを別地点にコピー</h4>
-                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                    <select id="copySourceLocation" style="padding: 6px 10px; font-size: 14px; border-radius: 6px;"></select>
-                    <span style="font-weight: bold;">→</span>
-                    <input type="text" id="copyDestLocation" placeholder="コピー先の検索地点 (例: 池袋駅)" style="padding: 6px 10px; font-size: 14px; flex-grow: 1;">
-                    <button type="button" id="executeCopyButton" class="button-secondary" style="padding: 6px 12px; font-size: 13px;">コピー実行</button>
-                </div>
-                <small style="display: block; margin-top: 8px; color: #6c6c70; font-size: 12px;">
-                    コピー元の検索地点に登録されている全てのキーワードを、新しい検索地点のタスクとして一括で追加します。
-                </small>
-            </div>
-            <!-- HPB通常タスク一括コピー機能 -->
-            <div id="hpbNormalTaskCopySection" style="display: none; padding-top: 15px; margin-top: 15px; border-top: 1px solid #e5e5e7;">
-                <h4 style="margin-top: 0; margin-bottom: 10px; font-size: 16px; font-weight: 600;">HPB通常タスクを別エリアにコピー</h4>
-                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                    <select id="copySourceArea" style="padding: 6px 10px; font-size: 14px; border-radius: 6px;"></select>
-                    <span style="font-weight: bold;">→</span>
-                    <select id="copyDestArea" style="padding: 6px 10px; font-size: 14px; border-radius: 6px; flex-grow: 1;"></select>
-                    <button type="button" id="executeHpbNormalCopyButton" class="button-secondary" style="padding: 6px 12px; font-size: 13px;">コピー実行</button>
-                </div>
-                <small style="display: block; margin-top: 8px; color: #6c6c70; font-size: 12px;">
-                    コピー元のエリアに登録されている全てのキーワードを、新しいエリアのタスクとして一括で追加します。
-                </small>
-            </div>
-            <!-- HPB特集タスク一括コピー機能 -->
-            <div id="hpbSpecialTaskCopySection" style="display: none; padding-top: 15px; margin-top: 15px; border-top: 1px solid #e5e5e7;">
-                <h4 style="margin-top: 0; margin-bottom: 10px; font-size: 16px; font-weight: 600;">HPB特集タスクを別ページにコピー</h4>
-                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                    <select id="copySourceSpecialPage" style="padding: 6px 10px; font-size: 14px; border-radius: 6px;"></select>
-                    <span style="font-weight: bold;">→</span>
-                    <input type="text" id="copyDestSpecialPageUrl" placeholder="コピー先の特集ページURL" style="padding: 6px 10px; font-size: 14px; flex-grow: 1;">
-                    <button type="button" id="executeHpbSpecialCopyButton" class="button-secondary" style="padding: 6px 12px; font-size: 13px;">コピー実行</button>
-                </div>
-                <small style="display: block; margin-top: 8px; color: #6c6c70; font-size: 12px;">
-                    コピー元の特集ページに登録されている全てのサロンを、新しい特集ページのタスクとして一括で追加します。
-                </small>
-            </div>
         </div>
 
         <!-- 手動計測セクション -->
@@ -342,6 +303,43 @@
             </div>
             <div id="resultArea" class="result-area" style="margin-top: 20px;">
                 <p id="initialResultMessage">キーワードとサロン名を入力して「順位を計測」ボタンを押してください。</p>
+            </div>
+        </div>
+
+        <!-- タスクコピー機能セクション (手動計測セクションの外に移動) -->
+        <div class="card">
+            <!-- MEOタスク一括コピー機能 -->
+            <div id="meoTaskCopySection" style="display: none;">
+                <h4 style="margin-top: 0; margin-bottom: 10px; font-size: 16px; font-weight: 600;">MEOタスクを別地点にコピー</h4>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <select id="copySourceLocation" style="padding: 6px 10px; font-size: 14px; border-radius: 6px;"></select>
+                    <span style="font-weight: bold;">→</span>
+                    <input type="text" id="copyDestLocation" placeholder="コピー先の検索地点 (例: 池袋駅)" style="padding: 6px 10px; font-size: 14px; flex-grow: 1;">
+                    <button type="button" id="executeCopyButton" class="button-secondary" style="padding: 6px 12px; font-size: 13px;">コピー実行</button>
+                </div>
+                <small style="display: block; margin-top: 8px; color: #6c6c70; font-size: 12px;">コピー元の検索地点に登録されている全てのキーワードを、新しい検索地点のタスクとして一括で追加します。</small>
+            </div>
+            <!-- HPB通常タスク一括コピー機能 -->
+            <div id="hpbNormalTaskCopySection" style="display: none;">
+                <h4 style="margin-top: 0; margin-bottom: 10px; font-size: 16px; font-weight: 600;">HPB通常タスクを別エリアにコピー</h4>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <select id="copySourceArea" style="padding: 6px 10px; font-size: 14px; border-radius: 6px;"></select>
+                    <span style="font-weight: bold;">→</span>
+                    <select id="copyDestArea" style="padding: 6px 10px; font-size: 14px; border-radius: 6px; flex-grow: 1;"></select>
+                    <button type="button" id="executeHpbNormalCopyButton" class="button-secondary" style="padding: 6px 12px; font-size: 13px;">コピー実行</button>
+                </div>
+                <small style="display: block; margin-top: 8px; color: #6c6c70; font-size: 12px;">コピー元のエリアに登録されている全てのキーワードを、新しいエリアのタスクとして一括で追加します。</small>
+            </div>
+            <!-- HPB特集タスク一括コピー機能 -->
+            <div id="hpbSpecialTaskCopySection" style="display: none;">
+                <h4 style="margin-top: 0; margin-bottom: 10px; font-size: 16px; font-weight: 600;">HPB特集タスクを別ページにコピー</h4>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <select id="copySourceSpecialPage" style="padding: 6px 10px; font-size: 14px; border-radius: 6px;"></select>
+                    <span style="font-weight: bold;">→</span>
+                    <input type="text" id="copyDestSpecialPageUrl" placeholder="コピー先の特集ページURL" style="padding: 6px 10px; font-size: 14px; flex-grow: 1;">
+                    <button type="button" id="executeHpbSpecialCopyButton" class="button-secondary" style="padding: 6px 12px; font-size: 13px;">コピー実行</button>
+                </div>
+                <small style="display: block; margin-top: 8px; color: #6c6c70; font-size: 12px;">コピー元の特集ページに登録されている全てのサロンを、新しい特集ページのタスクとして一括で追加します。</small>
             </div>
         </div>
     </main>
@@ -1263,9 +1261,27 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
 
                 // コピー先プルダウンを生成
                 copyDestAreaSelect.innerHTML = '';
-                Object.keys(areas).forEach(largeAreaName => {
+                // デフォルトオプションを追加
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = 'コピー先のエリアを選択';
+                defaultOption.disabled = true;
+                defaultOption.selected = true;
+                copyDestAreaSelect.appendChild(defaultOption);
+
+                Object.keys(areas).sort((a,b) => a.localeCompare(b, 'ja')).forEach(largeAreaName => {
                     const largeArea = areas[largeAreaName];
-                    Object.keys(largeArea.middleAreas).forEach(middleAreaName => {
+                    
+                    // 大エリア自体をコピー先として追加
+                    let largeAreaOption = document.createElement('option');
+                    largeAreaOption.value = JSON.stringify({
+                        areaName: largeAreaName,
+                        areaCodes: { serviceAreaCd: largeArea.code }
+                    });
+                    largeAreaOption.textContent = `${largeAreaName} (全域)`;
+                    copyDestAreaSelect.appendChild(largeAreaOption);
+
+                    Object.keys(largeArea.middleAreas).sort((a,b) => a.localeCompare(b, 'ja')).forEach(middleAreaName => {
                         const option = document.createElement('option');
                         option.value = JSON.stringify({
                             areaName: middleAreaName,
@@ -1273,6 +1289,20 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                         });
                         option.textContent = `${largeAreaName} > ${middleAreaName}`;
                         copyDestAreaSelect.appendChild(option);
+
+                        // 小エリアが存在する場合、それも追加
+                        const smallAreaDefs = largeArea.middleAreas[middleAreaName].smallAreas;
+                        if (smallAreaDefs && Object.keys(smallAreaDefs).length > 0) {
+                            Object.keys(smallAreaDefs).sort((a,b) => a.localeCompare(b, 'ja')).forEach(smallAreaName => {
+                                const smallAreaOption = document.createElement('option');
+                                smallAreaOption.value = JSON.stringify({
+                                    areaName: smallAreaName,
+                                    areaCodes: { serviceAreaCd: largeArea.code, middleAreaCd: largeArea.middleAreas[middleAreaName].code, smallAreaCd: smallAreaDefs[smallAreaName].code }
+                                });
+                                smallAreaOption.textContent = `${largeAreaName} > ${middleAreaName} > ${smallAreaName}`;
+                                copyDestAreaSelect.appendChild(smallAreaOption);
+                            });
+                        }
                     });
                 });
             }

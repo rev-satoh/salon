@@ -12109,5 +12109,335 @@
         "screenshot": "screenshots/251025_090453__眉毛ワックス.jpg"
       }
     ]
+  },
+  {
+    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-HBL",
+    "task": {
+      "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-HBL",
+      "type": "normal",
+      "salonName": "ケイトステージラッシュ",
+      "areaName": "箱崎・千早・香椎周辺",
+      "areaCodes": {
+        "serviceAreaCd": "SG",
+        "middleAreaCd": "GA",
+        "smallAreaCd": "X350"
+      },
+      "serviceKeyword": "HBL"
+    },
+    "log": [
+      {
+        "date": "2025/10/25",
+        "rank": 1,
+        "screenshot": "screenshots/251025_162117__HBL.jpg"
+      }
+    ]
+  },
+  {
+    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-アイブロウ",
+    "task": {
+      "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-アイブロウ",
+      "type": "normal",
+      "salonName": "ケイトステージラッシュ",
+      "areaName": "箱崎・千早・香椎周辺",
+      "areaCodes": {
+        "serviceAreaCd": "SG",
+        "middleAreaCd": "GA",
+        "smallAreaCd": "X350"
+      },
+      "serviceKeyword": "アイブロウ"
+    },
+    "log": [
+      {
+        "date": "2025/10/25",
+        "rank": 7,
+        "screenshot": "screenshots/251025_162124__アイブロウ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-アイラッシュ",
+    "task": {
+      "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-アイラッシュ",
+      "type": "normal",
+      "salonName": "ケイトステージラッシュ",
+      "areaName": "箱崎・千早・香椎周辺",
+      "areaCodes": {
+        "serviceAreaCd": "SG",
+        "middleAreaCd": "GA",
+        "smallAreaCd": "X350"
+      },
+      "serviceKeyword": "アイラッシュ"
+    },
+    "log": [
+      {
+        "date": "2025/10/25",
+        "rank": 17,
+        "screenshot": "screenshots/251025_162135__アイラッシュ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-ハリウッドブロウ",
+    "task": {
+      "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-ハリウッドブロウ",
+      "type": "normal",
+      "salonName": "ケイトステージラッシュ",
+      "areaName": "箱崎・千早・香椎周辺",
+      "areaCodes": {
+        "serviceAreaCd": "SG",
+        "middleAreaCd": "GA",
+        "smallAreaCd": "X350"
+      },
+      "serviceKeyword": "ハリウッドブロウ"
+    },
+    "log": [
+      {
+        "date": "2025/10/25",
+        "rank": 5,
+        "screenshot": "screenshots/251025_162145__ハリウッドブロウ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-パリジェンヌ",
+    "task": {
+      "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-パリジェンヌ",
+      "type": "normal",
+      "salonName": "ケイトステージラッシュ",
+      "areaName": "箱崎・千早・香椎周辺",
+      "areaCodes": {
+        "serviceAreaCd": "SG",
+        "middleAreaCd": "GA",
+        "smallAreaCd": "X350"
+      },
+      "serviceKeyword": "パリジェンヌ"
+    },
+    "log": [
+      {
+        "date": "2025/10/25",
+        "rank": 3,
+        "screenshot": "screenshots/251025_162153__パリジェンヌ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-マツエク",
+    "task": {
+      "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-マツエク",
+      "type": "normal",
+      "salonName": "ケイトステージラッシュ",
+      "areaName": "箱崎・千早・香椎周辺",
+      "areaCodes": {
+        "serviceAreaCd": "SG",
+        "middleAreaCd": "GA",
+        "smallAreaCd": "X350"
+      },
+      "serviceKeyword": "マツエク"
+    },
+    "log": [
+      {
+        "date": "2025/10/25",
+        "rank": 13,
+        "screenshot": "screenshots/251025_162204__マツエク.jpg"
+      }
+    ]
+  },
+  {
+    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-まつげ",
+    "task": {
+      "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-まつげ",
+      "type": "normal",
+      "salonName": "ケイトステージラッシュ",
+      "areaName": "箱崎・千早・香椎周辺",
+      "areaCodes": {
+        "serviceAreaCd": "SG",
+        "middleAreaCd": "GA",
+        "smallAreaCd": "X350"
+      },
+      "serviceKeyword": "まつげ"
+    },
+    "log": [
+      {
+        "date": "2025/10/25",
+        "rank": 4,
+        "screenshot": "screenshots/251025_162215__まつげ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-まつげパーマ",
+    "task": {
+      "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-まつげパーマ",
+      "type": "normal",
+      "salonName": "ケイトステージラッシュ",
+      "areaName": "箱崎・千早・香椎周辺",
+      "areaCodes": {
+        "serviceAreaCd": "SG",
+        "middleAreaCd": "GA",
+        "smallAreaCd": "X350"
+      },
+      "serviceKeyword": "まつげパーマ"
+    },
+    "log": [
+      {
+        "date": "2025/10/25",
+        "rank": 5,
+        "screenshot": "screenshots/251025_162227__まつげパーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-まつぱ",
+    "task": {
+      "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-まつぱ",
+      "type": "normal",
+      "salonName": "ケイトステージラッシュ",
+      "areaName": "箱崎・千早・香椎周辺",
+      "areaCodes": {
+        "serviceAreaCd": "SG",
+        "middleAreaCd": "GA",
+        "smallAreaCd": "X350"
+      },
+      "serviceKeyword": "まつぱ"
+    },
+    "log": [
+      {
+        "date": "2025/10/25",
+        "rank": 3,
+        "screenshot": "screenshots/251025_162239__まつぱ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-マツパ",
+    "task": {
+      "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-マツパ",
+      "type": "normal",
+      "salonName": "ケイトステージラッシュ",
+      "areaName": "箱崎・千早・香椎周辺",
+      "areaCodes": {
+        "serviceAreaCd": "SG",
+        "middleAreaCd": "GA",
+        "smallAreaCd": "X350"
+      },
+      "serviceKeyword": "マツパ"
+    },
+    "log": [
+      {
+        "date": "2025/10/25",
+        "rank": 2,
+        "screenshot": "screenshots/251025_162249__マツパ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-まつ毛パーマ",
+    "task": {
+      "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-まつ毛パーマ",
+      "type": "normal",
+      "salonName": "ケイトステージラッシュ",
+      "areaName": "箱崎・千早・香椎周辺",
+      "areaCodes": {
+        "serviceAreaCd": "SG",
+        "middleAreaCd": "GA",
+        "smallAreaCd": "X350"
+      },
+      "serviceKeyword": "まつ毛パーマ"
+    },
+    "log": [
+      {
+        "date": "2025/10/25",
+        "rank": 5,
+        "screenshot": "screenshots/251025_162300__まつ毛パーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-眉毛",
+    "task": {
+      "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-眉毛",
+      "type": "normal",
+      "salonName": "ケイトステージラッシュ",
+      "areaName": "箱崎・千早・香椎周辺",
+      "areaCodes": {
+        "serviceAreaCd": "SG",
+        "middleAreaCd": "GA",
+        "smallAreaCd": "X350"
+      },
+      "serviceKeyword": "眉毛"
+    },
+    "log": [
+      {
+        "date": "2025/10/25",
+        "rank": 2,
+        "screenshot": "screenshots/251025_162313__眉毛.jpg"
+      }
+    ]
+  },
+  {
+    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-眉毛WAX",
+    "task": {
+      "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-眉毛WAX",
+      "type": "normal",
+      "salonName": "ケイトステージラッシュ",
+      "areaName": "箱崎・千早・香椎周辺",
+      "areaCodes": {
+        "serviceAreaCd": "SG",
+        "middleAreaCd": "GA",
+        "smallAreaCd": "X350"
+      },
+      "serviceKeyword": "眉毛WAX"
+    },
+    "log": [
+      {
+        "date": "2025/10/25",
+        "rank": 2,
+        "screenshot": "screenshots/251025_162324__眉毛WAX.jpg"
+      }
+    ]
+  },
+  {
+    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-眉毛ワックス",
+    "task": {
+      "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-眉毛ワックス",
+      "type": "normal",
+      "salonName": "ケイトステージラッシュ",
+      "areaName": "箱崎・千早・香椎周辺",
+      "areaCodes": {
+        "serviceAreaCd": "SG",
+        "middleAreaCd": "GA",
+        "smallAreaCd": "X350"
+      },
+      "serviceKeyword": "眉毛ワックス"
+    },
+    "log": [
+      {
+        "date": "2025/10/25",
+        "rank": 3,
+        "screenshot": "screenshots/251025_162332__眉毛ワックス.jpg"
+      }
+    ]
+  },
+  {
+    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-まつげパーマ＆パリジェンヌ",
+    "task": {
+      "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-まつげパーマ＆パリジェンヌ",
+      "type": "normal",
+      "salonName": "ケイトステージラッシュ",
+      "areaName": "箱崎・千早・香椎周辺",
+      "areaCodes": {
+        "serviceAreaCd": "SG",
+        "middleAreaCd": "GA",
+        "smallAreaCd": "X350"
+      },
+      "serviceKeyword": "まつげパーマ＆パリジェンヌ"
+    },
+    "log": [
+      {
+        "date": "2025/10/25",
+        "rank": 1,
+        "screenshot": "screenshots/251025_162340__まつげパーマ＆パリジェンヌ.jpg"
+      }
+    ]
   }
 ]
