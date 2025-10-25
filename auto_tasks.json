@@ -2367,75 +2367,246 @@
     "type": "special"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "BA",
+      "serviceAreaCd": "SB",
+      "smallAreaCd": "X075"
+    },
+    "areaName": "京橋・都島",
     "id": "ディアロ-京橋・都島-まつげパーマ",
-    "type": "normal",
     "salonName": "ディアロ",
-    "areaName": "京橋・都島",
-    "areaCodes": {
-      "serviceAreaCd": "SB",
-      "middleAreaCd": "BA",
-      "smallAreaCd": "X075"
-    },
-    "serviceKeyword": "まつげパーマ"
+    "serviceKeyword": "まつげパーマ",
+    "type": "normal"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "BA",
+      "serviceAreaCd": "SB",
+      "smallAreaCd": "X075"
+    },
+    "areaName": "京橋・都島",
     "id": "ディアロ-京橋・都島-パリジェンヌ",
-    "type": "normal",
     "salonName": "ディアロ",
-    "areaName": "京橋・都島",
-    "areaCodes": {
-      "serviceAreaCd": "SB",
-      "middleAreaCd": "BA",
-      "smallAreaCd": "X075"
-    },
-    "serviceKeyword": "パリジェンヌ"
+    "serviceKeyword": "パリジェンヌ",
+    "type": "normal"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "BA",
+      "serviceAreaCd": "SB",
+      "smallAreaCd": "X075"
+    },
+    "areaName": "京橋・都島",
     "id": "ディアロ-京橋・都島-マツパ",
-    "type": "normal",
     "salonName": "ディアロ",
-    "areaName": "京橋・都島",
-    "areaCodes": {
-      "serviceAreaCd": "SB",
-      "middleAreaCd": "BA",
-      "smallAreaCd": "X075"
-    },
-    "serviceKeyword": "マツパ"
+    "serviceKeyword": "マツパ",
+    "type": "normal"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "BA",
+      "serviceAreaCd": "SB",
+      "smallAreaCd": "X075"
+    },
+    "areaName": "京橋・都島",
     "id": "ディアロ-京橋・都島-眉毛",
-    "type": "normal",
     "salonName": "ディアロ",
-    "areaName": "京橋・都島",
-    "areaCodes": {
-      "serviceAreaCd": "SB",
-      "middleAreaCd": "BA",
-      "smallAreaCd": "X075"
-    },
-    "serviceKeyword": "眉毛"
+    "serviceKeyword": "眉毛",
+    "type": "normal"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "BA",
+      "serviceAreaCd": "SB",
+      "smallAreaCd": "X075"
+    },
+    "areaName": "京橋・都島",
     "id": "ディアロ-京橋・都島-まつげ",
-    "type": "normal",
     "salonName": "ディアロ",
-    "areaName": "京橋・都島",
-    "areaCodes": {
-      "serviceAreaCd": "SB",
-      "middleAreaCd": "BA",
-      "smallAreaCd": "X075"
-    },
-    "serviceKeyword": "まつげ"
+    "serviceKeyword": "まつげ",
+    "type": "normal"
   },
   {
-    "id": "ディアロ-京橋・都島-眉毛ワックス",
-    "type": "normal",
-    "salonName": "ディアロ",
-    "areaName": "京橋・都島",
     "areaCodes": {
-      "serviceAreaCd": "SB",
       "middleAreaCd": "BA",
+      "serviceAreaCd": "SB",
       "smallAreaCd": "X075"
     },
-    "serviceKeyword": "眉毛ワックス"
+    "areaName": "京橋・都島",
+    "id": "ディアロ-京橋・都島-眉毛ワックス",
+    "salonName": "ディアロ",
+    "serviceKeyword": "眉毛ワックス",
+    "type": "normal"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "salonName": "ケイトステージラッシュ",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "id": "ロレインブロウ-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "salonName": "ロレインブロウ",
+    "type": "special"
+  },
+  {
+    "featurePageName": "広島市でまつげパーマが人気のまつげサロン｜ホットペッパービューティー",
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "id": "elua 紙屋町店-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "salonName": "elua 紙屋町店",
+    "type": "special"
+  },
+  {
+    "featurePageName": "広島市でまつげパーマが人気のまつげサロン｜ホットペッパービューティー",
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "id": "elua 横川店-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "salonName": "elua 横川店",
+    "type": "special"
+  },
+  {
+    "featurePageName": "広島市でまつげパーマが人気のまつげサロン｜ホットペッパービューティー",
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "id": "elua 緑井店-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "salonName": "elua 緑井店",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "id": "MARIE TERESIA 広島八丁堀-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "salonName": "MARIE TERESIA 広島八丁堀",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "id": "リラ-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "salonName": "リラ",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "id": "リラ　広島立町店-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "salonName": "リラ　広島立町店",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "id": "eye+nico-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "salonName": "eye+nico",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "id": "ヘイリーブロウ-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "salonName": "ヘイリーブロウ",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "id": "THINK EYE-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "salonName": "THINK EYE",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "id": "MAQUIＡ広島八丁堀店-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "salonName": "MAQUIＡ広島八丁堀店",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "id": "ミエル広島八丁堀店-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "salonName": "ミエル広島八丁堀店",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "id": "HANABI NAMIKI-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city34100001/",
+    "salonName": "HANABI NAMIKI",
+    "type": "special"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city10100000/",
+    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city10100000/",
+    "salonName": "ケイトステージラッシュ",
+    "type": "special",
+    "featurePageName": "広島市中区でまつげパーマが人気のまつげサロン｜ホットペッパービューティー"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city10100000/",
+    "id": "ロレインブロウ-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city10100000/",
+    "salonName": "ロレインブロウ",
+    "type": "special",
+    "featurePageName": "広島市中区でまつげパーマが人気のまつげサロン｜ホットペッパービューティー"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city10100000/",
+    "id": "elua 紙屋町店-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city10100000/",
+    "salonName": "elua 紙屋町店",
+    "type": "special",
+    "featurePageName": "広島市中区でまつげパーマが人気のまつげサロン｜ホットペッパービューティー"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city10100000/",
+    "id": "MARIE TERESIA 広島八丁堀-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city10100000/",
+    "salonName": "MARIE TERESIA 広島八丁堀",
+    "type": "special",
+    "featurePageName": "広島市中区でまつげパーマが人気のまつげサロン｜ホットペッパービューティー"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city10100000/",
+    "id": "リラ　広島立町店-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city10100000/",
+    "salonName": "リラ　広島立町店",
+    "type": "special",
+    "featurePageName": "広島市中区でまつげパーマが人気のまつげサロン｜ホットペッパービューティー"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city10100000/",
+    "id": "eye+nico-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city10100000/",
+    "salonName": "eye+nico",
+    "type": "special",
+    "featurePageName": "広島市中区でまつげパーマが人気のまつげサロン｜ホットペッパービューティー"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city10100000/",
+    "id": "ヘイリーブロウ-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city10100000/",
+    "salonName": "ヘイリーブロウ",
+    "type": "special",
+    "featurePageName": "広島市中区でまつげパーマが人気のまつげサロン｜ホットペッパービューティー"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city10100000/",
+    "id": "THINK EYE-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city10100000/",
+    "salonName": "THINK EYE",
+    "type": "special",
+    "featurePageName": "広島市中区でまつげパーマが人気のまつげサロン｜ホットペッパービューティー"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city10100000/",
+    "id": "MAQUIＡ広島八丁堀店-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city10100000/",
+    "salonName": "MAQUIＡ広島八丁堀店",
+    "type": "special",
+    "featurePageName": "広島市中区でまつげパーマが人気のまつげサロン｜ホットペッパービューティー"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city10100000/",
+    "id": "ミエル広島八丁堀店-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city10100000/",
+    "salonName": "ミエル広島八丁堀店",
+    "type": "special",
+    "featurePageName": "広島市中区でまつげパーマが人気のまつげサロン｜ホットペッパービューティー"
+  },
+  {
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city10100000/",
+    "id": "HANABI NAMIKI-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city10100000/",
+    "salonName": "HANABI NAMIKI",
+    "type": "special",
+    "featurePageName": "広島市中区でまつげパーマが人気のまつげサロン｜ホットペッパービューティー"
+  },
+  {
+    "id": "エクレア　広島立町店-https://beauty.hotpepper.jp/genre/kgkw038/pre34/city10100000/",
+    "type": "special",
+    "salonName": "エクレア　広島立町店",
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw038/pre34/city10100000/",
+    "featurePageName": "広島市中区でまつげパーマが人気のまつげサロン｜ホットペッパービューティー"
   }
 ]

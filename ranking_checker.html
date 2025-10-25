@@ -778,6 +778,22 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                 return (rank < 1) ? 6 : 1.5; // 1位より良いか、100位より悪い場合
             }
 
+            // --- UIの状態を管理する関数 ---
+            let isMeasuring = false;
+            function setMeasuringState(measuring) {
+                isMeasuring = measuring;
+                // 計測実行ボタンの状態を更新
+                checkRankButton.disabled = measuring;
+                manualTriggerButton.disabled = measuring;
+
+                // 計測中はモード切替とタスク追加/コピーボタンを無効化
+                searchTypeToggle.querySelectorAll('button').forEach(btn => btn.disabled = measuring);
+                addAutoTaskButton.disabled = measuring;
+                copyButton.disabled = measuring; // MEOコピーボタン
+                hpbNormalCopyButton.disabled = measuring; // HPB通常コピーボタン
+                hpbSpecialCopyButton.disabled = measuring; // HPB特集コピーボタン
+            }
+
             checkRankButton.addEventListener('click', async () => {
                 const salonName = salonNameInput.value.trim();
                 const activeSearchType = searchTypeToggle.querySelector('.toggle-button.active').dataset.type;
@@ -831,7 +847,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                 } else if (activeSearchType === 'seo') {
                 }
 
-                checkRankButton.disabled = true; // ボタンを無効化
+                setMeasuringState(true); // 計測状態を開始に設定
                 checkRankButton.textContent = '計測中...';
                 resultArea.innerHTML = ''; // 以前の結果をクリア
 
@@ -1068,8 +1084,8 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
 
                 // 全ての計測が完了したことを通知
                 overallStatusContainer.textContent = `すべての計測が完了しました。（${serviceKeywords.length}件 / 所要時間: ${durationString}）`;
-                // 全ての処理が完了したらボタンを元に戻す
-                checkRankButton.disabled = false;
+                // 全ての処理が完了したらUIの状態を元に戻す
+                setMeasuringState(false);
                 checkRankButton.textContent = '順位を計測';
                 fetchAndDisplayAutoHistory(); // 自動計測履歴グラフを更新
             });
@@ -1487,37 +1503,73 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                         const groupLabel = document.createElement('label');
                         groupLabel.textContent = groupKey;
                         groupLabel.style.cursor = 'pointer';
-                        groupLabel.style.flexGrow = '1';
+                        groupLabel.style.flexGrow = '1'; // この行は変更なし
                         groupLabel.onclick = () => groupCheckbox.click();
                         groupHeader.appendChild(groupLabel);
 
                         autoTaskList.appendChild(groupHeader);
 
                         tasksInGroup.sort((a, b) => (a.serviceKeyword || '').localeCompare(b.serviceKeyword || '', 'ja'));
+                        tasksInGroup.forEach(task => renderTaskItem(task, autoTaskList, groupKey)); // この行は変更なし
+                    });
+                } else if (activeSearchType === 'special') { // HPB特集検索のグループ化を追加
+                    const groupedTasks = filteredTasks.reduce((acc, task) => {
+                        // グループキーにはURLを使用し、表示名としてタイトル(featurePageName)またはURLを保持
+                        const groupKey = task.featurePageUrl;
+                        const groupDisplayName = task.featurePageName || task.featurePageUrl;
+                        if (!acc[groupKey]) {
+                            acc[groupKey] = { displayName: groupDisplayName, tasks: [] };
+                        }
+                        acc[groupKey].tasks.push(task);
+                        // グループ内で最も新しいタイトルをdisplayNameとして採用
+                        if (task.featurePageName) {
+                            acc[groupKey].displayName = task.featurePageName;
+                        }
+                        return acc;
+                    }, {});
+
+                    const sortedGroups = Object.entries(groupedTasks).sort((a, b) => a[1].displayName.localeCompare(b[1].displayName, 'ja'));
+
+                    sortedGroups.forEach(([groupKey, groupData]) => {
+                        const tasksInGroup = groupData.tasks;
+
+                        const groupHeader = document.createElement('li');
+                        groupHeader.style.padding = '10px 8px';
+                        groupHeader.style.backgroundColor = '#f0f0f5';
+                        groupHeader.style.fontWeight = '600';
+                        groupHeader.style.marginTop = '10px';
+                        groupHeader.style.borderRadius = '6px';
+                        groupHeader.style.display = 'flex';
+                        groupHeader.style.alignItems = 'center';
+
+                        const groupCheckbox = document.createElement('input');
+                        groupCheckbox.type = 'checkbox';
+                        groupCheckbox.style.marginRight = '10px';
+                        groupCheckbox.dataset.groupKey = groupKey; // グループキーとしてURLを使用
+                        groupHeader.appendChild(groupCheckbox);
+
+                        const groupLabel = document.createElement('label');
+                        groupLabel.textContent = groupData.displayName; // 表示名を使用
+                        groupLabel.style.cursor = 'pointer';
+                        groupLabel.style.flexGrow = '1';
+                        groupLabel.onclick = () => groupCheckbox.click();
+                        groupHeader.appendChild(groupLabel);
+
+                        autoTaskList.appendChild(groupHeader);
+
+                        tasksInGroup.sort((a, b) => (a.salonName || '').localeCompare(b.salonName || '', 'ja'));
                         tasksInGroup.forEach(task => renderTaskItem(task, autoTaskList, groupKey));
                     });
                 } else { // 特集ページの場合 (グループ化なし)
-                    // --- 特集ページのタイトルをURLごとに集約するロジックを改善 ---
-                    const urlToTitleMap = filteredTasks.reduce((map, task) => {
-                        if (task.type === 'special' && task.featurePageUrl) {
-                            // 既にタイトルがMapにあるか、現在のタスクにタイトルがあれば更新
-                            const existingTitle = map.get(task.featurePageUrl);
-                            if (!existingTitle && task.featurePageName) {
-                                map.set(task.featurePageUrl, task.featurePageName);
-                            }
-                        }
-                        return map;
-                    }, new Map());
-
                     // ソートして表示
                     filteredTasks.sort((a, b) => (a.id).localeCompare(b.id, 'ja'));
                     filteredTasks.forEach(task => {
-                        renderTaskItem(task, autoTaskList, null, urlToTitleMap);
+                        renderTaskItem(task, autoTaskList);
                     });
                 }
             };
 
-            function renderTaskItem(task, parentElement, groupKey = null, urlToTitleMap = new Map()) {
+            function renderTaskItem(task, parentElement, groupKey = null) {
                 const taskType = task.type || 'normal';
 
                 const li = document.createElement('li');
@@ -1555,8 +1607,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                 if (taskType === 'normal') {
                     taskText.textContent = `${task.serviceKeyword} - ${task.salonName}`;
                 } else if (taskType === 'special') {
-                    const pageTitle = urlToTitleMap.get(task.featurePageUrl) || task.featurePageName || task.featurePageUrl.replace(/^(https?:\/\/)?[^/]+/, '');
-                    taskText.textContent = `[${task.salonName}] ${pageTitle}`;
+                    taskText.textContent = `${task.salonName}`; // グループ化されたのでサロン名のみ表示
                 } else if (taskType === 'google') {
                     taskText.textContent = `${task.keyword} - ${task.salonName}`;
                 }
@@ -1587,7 +1638,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                     const groupCheckbox = document.querySelector(`input[type="checkbox"][data-group-key="${groupKey}"]`);
                     if (groupCheckbox) {
                         groupCheckbox.addEventListener('change', (e) => {
-                            const isChecked = e.target.checked;
+                            const isChecked = e.target.checked; // この行は変更なし
                             const key = e.target.dataset.groupKey;
                             // 同じ親要素内の、同じグループキーを持つタスクチェックボックスの状態を同期
                             parentElement.querySelectorAll(`.auto-task-checkbox[data-group-key="${key}"]`).forEach(cb => {
@@ -1723,7 +1774,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                 // 実行対象のタスクオブジェクトを取得
                 const tasksToRun = autoTasks.filter(task => selectedTaskIds.has(task.id));
 
-                manualTriggerButton.disabled = true;
+                setMeasuringState(true); // 計測状態を開始に設定
                 manualTriggerButton.textContent = '実行中...';
 
                 // --- ステータス表示の準備 ---
@@ -1912,7 +1963,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                     overallStatusContainer.textContent = `計測中にエラーが発生しました。（所要時間: ${durationString}）詳細はコンソールを確認してください。`;
                 } finally {
                     // 全ての処理が終わったらボタンを元に戻す
-                    manualTriggerButton.disabled = false;
+                    setMeasuringState(false);
                     manualTriggerButton.textContent = '選択したタスクを実行';
                     fetchAndDisplayAutoHistory(); // グラフを最新の状態に更新
                 }

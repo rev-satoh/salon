@@ -21,6 +21,7 @@ from PIL import Image
 from apscheduler.schedulers.background import BackgroundScheduler
 from dotenv import load_dotenv
 from feature_page_scraper import check_feature_page_ranking # 新しいスクレイパーをインポート
+import threading # ロック機能のためにインポート
 
 # app.pyと同じ階層にある静的ファイル(css, js, html)を読み込めるように設定
 app = Flask(__name__, static_folder='.', static_url_path='')
@@ -42,6 +43,9 @@ HISTORY_FILE_SPECIAL = 'history_special.json'
 HISTORY_FILE_MEO = 'history_meo.json'
 HISTORY_FILE_SEO = 'history_seo.json' # SEO履歴ファイルを追加
 SCHEDULER_CONFIG_FILE = 'scheduler_config.json'
+
+# --- 計測ジョブの同時実行を防ぐためのロック ---
+measurement_lock = threading.Lock()
 
 def save_json_file(filename, data):
     with open(filename, 'w', encoding='utf-8') as f:
@@ -294,27 +298,33 @@ def check_ranking_api():
     salonName = data['salonName']
     areaCodes = data['areaCodes']
     
+    if not measurement_lock.acquire(blocking=False):
+        return jsonify({"error": "現在、他の計測タスクが実行中です。しばらく待ってから再度お試しください。"}), 429 # Too Many Requests
+
     def generate_stream():
-        # WebDriverのライフサイクルをリクエストごとに管理
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--window-size=1200,800")
-        user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-        chrome_options.add_argument(f'user-agent={user_agent}')
-        
-        driver = None
         try:
-            yield sse_format({"status": "ブラウザを起動しています..."})
-            driver = webdriver.Chrome(options=chrome_options)
-            driver.set_page_load_timeout(30)
-            # ジェネレータから得られる進捗をそのままクライアントに流す
-            yield from check_hotpepper_ranking(driver, serviceKeyword, salonName, areaCodes)
-        except Exception as e:
-            app.logger.error(f"手動計測でのWebDriver生成中にエラー: {e}")
-            yield sse_format({"error": "ブラウザの起動に失敗しました。"})
+            # WebDriverのライフサイクルをリクエストごとに管理
+            chrome_options = Options()
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument("--window-size=1200,800")
+            user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            chrome_options.add_argument(f'user-agent={user_agent}')
+            
+            driver = None
+            try:
+                yield sse_format({"status": "ブラウザを起動しています..."})
+                driver = webdriver.Chrome(options=chrome_options)
+                driver.set_page_load_timeout(30)
+                # ジェネレータから得られる進捗をそのままクライアントに流す
+                yield from check_hotpepper_ranking(driver, serviceKeyword, salonName, areaCodes)
+            except Exception as e:
+                app.logger.error(f"手動計測でのWebDriver生成中にエラー: {e}")
+                yield sse_format({"error": "ブラウザの起動に失敗しました。"})
+            finally:
+                if driver:
+                    driver.quit()
         finally:
-            if driver:
-                driver.quit()
+            measurement_lock.release() # ストリームが終了したら必ずロックを解放
 
     # ストリーミングレスポンスを返す
     return app.response_class(generate_stream(), mimetype='text/event-stream')
@@ -512,18 +522,24 @@ def check_meo_ranking_api():
     if not all([keyword, location]):
         return jsonify({"error": "キーワードと検索地点の両方が必要です"}), 400
 
+    if not measurement_lock.acquire(blocking=False):
+        return jsonify({"error": "現在、他の計測タスクが実行中です。しばらく待ってから再度お試しください。"}), 429
+
     def generate_stream():
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--window-size=1200,800")
-        driver = None
         try:
-            driver = webdriver.Chrome(options=chrome_options)
-            driver.set_page_load_timeout(30)
-            yield from check_meo_ranking(driver, keyword, location)
+            chrome_options = Options()
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument("--window-size=1200,800")
+            driver = None
+            try:
+                driver = webdriver.Chrome(options=chrome_options)
+                driver.set_page_load_timeout(30)
+                yield from check_meo_ranking(driver, keyword, location)
+            finally:
+                if driver:
+                    driver.quit()
         finally:
-            if driver:
-                driver.quit()
+            measurement_lock.release()
 
     return app.response_class(generate_stream(), mimetype='text/event-stream')
 
@@ -712,29 +728,35 @@ def check_seo_ranking_api():
     if not all([url_to_find, keyword]):
         return jsonify({"error": "URLとキーワードの両方が必要です"}), 400
 
+    if not measurement_lock.acquire(blocking=False):
+        return jsonify({"error": "現在、他の計測タスクが実行中です。しばらく待ってから再度お試しください。"}), 429
+
     def generate_stream():
-        # --- SEO計測用のボット検出回避オプション ---
-        user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36'
-        chrome_options = Options()
-        chrome_options.add_argument(f'user-agent={user_agent}')
-        chrome_options.add_argument('--headless=new')
-        chrome_options.add_argument("--window-size=1200,800")
-        chrome_options.add_argument('--disable-blink-features=AutomationControlled')
-        chrome_options.add_argument('--accept-lang=ja-JP,ja;q=0.9,en-US;q=0.8,en;q=0.7')
-        chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        chrome_options.add_experimental_option('useAutomationExtension', False)
-        driver = None
         try:
-            driver = webdriver.Chrome(options=chrome_options)
-            driver.set_page_load_timeout(30)
-            # --- ボット検出回避のためのスクリプトを実行 ---
-            driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
-                "source": "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
-            })
-            yield from check_seo_ranking(driver, url_to_find, keyword, location) # locationを渡す
+            # --- SEO計測用のボット検出回避オプション ---
+            user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36'
+            chrome_options = Options()
+            chrome_options.add_argument(f'user-agent={user_agent}')
+            chrome_options.add_argument('--headless=new')
+            chrome_options.add_argument("--window-size=1200,800")
+            chrome_options.add_argument('--disable-blink-features=AutomationControlled')
+            chrome_options.add_argument('--accept-lang=ja-JP,ja;q=0.9,en-US;q=0.8,en;q=0.7')
+            chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
+            chrome_options.add_experimental_option('useAutomationExtension', False)
+            driver = None
+            try:
+                driver = webdriver.Chrome(options=chrome_options)
+                driver.set_page_load_timeout(30)
+                # --- ボット検出回避のためのスクリプトを実行 ---
+                driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
+                    "source": "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
+                })
+                yield from check_seo_ranking(driver, url_to_find, keyword, location) # locationを渡す
+            finally:
+                if driver:
+                    driver.quit()
         finally:
-            if driver:
-                driver.quit()
+            measurement_lock.release()
 
     return app.response_class(generate_stream(), mimetype='text/event-stream')
 
@@ -754,22 +776,28 @@ def run_feature_page_tasks_api():
     except (json.JSONDecodeError, ValueError):
         return jsonify({"error": "サロン名は有効なリスト形式である必要があります"}), 400
 
+    if not measurement_lock.acquire(blocking=False):
+        return jsonify({"error": "現在、他の計測タスクが実行中です。しばらく待ってから再度お試しください。"}), 429
+
     def generate_stream():
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--window-size=1200,800")
-        user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-        chrome_options.add_argument(f'user-agent={user_agent}')
-        
-        driver = None
         try:
-            driver = webdriver.Chrome(options=chrome_options)
-            driver.set_page_load_timeout(30)
-            # 特集ページ用のスクレイパーを呼び出す
-            yield from check_feature_page_ranking(driver, feature_page_url, salon_names)
+            chrome_options = Options()
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument("--window-size=1200,800")
+            user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            chrome_options.add_argument(f'user-agent={user_agent}')
+            
+            driver = None
+            try:
+                driver = webdriver.Chrome(options=chrome_options)
+                driver.set_page_load_timeout(30)
+                # 特集ページ用のスクレイパーを呼び出す
+                yield from check_feature_page_ranking(driver, feature_page_url, salon_names)
+            finally:
+                if driver:
+                    driver.quit()
         finally:
-            if driver:
-                driver.quit()
+            measurement_lock.release()
 
     return app.response_class(generate_stream(), mimetype='text/event-stream')
 
@@ -782,26 +810,32 @@ def check_feature_page_ranking_api():
     if not feature_page_url or not salon_name:
         return jsonify({"error": "特集ページのURLとサロン名が必要です"}), 400
 
+    if not measurement_lock.acquire(blocking=False):
+        return jsonify({"error": "現在、他の計測タスクが実行中です。しばらく待ってから再度お試しください。"}), 429
+
     def generate_stream():
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--window-size=1200,800")
-        user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-        chrome_options.add_argument(f'user-agent={user_agent}')
-        
-        driver = None
         try:
-            yield sse_format({"status": "ブラウザを起動しています..."})
-            driver = webdriver.Chrome(options=chrome_options)
-            driver.set_page_load_timeout(30)
-            # 特集ページ用のスクレイパーを呼び出す
-            yield from check_feature_page_ranking(driver, feature_page_url, [salon_name])
-        except Exception as e:
-            app.logger.error(f"特集ページ計測でのWebDriver生成中にエラー: {e}")
-            yield sse_format({"error": "ブラウザの起動に失敗しました。"})
+            chrome_options = Options()
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument("--window-size=1200,800")
+            user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            chrome_options.add_argument(f'user-agent={user_agent}')
+            
+            driver = None
+            try:
+                yield sse_format({"status": "ブラウザを起動しています..."})
+                driver = webdriver.Chrome(options=chrome_options)
+                driver.set_page_load_timeout(30)
+                # 特集ページ用のスクレイパーを呼び出す
+                yield from check_feature_page_ranking(driver, feature_page_url, [salon_name])
+            except Exception as e:
+                app.logger.error(f"特集ページ計測でのWebDriver生成中にエラー: {e}")
+                yield sse_format({"error": "ブラウザの起動に失敗しました。"})
+            finally:
+                if driver:
+                    driver.quit()
         finally:
-            if driver:
-                driver.quit()
+            measurement_lock.release()
 
     return app.response_class(generate_stream(), mimetype='text/event-stream')
 
@@ -812,6 +846,12 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
     指定されたタスク、またはすべてのタスクを実行し、結果を履歴ファイルに保存する
     :param task_ids_to_run: 実行するタスクIDのリスト。Noneの場合は全タスクを実行。
     """
+    # --- ロックの取得を試みる ---
+    if not measurement_lock.acquire(blocking=False):
+        app.logger.warning("自動計測ジョブを開始しようとしましたが、既に別の計測が実行中のためスキップします。")
+        if stream_progress:
+            yield sse_format({"error": "現在、他の計測タスクが実行中です。"})
+        return
     with app.app_context():
         app.logger.info("--- 自動計測ジョブを開始します ---")
         all_tasks = load_json_file(AUTO_TASKS_FILE)
@@ -1043,9 +1083,11 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
             save_json_file(AUTO_TASKS_FILE, all_tasks)
             
             if stream_progress:
+                measurement_lock.release() # ストリーミングの場合はここで解放
                 yield sse_format({"final_status": f"すべての計測が完了しました。（{total_job_count}件）"})
             else:
                 app.logger.info("--- 自動計測ジョブが完了しました ---")
+                measurement_lock.release() # 通常のジョブの場合はここで解放
 
 def update_history(history, task, date_str, rank, screenshot_path):
     """履歴リストを更新するヘルパー関数"""
