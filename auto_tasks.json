@@ -2002,13 +2002,6 @@
     "type": "normal"
   },
   {
-    "featurePageName": "福山駅で美眉(眉サロン)が人気のまつげサロン｜ホットペッパービューティー",
-    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw094/stc9952340/?vos=evhbkpg0018&pog=mt(b)ti(kwd-844162461250)dv(c)cr(480395258311)fi()gi(80460792450)ci(368609434)lc(9198798)ps()nw(g)&gclsrc=aw.ds&gad_source=1&gad_campaignid=368609434&gbraid=0AAAAADNPXWMI74zWEL02pwmT5luVvYJ8C&gclid=CjwKCAjw6P3GBhBVEiwAJPjmLiKXUbQWx-DXSYviLIAvGzkM4obUzgoSuu2c0hHYeSQ98ViAVV3mfRoCsUIQAvD_BwE",
-    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw094/stc9952340/?vos=evhbkpg0018&pog=mt(b)ti(kwd-844162461250)dv(c)cr(480395258311)fi()gi(80460792450)ci(368609434)lc(9198798)ps()nw(g)&gclsrc=aw.ds&gad_source=1&gad_campaignid=368609434&gbraid=0AAAAADNPXWMI74zWEL02pwmT5luVvYJ8C&gclid=CjwKCAjw6P3GBhBVEiwAJPjmLiKXUbQWx-DXSYviLIAvGzkM4obUzgoSuu2c0hHYeSQ98ViAVV3mfRoCsUIQAvD_BwE",
-    "salonName": "ケイトステージラッシュ",
-    "type": "special"
-  },
-  {
     "featurePageName": "福山市で美眉(眉サロン)が人気のまつげサロン｜ホットペッパービューティー",
     "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw094/pre34/city20700000/",
     "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw094/pre34/city20700000/",
@@ -2712,183 +2705,630 @@
     "type": "special"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG",
+      "smallAreaCd": "X350"
+    },
+    "areaName": "箱崎・千早・香椎周辺",
     "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-HBL",
-    "type": "normal",
     "salonName": "ケイトステージラッシュ",
-    "areaName": "箱崎・千早・香椎周辺",
-    "areaCodes": {
-      "serviceAreaCd": "SG",
-      "middleAreaCd": "GA",
-      "smallAreaCd": "X350"
-    },
-    "serviceKeyword": "HBL"
+    "serviceKeyword": "HBL",
+    "type": "normal"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG",
+      "smallAreaCd": "X350"
+    },
+    "areaName": "箱崎・千早・香椎周辺",
     "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-アイブロウ",
-    "type": "normal",
     "salonName": "ケイトステージラッシュ",
-    "areaName": "箱崎・千早・香椎周辺",
-    "areaCodes": {
-      "serviceAreaCd": "SG",
-      "middleAreaCd": "GA",
-      "smallAreaCd": "X350"
-    },
-    "serviceKeyword": "アイブロウ"
+    "serviceKeyword": "アイブロウ",
+    "type": "normal"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG",
+      "smallAreaCd": "X350"
+    },
+    "areaName": "箱崎・千早・香椎周辺",
     "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-アイラッシュ",
-    "type": "normal",
     "salonName": "ケイトステージラッシュ",
-    "areaName": "箱崎・千早・香椎周辺",
-    "areaCodes": {
-      "serviceAreaCd": "SG",
-      "middleAreaCd": "GA",
-      "smallAreaCd": "X350"
-    },
-    "serviceKeyword": "アイラッシュ"
+    "serviceKeyword": "アイラッシュ",
+    "type": "normal"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG",
+      "smallAreaCd": "X350"
+    },
+    "areaName": "箱崎・千早・香椎周辺",
     "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-ハリウッドブロウ",
-    "type": "normal",
     "salonName": "ケイトステージラッシュ",
-    "areaName": "箱崎・千早・香椎周辺",
-    "areaCodes": {
-      "serviceAreaCd": "SG",
-      "middleAreaCd": "GA",
-      "smallAreaCd": "X350"
-    },
-    "serviceKeyword": "ハリウッドブロウ"
+    "serviceKeyword": "ハリウッドブロウ",
+    "type": "normal"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG",
+      "smallAreaCd": "X350"
+    },
+    "areaName": "箱崎・千早・香椎周辺",
     "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-パリジェンヌ",
-    "type": "normal",
     "salonName": "ケイトステージラッシュ",
-    "areaName": "箱崎・千早・香椎周辺",
-    "areaCodes": {
-      "serviceAreaCd": "SG",
-      "middleAreaCd": "GA",
-      "smallAreaCd": "X350"
-    },
-    "serviceKeyword": "パリジェンヌ"
+    "serviceKeyword": "パリジェンヌ",
+    "type": "normal"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG",
+      "smallAreaCd": "X350"
+    },
+    "areaName": "箱崎・千早・香椎周辺",
     "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-マツエク",
-    "type": "normal",
     "salonName": "ケイトステージラッシュ",
-    "areaName": "箱崎・千早・香椎周辺",
-    "areaCodes": {
-      "serviceAreaCd": "SG",
-      "middleAreaCd": "GA",
-      "smallAreaCd": "X350"
-    },
-    "serviceKeyword": "マツエク"
+    "serviceKeyword": "マツエク",
+    "type": "normal"
   },
   {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG",
+      "smallAreaCd": "X350"
+    },
+    "areaName": "箱崎・千早・香椎周辺",
     "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-まつげ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつげ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG",
+      "smallAreaCd": "X350"
+    },
+    "areaName": "箱崎・千早・香椎周辺",
+    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-まつげパーマ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつげパーマ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG",
+      "smallAreaCd": "X350"
+    },
+    "areaName": "箱崎・千早・香椎周辺",
+    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-まつぱ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつぱ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG",
+      "smallAreaCd": "X350"
+    },
+    "areaName": "箱崎・千早・香椎周辺",
+    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-マツパ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "マツパ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG",
+      "smallAreaCd": "X350"
+    },
+    "areaName": "箱崎・千早・香椎周辺",
+    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-まつ毛パーマ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつ毛パーマ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG",
+      "smallAreaCd": "X350"
+    },
+    "areaName": "箱崎・千早・香椎周辺",
+    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-眉毛",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "眉毛",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG",
+      "smallAreaCd": "X350"
+    },
+    "areaName": "箱崎・千早・香椎周辺",
+    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-眉毛WAX",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "眉毛WAX",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG",
+      "smallAreaCd": "X350"
+    },
+    "areaName": "箱崎・千早・香椎周辺",
+    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-眉毛ワックス",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "眉毛ワックス",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG",
+      "smallAreaCd": "X350"
+    },
+    "areaName": "箱崎・千早・香椎周辺",
+    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-まつげパーマ＆パリジェンヌ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつげパーマ＆パリジェンヌ",
+    "type": "normal"
+  },
+  {
+    "featurePageName": "福山市でまつげトリートメントが人気のまつげサロン｜ホットペッパービューティー",
+    "featurePageUrl": "https://beauty.hotpepper.jp/genre/kgkw091/pre34/city20700000/",
+    "id": "ケイトステージラッシュ-https://beauty.hotpepper.jp/genre/kgkw091/pre34/city20700000/",
+    "salonName": "ケイトステージラッシュ",
+    "type": "special"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "福山・尾道",
+    "id": "ケイトステージラッシュ-福山・尾道-",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FA",
+      "serviceAreaCd": "SF"
+    },
+    "areaName": "広島",
+    "id": "ケイトステージラッシュ-広島-",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "GA",
+      "serviceAreaCd": "SG",
+      "smallAreaCd": "X350"
+    },
+    "areaName": "箱崎・千早・香椎周辺",
+    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "AB",
+      "serviceAreaCd": "SA"
+    },
+    "areaName": "池袋・目白",
+    "id": "ケイトステージラッシュ-池袋・目白-",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "CB",
+      "serviceAreaCd": "SC"
+    },
+    "areaName": "岐阜",
+    "id": "ケイトステージラッシュ-岐阜-",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF",
+      "smallAreaCd": "X336"
+    },
+    "areaName": "福山駅前・三吉周辺",
+    "id": "ケイトステージラッシュ-福山駅前・三吉周辺-まつげ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつげ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF",
+      "smallAreaCd": "X336"
+    },
+    "areaName": "福山駅前・三吉周辺",
+    "id": "ケイトステージラッシュ-福山駅前・三吉周辺-まつげパーマ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつげパーマ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF",
+      "smallAreaCd": "X336"
+    },
+    "areaName": "福山駅前・三吉周辺",
+    "id": "ケイトステージラッシュ-福山駅前・三吉周辺-まつ毛パーマ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつ毛パーマ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF",
+      "smallAreaCd": "X336"
+    },
+    "areaName": "福山駅前・三吉周辺",
+    "id": "ケイトステージラッシュ-福山駅前・三吉周辺-まつぱ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつぱ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF",
+      "smallAreaCd": "X336"
+    },
+    "areaName": "福山駅前・三吉周辺",
+    "id": "ケイトステージラッシュ-福山駅前・三吉周辺-マツパ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "マツパ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF",
+      "smallAreaCd": "X336"
+    },
+    "areaName": "福山駅前・三吉周辺",
+    "id": "ケイトステージラッシュ-福山駅前・三吉周辺-眉毛",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "眉毛",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF",
+      "smallAreaCd": "X336"
+    },
+    "areaName": "福山駅前・三吉周辺",
+    "id": "ケイトステージラッシュ-福山駅前・三吉周辺-眉毛ワックス",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "眉毛ワックス",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF",
+      "smallAreaCd": "X336"
+    },
+    "areaName": "福山駅前・三吉周辺",
+    "id": "ケイトステージラッシュ-福山駅前・三吉周辺-眉毛WAX",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "眉毛WAX",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF",
+      "smallAreaCd": "X336"
+    },
+    "areaName": "福山駅前・三吉周辺",
+    "id": "ケイトステージラッシュ-福山駅前・三吉周辺-アイラッシュ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "アイラッシュ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF",
+      "smallAreaCd": "X336"
+    },
+    "areaName": "福山駅前・三吉周辺",
+    "id": "ケイトステージラッシュ-福山駅前・三吉周辺-アイブロウ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "アイブロウ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF",
+      "smallAreaCd": "X336"
+    },
+    "areaName": "福山駅前・三吉周辺",
+    "id": "ケイトステージラッシュ-福山駅前・三吉周辺-マツエク",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "マツエク",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF",
+      "smallAreaCd": "X336"
+    },
+    "areaName": "福山駅前・三吉周辺",
+    "id": "ケイトステージラッシュ-福山駅前・三吉周辺-パリジェンヌ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "パリジェンヌ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF",
+      "smallAreaCd": "X336"
+    },
+    "areaName": "福山駅前・三吉周辺",
+    "id": "ケイトステージラッシュ-福山駅前・三吉周辺-HBL",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "HBL",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF",
+      "smallAreaCd": "X336"
+    },
+    "areaName": "福山駅前・三吉周辺",
+    "id": "ケイトステージラッシュ-福山駅前・三吉周辺-ハリウッドブロウ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "ハリウッドブロウ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF",
+      "smallAreaCd": "X336"
+    },
+    "areaName": "福山駅前・三吉周辺",
+    "id": "ケイトステージラッシュ-福山駅前・三吉周辺-まつげパーマ＆パリジェンヌ",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "まつげパーマ＆パリジェンヌ",
+    "type": "normal"
+  },
+  {
+    "areaCodes": {
+      "middleAreaCd": "FC",
+      "serviceAreaCd": "SF",
+      "smallAreaCd": "X336"
+    },
+    "areaName": "福山駅前・三吉周辺",
+    "id": "ケイトステージラッシュ-福山駅前・三吉周辺-",
+    "salonName": "ケイトステージラッシュ",
+    "serviceKeyword": "",
+    "type": "normal"
+  },
+  {
+    "id": "ケイトステージラッシュ-八丁堀・幟町・銀山・白島-まつげ",
     "type": "normal",
     "salonName": "ケイトステージラッシュ",
-    "areaName": "箱崎・千早・香椎周辺",
+    "areaName": "八丁堀・幟町・銀山・白島",
     "areaCodes": {
-      "serviceAreaCd": "SG",
-      "middleAreaCd": "GA",
-      "smallAreaCd": "X350"
+      "serviceAreaCd": "SF",
+      "middleAreaCd": "FA",
+      "smallAreaCd": "X165"
     },
     "serviceKeyword": "まつげ"
   },
   {
-    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-まつげパーマ",
+    "id": "ケイトステージラッシュ-八丁堀・幟町・銀山・白島-まつげパーマ",
     "type": "normal",
     "salonName": "ケイトステージラッシュ",
-    "areaName": "箱崎・千早・香椎周辺",
+    "areaName": "八丁堀・幟町・銀山・白島",
     "areaCodes": {
-      "serviceAreaCd": "SG",
-      "middleAreaCd": "GA",
-      "smallAreaCd": "X350"
+      "serviceAreaCd": "SF",
+      "middleAreaCd": "FA",
+      "smallAreaCd": "X165"
     },
     "serviceKeyword": "まつげパーマ"
   },
   {
-    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-まつぱ",
+    "id": "ケイトステージラッシュ-八丁堀・幟町・銀山・白島-まつ毛パーマ",
     "type": "normal",
     "salonName": "ケイトステージラッシュ",
-    "areaName": "箱崎・千早・香椎周辺",
+    "areaName": "八丁堀・幟町・銀山・白島",
     "areaCodes": {
-      "serviceAreaCd": "SG",
-      "middleAreaCd": "GA",
-      "smallAreaCd": "X350"
-    },
-    "serviceKeyword": "まつぱ"
-  },
-  {
-    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-マツパ",
-    "type": "normal",
-    "salonName": "ケイトステージラッシュ",
-    "areaName": "箱崎・千早・香椎周辺",
-    "areaCodes": {
-      "serviceAreaCd": "SG",
-      "middleAreaCd": "GA",
-      "smallAreaCd": "X350"
-    },
-    "serviceKeyword": "マツパ"
-  },
-  {
-    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-まつ毛パーマ",
-    "type": "normal",
-    "salonName": "ケイトステージラッシュ",
-    "areaName": "箱崎・千早・香椎周辺",
-    "areaCodes": {
-      "serviceAreaCd": "SG",
-      "middleAreaCd": "GA",
-      "smallAreaCd": "X350"
+      "serviceAreaCd": "SF",
+      "middleAreaCd": "FA",
+      "smallAreaCd": "X165"
     },
     "serviceKeyword": "まつ毛パーマ"
   },
   {
-    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-眉毛",
+    "id": "ケイトステージラッシュ-八丁堀・幟町・銀山・白島-まつぱ",
     "type": "normal",
     "salonName": "ケイトステージラッシュ",
-    "areaName": "箱崎・千早・香椎周辺",
+    "areaName": "八丁堀・幟町・銀山・白島",
     "areaCodes": {
-      "serviceAreaCd": "SG",
-      "middleAreaCd": "GA",
-      "smallAreaCd": "X350"
+      "serviceAreaCd": "SF",
+      "middleAreaCd": "FA",
+      "smallAreaCd": "X165"
+    },
+    "serviceKeyword": "まつぱ"
+  },
+  {
+    "id": "ケイトステージラッシュ-八丁堀・幟町・銀山・白島-マツパ",
+    "type": "normal",
+    "salonName": "ケイトステージラッシュ",
+    "areaName": "八丁堀・幟町・銀山・白島",
+    "areaCodes": {
+      "serviceAreaCd": "SF",
+      "middleAreaCd": "FA",
+      "smallAreaCd": "X165"
+    },
+    "serviceKeyword": "マツパ"
+  },
+  {
+    "id": "ケイトステージラッシュ-八丁堀・幟町・銀山・白島-眉毛",
+    "type": "normal",
+    "salonName": "ケイトステージラッシュ",
+    "areaName": "八丁堀・幟町・銀山・白島",
+    "areaCodes": {
+      "serviceAreaCd": "SF",
+      "middleAreaCd": "FA",
+      "smallAreaCd": "X165"
     },
     "serviceKeyword": "眉毛"
   },
   {
-    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-眉毛WAX",
+    "id": "ケイトステージラッシュ-八丁堀・幟町・銀山・白島-眉毛ワックス",
     "type": "normal",
     "salonName": "ケイトステージラッシュ",
-    "areaName": "箱崎・千早・香椎周辺",
+    "areaName": "八丁堀・幟町・銀山・白島",
     "areaCodes": {
-      "serviceAreaCd": "SG",
-      "middleAreaCd": "GA",
-      "smallAreaCd": "X350"
-    },
-    "serviceKeyword": "眉毛WAX"
-  },
-  {
-    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-眉毛ワックス",
-    "type": "normal",
-    "salonName": "ケイトステージラッシュ",
-    "areaName": "箱崎・千早・香椎周辺",
-    "areaCodes": {
-      "serviceAreaCd": "SG",
-      "middleAreaCd": "GA",
-      "smallAreaCd": "X350"
+      "serviceAreaCd": "SF",
+      "middleAreaCd": "FA",
+      "smallAreaCd": "X165"
     },
     "serviceKeyword": "眉毛ワックス"
   },
   {
-    "id": "ケイトステージラッシュ-箱崎・千早・香椎周辺-まつげパーマ＆パリジェンヌ",
+    "id": "ケイトステージラッシュ-八丁堀・幟町・銀山・白島-眉毛WAX",
     "type": "normal",
     "salonName": "ケイトステージラッシュ",
-    "areaName": "箱崎・千早・香椎周辺",
+    "areaName": "八丁堀・幟町・銀山・白島",
     "areaCodes": {
-      "serviceAreaCd": "SG",
-      "middleAreaCd": "GA",
-      "smallAreaCd": "X350"
+      "serviceAreaCd": "SF",
+      "middleAreaCd": "FA",
+      "smallAreaCd": "X165"
+    },
+    "serviceKeyword": "眉毛WAX"
+  },
+  {
+    "id": "ケイトステージラッシュ-八丁堀・幟町・銀山・白島-アイラッシュ",
+    "type": "normal",
+    "salonName": "ケイトステージラッシュ",
+    "areaName": "八丁堀・幟町・銀山・白島",
+    "areaCodes": {
+      "serviceAreaCd": "SF",
+      "middleAreaCd": "FA",
+      "smallAreaCd": "X165"
+    },
+    "serviceKeyword": "アイラッシュ"
+  },
+  {
+    "id": "ケイトステージラッシュ-八丁堀・幟町・銀山・白島-アイブロウ",
+    "type": "normal",
+    "salonName": "ケイトステージラッシュ",
+    "areaName": "八丁堀・幟町・銀山・白島",
+    "areaCodes": {
+      "serviceAreaCd": "SF",
+      "middleAreaCd": "FA",
+      "smallAreaCd": "X165"
+    },
+    "serviceKeyword": "アイブロウ"
+  },
+  {
+    "id": "ケイトステージラッシュ-八丁堀・幟町・銀山・白島-マツエク",
+    "type": "normal",
+    "salonName": "ケイトステージラッシュ",
+    "areaName": "八丁堀・幟町・銀山・白島",
+    "areaCodes": {
+      "serviceAreaCd": "SF",
+      "middleAreaCd": "FA",
+      "smallAreaCd": "X165"
+    },
+    "serviceKeyword": "マツエク"
+  },
+  {
+    "id": "ケイトステージラッシュ-八丁堀・幟町・銀山・白島-パリジェンヌ",
+    "type": "normal",
+    "salonName": "ケイトステージラッシュ",
+    "areaName": "八丁堀・幟町・銀山・白島",
+    "areaCodes": {
+      "serviceAreaCd": "SF",
+      "middleAreaCd": "FA",
+      "smallAreaCd": "X165"
+    },
+    "serviceKeyword": "パリジェンヌ"
+  },
+  {
+    "id": "ケイトステージラッシュ-八丁堀・幟町・銀山・白島-HBL",
+    "type": "normal",
+    "salonName": "ケイトステージラッシュ",
+    "areaName": "八丁堀・幟町・銀山・白島",
+    "areaCodes": {
+      "serviceAreaCd": "SF",
+      "middleAreaCd": "FA",
+      "smallAreaCd": "X165"
+    },
+    "serviceKeyword": "HBL"
+  },
+  {
+    "id": "ケイトステージラッシュ-八丁堀・幟町・銀山・白島-ハリウッドブロウ",
+    "type": "normal",
+    "salonName": "ケイトステージラッシュ",
+    "areaName": "八丁堀・幟町・銀山・白島",
+    "areaCodes": {
+      "serviceAreaCd": "SF",
+      "middleAreaCd": "FA",
+      "smallAreaCd": "X165"
+    },
+    "serviceKeyword": "ハリウッドブロウ"
+  },
+  {
+    "id": "ケイトステージラッシュ-八丁堀・幟町・銀山・白島-まつげパーマ＆パリジェンヌ",
+    "type": "normal",
+    "salonName": "ケイトステージラッシュ",
+    "areaName": "八丁堀・幟町・銀山・白島",
+    "areaCodes": {
+      "serviceAreaCd": "SF",
+      "middleAreaCd": "FA",
+      "smallAreaCd": "X165"
     },
     "serviceKeyword": "まつげパーマ＆パリジェンヌ"
+  },
+  {
+    "id": "ケイトステージラッシュ-八丁堀・幟町・銀山・白島-",
+    "type": "normal",
+    "salonName": "ケイトステージラッシュ",
+    "areaName": "八丁堀・幟町・銀山・白島",
+    "areaCodes": {
+      "serviceAreaCd": "SF",
+      "middleAreaCd": "FA",
+      "smallAreaCd": "X165"
+    },
+    "serviceKeyword": ""
   }
 ]

@@ -510,7 +510,19 @@
                 },
                 "中国": {
                     code: "SF",
-                    middleAreas: { "広島": { code: "FA", smallAreas: {} }, "福山・尾道": { code: "FC", smallAreas: {} }, "岡山・倉敷": { code: "FB", smallAreas: {} }, "山口": { code: "FG", smallAreas: {} }, "鳥取": { code: "FD", smallAreas: {} }, "島根": { code: "FE", smallAreas: {} }}
+                    middleAreas: {
+                        "広島": {
+                            code: "FA",
+                            smallAreas: {
+                                "袋町・中町・小町・富士見": { code: "X161" }, "立町・本通・並木通り・三川町": { code: "X164" }, "紙屋町・大手町": { code: "X163" }, "八丁堀・幟町・銀山・白島": { code: "X165" }, "段原・皆実・宇品・千田": { code: "X384" }, "広島駅周辺・東区・安芸区・安芸郡": { code: "X166" }, "横川・十日市・天満・舟入": { code: "X167" }, "佐伯区・西区": { code: "X385" }, "廿日市": { code: "X450" }, "安佐南区・安佐北区": { code: "X386" }, "呉": { code: "X335" }, "東広島": { code: "X451" }
+                            }
+                        }, "福山・尾道": {
+                            code: "FC",
+                            smallAreas: {
+                                "福山駅前・三吉周辺": { code: "X336" }, "福山その他エリア": { code: "X337" }, "尾道周辺": { code: "X461" }, "三原周辺": { code: "X474" }
+                            }
+                        }, "岡山・倉敷": { code: "FB", smallAreas: {} }, "山口": { code: "FG", smallAreas: {} }, "鳥取": { code: "FD", smallAreas: {} }, "島根": { code: "FE", smallAreas: {} }
+                    }
                 },
                 "四国": {
                     code: "SI",
@@ -856,7 +868,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                         return;
                     }
                     if (!largeArea || !keywordsRaw) {
-                        alert('通常検索では、エリアブロックと検索キーワードを入力してください。');
+                        alert('通常検索では、エリアブロックを必ず入力してください。');
                         return;
                     }
                     serviceKeywords = keywordsRaw.split(/[\s,、]+/).filter(k => k);
@@ -1732,11 +1744,12 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                 let existingTasks = [];
 
                 if (activeSearchType === 'normal') {
-                    const largeArea = largeAreaSelect.value;
+                    // 修正：選択されているoptionのテキストからエリア名を取得するように変更
+                    const largeArea = largeAreaSelect.selectedIndex > 0 ? largeAreaSelect.options[largeAreaSelect.selectedIndex].value : '';
                     const serviceKeywords = keywordInput.value.trim().split(/[\s,、]+/).filter(k => k);
 
-                    if (!largeArea || serviceKeywords.length === 0) {
-                        alert('エリアブロックとキーワードを入力してください。');
+                    if (!largeArea) { // 修正：キーワードが空でもエリアさえ選択されていればOKにする
+                        alert('エリアブロックを入力してください。（キーワードは任意です）');
                         return;
                     }
 
@@ -1745,8 +1758,9 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                         return;
                     }
 
-                    const middleArea = middleAreaSelect.value; // 中エリアの値を取得
-                    const smallArea = smallAreaSelect.value; // 小エリアの値を取得
+                    // 修正：選択されているoptionのテキストからエリア名を取得するように変更
+                    const middleArea = middleAreaSelect.selectedIndex > 0 ? middleAreaSelect.options[middleAreaSelect.selectedIndex].value : '';
+                    const smallArea = smallAreaSelect.selectedIndex > 0 ? smallAreaSelect.options[smallAreaSelect.selectedIndex].value : '';
                     const areaCodes = {};
                     if (largeArea) areaCodes.serviceAreaCd = areas[largeArea].code; // 大エリアコード
                     if (middleArea) areaCodes.middleAreaCd = areas[largeArea].middleAreas[middleArea].code; // 中エリアコード
@@ -1755,6 +1769,11 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
 
                     // 表示用のエリア名は、最も詳細なエリア名を使用
                     const areaName = smallArea || middleArea || largeArea; 
+
+                    // キーワードが空の場合の処理
+                    if (serviceKeywords.length === 0) {
+                        serviceKeywords.push(''); // 空のキーワードとして処理を進める
+                    }
 
                     serviceKeywords.forEach(keyword => {
                         const taskId = `${salonName}-${areaName}-${keyword}`;
