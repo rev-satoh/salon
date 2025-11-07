@@ -427,6 +427,9 @@
             const modeHelpButton = document.getElementById('modeHelpButton');
             const scrollToManualCheckButton = document.getElementById('scrollToManualCheckButton');
 
+            // --- 自動計測タスクを保持するグローバル変数 ---
+            let autoTasks = [];
+
 
 
 
@@ -462,7 +465,13 @@
                 "関東": {
                     code: "SA",
                     middleAreas: {
-                        "新宿・高田馬場・代々木": { code: "AA", smallAreas: {} }, "池袋・目白": { code: "AB", smallAreas: {} }, "恵比寿・代官山・中目黒・広尾・麻布・六本木": { code: "AC", smallAreas: {} },
+                        "新宿・高田馬場・代々木": { code: "AA", smallAreas: {} }, "池袋・目白": {
+                            code: "AB",
+                            smallAreas: {
+                                "東口・サンシャイン方面": { code: "X006" },
+                                "西口・北口・目白": { code: "X007" }
+                            }
+                        }, "恵比寿・代官山・中目黒・広尾・麻布・六本木": { code: "AC", smallAreas: {} },
                         "渋谷・青山・表参道・原宿": { code: "AD", smallAreas: {} }, "自由が丘・学芸大学・武蔵小杉・菊名": { code: "AE", smallAreas: {} }, "三軒茶屋・二子玉川・溝の口・青葉台": { code: "JL", smallAreas: {} },
                         "銀座・有楽町・新橋・丸の内・日本橋": { code: "AF", smallAreas: {} }, "上野・神田・北千住・亀有・青砥・町屋": { code: "AG", smallAreas: {} }, "品川・目黒・五反田・田町": { code: "AH", smallAreas: {} },
                         "両国・錦糸町・小岩・森下・瑞江": { code: "JP", smallAreas: {} }, "門前仲町・勝どき・月島・豊洲": { code: "JQ", smallAreas: {} }, "中野・高円寺・阿佐ヶ谷": { code: "AI", smallAreas: {} },
@@ -482,7 +491,10 @@
                     code: "SC",
                     middleAreas: {
                         "名駅・栄・金山・本山": { code: "CA", smallAreas: {} }, "一宮・犬山・江南・小牧・小田井": { code: "CE", smallAreas: {} }, "日進・豊田・刈谷・岡崎・安城・豊橋": { code: "CI", smallAreas: {} },
-                        "岐阜": { code: "CB", smallAreas: {} }, "静岡・藤枝・焼津・島田": { code: "CC", smallAreas: {} }, "浜松・磐田・掛川・袋井": { code: "CD", smallAreas: {} },
+                        "岐阜": {
+                            code: "CB",
+                            smallAreas: { "岐阜駅・柳ヶ瀬周辺": { code: "X113" } }
+                        }, "静岡・藤枝・焼津・島田": { code: "CC", smallAreas: {} }, "浜松・磐田・掛川・袋井": { code: "CD", smallAreas: {} },
                         "桑名・四日市・津・鈴鹿・伊勢": { code: "CH", smallAreas: {} }
                     }
                 },
@@ -618,45 +630,14 @@
                 });
                 // クリックされたボタンにactiveクラスを追加
                 clickedButton.classList.add('active');
-
-                // --- 入力フォームの表示切り替え ---
-                normalSearchInputs.style.display = 'none';
-                specialSearchInputs.style.display = 'none';
-                googleMapSearchInputs.style.display = 'none';
-                // SEO以外ではサロン名入力欄を表示
-                salonNameFormGroup.style.display = 'block';
-
-                if (clickedButton.dataset.type === 'normal') {
-                    normalSearchInputs.style.display = 'block';
-                } else if (clickedButton.dataset.type === 'special') {
-                    specialSearchInputs.style.display = 'block';
-                } else if (clickedButton.dataset.type === 'google') {
-                    googleMapSearchInputs.style.display = 'block';
-                }
-
                 // グラフの表示を切り替えるために履歴を再読み込み・再描画する
                 // MEOの履歴機能は今後の拡張で対応
                 fetchAndDisplayAutoHistory();
-
-                // --- コピー機能セクションの表示切り替え ---
-                meoCopySection.style.display = 'none';
-                hpbNormalTaskCopySection.style.display = 'none';
-                hpbSpecialTaskCopySection.style.display = 'none';
-
-                if (clickedButton.dataset.type === 'google') {
-                    meoCopySection.style.display = 'block';
-                    updateCopySourceLocations();
-                } else if (clickedButton.dataset.type === 'normal') {
-                    hpbNormalTaskCopySection.style.display = 'block';
-                    updateHpbNormalCopySources();
-                } else if (clickedButton.dataset.type === 'special') {
-                    hpbSpecialTaskCopySection.style.display = 'block';
-                    updateHpbSpecialCopySources();
-                }
-
+                const activeType = clickedButton.dataset.type;
+                updateUIForSearchType(activeType); // Call the new function
                 renderAutoTasks();
             });
-            
+
             // モード説明ボタンのイベントリスナー
             modeHelpButton.addEventListener('click', () => {
                 const activeMode = searchTypeToggle.querySelector('.toggle-button.active').dataset.type;
@@ -1295,7 +1276,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
             const hpbNormalCopyButton = document.getElementById('executeHpbNormalCopyButton');
 
             function updateHpbNormalCopySources() {
-                const normalTasks = autoTasks.filter(task => (task.type || 'normal') === 'normal');
+                const normalTasks = (autoTasks || []).filter(task => (task.type || 'normal') === 'normal');
                 const sourceAreas = [...new Set(normalTasks.map(task => task.areaName))];
                 
                 copySourceAreaSelect.innerHTML = '';
@@ -1314,7 +1295,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                         copySourceAreaSelect.appendChild(option);
                     });
                     hpbNormalCopyButton.disabled = false;
-                }
+                } // updateHpbNormalCopySources
 
                 // コピー先プルダウンを生成
                 copyDestAreaSelect.innerHTML = '';
@@ -1453,8 +1434,46 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                 copyDestSpecialPageUrlInput.value = '';
             });
 
+            // Function to update visibility of search inputs and copy sections
+            function updateUIForSearchType(activeType) {
+                normalSearchInputs.style.display = 'none';
+                specialSearchInputs.style.display = 'none';
+                googleMapSearchInputs.style.display = 'none';
+                salonNameFormGroup.style.display = 'block'; // Always visible for now
+
+                if (activeType === 'normal') {
+                    normalSearchInputs.style.display = 'block';
+                } else if (activeType === 'special') {
+                    specialSearchInputs.style.display = 'block';
+                } else if (activeType === 'google') {
+                    googleMapSearchInputs.style.display = 'block';
+                }
+
+                // コピー機能セクションの表示切り替え
+                meoCopySection.style.display = 'none';
+                hpbNormalTaskCopySection.style.display = 'none';
+                hpbSpecialTaskCopySection.style.display = 'none';
+
+                if (activeType === 'google') {
+                    meoCopySection.style.display = 'block';
+                    updateCopySourceLocations();
+                } else if (activeType === 'normal') {
+                    hpbNormalTaskCopySection.style.display = 'block';
+                    updateHpbNormalCopySources();
+                } else if (activeType === 'special') {
+                    hpbSpecialTaskCopySection.style.display = 'block';
+                    updateHpbSpecialCopySources();
+                }
+            }
+
+            // Initial UI setup based on active search type
+            const initialActiveButton = searchTypeToggle.querySelector('.toggle-button.active');
+            if (initialActiveButton) {
+                const initialActiveType = initialActiveButton.dataset.type;
+                updateUIForSearchType(initialActiveType);
+            }
+
             // --- 自動計測機能 ---
-            let autoTasks = [];
             let autoRankChart = null;
 
             const fetchAutoTasks = async () => {
