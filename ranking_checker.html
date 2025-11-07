@@ -228,6 +228,7 @@
             <button type="button" class="toggle-button active" data-type="normal">HPB 通常</button>
             <button type="button" class="toggle-button" data-type="special">HPB 特集</button>
             <button type="button" class="toggle-button" data-type="google">MEO</button>
+            <button type="button" class="toggle-button" data-type="seo">SEO</button>
         </div>
 
         <!-- 自動計測セクション -->
@@ -320,6 +321,22 @@
                     </div>
                 </div>
 
+                <!-- SEO検索用の入力フォーム -->
+                <div id="seoSearchInputs" style="display: none;">
+                    <div class="form-group">
+                        <label for="urlToFindInput">計測対象URL</label>
+                        <input type="text" id="urlToFindInput" placeholder="例: https://example.com/">
+                    </div>
+                    <div class="form-group">
+                        <label for="seoKeywordInput">検索キーワード</label>
+                        <input type="text" id="seoKeywordInput" placeholder="例: 〇〇市 まつげパーマ">
+                    </div>
+                    <div class="form-group">
+                        <label for="seoLocationInput">検索地点（任意）</label>
+                        <input type="text" id="seoLocationInput" placeholder="例: 広島駅, 福山駅">
+                    </div>
+                </div>
+
                 <div class="button-container">
                     <button type="button" id="checkRankButton" class="button-primary">順位を計測</button>
                     <button type="button" id="addAutoTaskButton" class="button-secondary">自動計測に追加</button>
@@ -375,6 +392,17 @@
                 </div>
                 <small style="display: block; margin-top: 8px; color: #6c6c70; font-size: 12px;">コピー元の特集ページに登録されている全てのサロンを、新しい特集ページのタスクとして一括で追加します。</small>
             </div>
+            <!-- SEOタスク一括コピー機能 -->
+            <div id="seoTaskCopySection" style="display: none;">
+                <h4 style="margin-top: 0; margin-bottom: 10px; font-size: 16px; font-weight: 600;">SEOタスクを別URLにコピー</h4>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <select id="copySourceSeoUrl" style="padding: 6px 10px; font-size: 14px; border-radius: 6px;"></select>
+                    <span style="font-weight: bold;">→</span>
+                    <input type="text" id="copyDestSeoUrl" placeholder="コピー先のURL" style="padding: 6px 10px; font-size: 14px; flex-grow: 1;">
+                    <button type="button" id="executeSeoCopyButton" class="button-secondary" style="padding: 6px 12px; font-size: 13px;">コピー実行</button>
+                </div>
+                <small style="display: block; margin-top: 8px; color: #6c6c70; font-size: 12px;">コピー元のURLに登録されている全てのキーワードを、新しいURLのタスクとして一括で追加します。</small>
+            </div>
         </div>
     </main>
 
@@ -420,6 +448,7 @@
             const specialSearchInputs = document.getElementById('specialSearchInputs');
             const googleMapSearchInputs = document.getElementById('googleMapSearchInputs');
             const searchTypeToggle = document.getElementById('searchTypeToggle');
+            const seoSearchInputs = document.getElementById('seoSearchInputs'); // SEO入力フォーム
             const meoCopySection = document.getElementById('meoTaskCopySection');
             const hpbNormalTaskCopySection = document.getElementById('hpbNormalTaskCopySection');
             const hpbSpecialTaskCopySection = document.getElementById('hpbSpecialTaskCopySection');
@@ -427,6 +456,7 @@
             const modeHelpButton = document.getElementById('modeHelpButton');
             const scrollToManualCheckButton = document.getElementById('scrollToManualCheckButton');
 
+            const seoTaskCopySection = document.getElementById('seoTaskCopySection'); // SEOコピーセクション
             // --- 自動計測タスクを保持するグローバル変数 ---
             let autoTasks = [];
 
@@ -668,6 +698,8 @@ HPBの特集企画に掲載されている場合の順位を確認したい場�
 
 このモードは、Googleマップでの検索結果（MEO）における掲載順位を計測します。
 
+【計測地点について】
+
 【パーソナライズの排除】
 Googleマップの検索結果は、検索場所や履歴によって変動しますが、このシステムでは以下の方法で客観的な順位を計測しています。
 
@@ -675,6 +707,19 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
 2. 検索場所の固定: あなたのPCの場所ではなく、指定された検索地点（例：「福山駅」）の座標を仮想的に設定して検索します。
 
 これにより、誰がどこで計測しても、常に「指定した地点の周辺での検索結果」という同じ条件下での順位を確認できます。`;
+                } else if (activeMode === 'seo') {
+                    helpText = `■ SEO検索モードについて
+
+このモードは、通常のGoogleウェブ検索結果での掲載順位（SEO）を計測します。
+
+【計測方法】
+指定された「キーワード」でGoogle検索を行い、検索結果の1ページ目から順に、指定された「計測対象URL」が含まれるページを探します。
+
+【検索地点（任意）】
+「検索地点」を指定すると、その地点から検索した際の結果をシミュレートします。これにより、地域によって変動する検索順位（ローカルSEO）の確認が可能です。
+地点を指定しない場合は、より一般的な検索結果を取得します。
+
+【注意】Googleの検索結果は常に変動するため、計測結果はあくまで目安としてご利用ください。`;
                 }
 
                 alert(helpText);
@@ -708,6 +753,8 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                         rowLabel = taskData.task.salonName;
                     } else if (activeSearchType === 'google') {
                         rowLabel = taskData.task.keyword;
+                    } else if (activeSearchType === 'seo') {
+                        rowLabel = taskData.task.keyword;
                     }
 
                     const dataMap = new Map(taskData.log.map(entry => [entry.date, entry.rank]));
@@ -730,6 +777,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                 if (activeSearchType === 'normal') typeName = 'HPB通常';
                 else if (activeSearchType === 'special') typeName = 'HPB特集';
                 else if (activeSearchType === 'google') typeName = 'MEO';
+                else if (activeSearchType === 'seo') typeName = 'SEO';
                 const fileName = `${safeGroupKey}_${typeName}履歴.csv`;
 
                 link.setAttribute("download", fileName);
@@ -937,6 +985,16 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                         eventSourceUrl = `/check-meo-ranking?` + new URLSearchParams({
                             keyword: serviceKeyword,
                             location: searchLocation,
+                            // salonName: salonName // バックエンドでの照合は不要になったため削除
+                        });
+                    } else if (activeSearchType === 'seo') {
+                        const urlToFind = document.getElementById('urlToFindInput').value.trim();
+                        const seoLocation = document.getElementById('seoLocationInput').value.trim();
+                        fullKeyword = `[${seoLocation || '指定なし'}] ${serviceKeyword}`;
+                        eventSourceUrl = `/check-seo-ranking?` + new URLSearchParams({
+                            url: urlToFind,
+                            keyword: serviceKeyword,
+                            location: seoLocation
                             // salonName: salonName // バックエンドでの照合は不要になったため削除
                         });
                     } else { // special
@@ -1434,17 +1492,70 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                 copyDestSpecialPageUrlInput.value = '';
             });
 
+            // --- SEOタスクコピー機能 ---
+            const copySourceSeoUrlSelect = document.getElementById('copySourceSeoUrl');
+            const copyDestSeoUrlInput = document.getElementById('copyDestSeoUrl');
+            const seoCopyButton = document.getElementById('executeSeoCopyButton');
+
+            function updateSeoCopySources() {
+                const seoTasks = autoTasks.filter(task => task.type === 'seo');
+                // URLをキーにしてユニークなURLのリストを作成
+                const sourceUrls = [...new Set(seoTasks.map(task => task.url))];
+
+                copySourceSeoUrlSelect.innerHTML = '';
+                if (sourceUrls.length === 0) {
+                    const option = document.createElement('option');
+                    option.textContent = 'コピー元のURLがありません';
+                    option.disabled = true;
+                    copySourceSeoUrlSelect.appendChild(option);
+                    seoCopyButton.disabled = true;
+                } else {
+                    sourceUrls.sort();
+                    sourceUrls.forEach(url => {
+                        const option = document.createElement('option');
+                        option.value = url;
+                        option.textContent = url;
+                        copySourceSeoUrlSelect.appendChild(option);
+                    });
+                    seoCopyButton.disabled = false;
+                }
+            }
+
+            seoCopyButton.addEventListener('click', () => {
+                const sourceUrl = copySourceSeoUrlSelect.value;
+                const destUrl = copyDestSeoUrlInput.value.trim();
+                if (!sourceUrl || !destUrl) { alert('コピー元とコピー先の両方を指定してください。'); return; }
+                if (sourceUrl === destUrl) { alert('コピー元とコピー先が同じです。'); return; }
+
+                const tasksToCopy = autoTasks.filter(task => task.type === 'seo' && task.url === sourceUrl);
+                if (!confirm(`「${sourceUrl}」の${tasksToCopy.length}個のタスクを新しいURL「${destUrl}」にコピーしますか？`)) { return; }
+
+                tasksToCopy.forEach(task => {
+                    const newTaskId = `[seo]-${destUrl}-${task.keyword}-${task.searchLocation || ''}`;
+                    if (!autoTasks.some(t => t.id === newTaskId)) {
+                        autoTasks.push({ id: newTaskId, type: 'seo', url: destUrl, keyword: task.keyword, searchLocation: task.searchLocation });
+                    }
+                });
+                saveAutoTasks();
+                renderAutoTasks();
+                alert('タスクのコピーが完了しました。');
+                copyDestSeoUrlInput.value = '';
+            });
+
             // Function to update visibility of search inputs and copy sections
             function updateUIForSearchType(activeType) {
                 normalSearchInputs.style.display = 'none';
                 specialSearchInputs.style.display = 'none';
                 googleMapSearchInputs.style.display = 'none';
                 salonNameFormGroup.style.display = 'block'; // Always visible for now
+                seoSearchInputs.style.display = 'none';
 
                 if (activeType === 'normal') {
                     normalSearchInputs.style.display = 'block';
                 } else if (activeType === 'special') {
                     specialSearchInputs.style.display = 'block';
+                } else if (activeType === 'seo') {
+                    seoSearchInputs.style.display = 'block';
                 } else if (activeType === 'google') {
                     googleMapSearchInputs.style.display = 'block';
                 }
@@ -1453,6 +1564,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                 meoCopySection.style.display = 'none';
                 hpbNormalTaskCopySection.style.display = 'none';
                 hpbSpecialTaskCopySection.style.display = 'none';
+                seoTaskCopySection.style.display = 'none';
 
                 if (activeType === 'google') {
                     meoCopySection.style.display = 'block';
@@ -1463,6 +1575,9 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                 } else if (activeType === 'special') {
                     hpbSpecialTaskCopySection.style.display = 'block';
                     updateHpbSpecialCopySources();
+                } else if (activeType === 'seo') {
+                    seoTaskCopySection.style.display = 'block';
+                    updateSeoCopySources();
                 }
             }
 
@@ -1483,6 +1598,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                     updateCopySourceLocations(); // MEOコピー元のプルダウンも更新
                     updateHpbNormalCopySources(); // HPB通常コピー元のプルダウンも更新
                     updateHpbSpecialCopySources(); // HPB特集コピー元のプルダウンも更新
+                    updateSeoCopySources(); // SEOコピー元のプルダウンも更新
                     renderAutoTasks();
                 } catch (error) {
                     console.error('自動計測タスクの読み込みに失敗しました:', error);
@@ -1666,6 +1782,48 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                         tasksInGroup.sort((a, b) => (a.salonName || '').localeCompare(b.salonName || '', 'ja'));
                         tasksInGroup.forEach(task => renderTaskItem(task, autoTaskList, groupKey));
                     });
+                } else if (activeSearchType === 'seo') { // SEOのグループ化を追加
+                    const groupedTasks = filteredTasks.reduce((acc, task) => {
+                        const groupKey = task.url || 'URL未設定';
+                        if (!acc[groupKey]) {
+                            acc[groupKey] = [];
+                        }
+                        acc[groupKey].push(task);
+                        return acc;
+                    }, {});
+
+                    const sortedGroups = Object.keys(groupedTasks).sort((a, b) => a.localeCompare(b, 'ja'));
+
+                    sortedGroups.forEach(groupKey => {
+                        const tasksInGroup = groupedTasks[groupKey];
+                        
+                        const groupHeader = document.createElement('li');
+                        groupHeader.style.padding = '10px 8px';
+                        groupHeader.style.backgroundColor = '#f0f0f5';
+                        groupHeader.style.fontWeight = '600';
+                        groupHeader.style.marginTop = '10px';
+                        groupHeader.style.borderRadius = '6px';
+                        groupHeader.style.display = 'flex';
+                        groupHeader.style.alignItems = 'center';
+
+                        const groupCheckbox = document.createElement('input');
+                        groupCheckbox.type = 'checkbox';
+                        groupCheckbox.style.marginRight = '10px';
+                        groupCheckbox.dataset.groupKey = groupKey;
+                        groupHeader.appendChild(groupCheckbox);
+
+                        const groupLabel = document.createElement('label');
+                        groupLabel.textContent = groupKey;
+                        groupLabel.style.cursor = 'pointer';
+                        groupLabel.style.flexGrow = '1';
+                        groupLabel.onclick = () => groupCheckbox.click();
+                        groupHeader.appendChild(groupLabel);
+
+                        autoTaskList.appendChild(groupHeader);
+
+                        tasksInGroup.sort((a, b) => (a.keyword || '').localeCompare(b.keyword || '', 'ja'));
+                        tasksInGroup.forEach(task => renderTaskItem(task, autoTaskList, groupKey));
+                    });
                 } else { // 特集ページの場合 (グループ化なし)
                     // ソートして表示
                     filteredTasks.sort((a, b) => (a.id).localeCompare(b.id, 'ja'));
@@ -1716,6 +1874,8 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                     taskText.textContent = `${task.salonName}`; // グループ化されたのでサロン名のみ表示
                 } else if (taskType === 'google') {
                     taskText.textContent = `${task.keyword} - ${task.salonName}`;
+                } else if (taskType === 'seo') {
+                    taskText.textContent = `${task.keyword} ${task.searchLocation ? `(${task.searchLocation})` : ''}`;
                 }
 
                 taskLabel.appendChild(checkbox);
@@ -1852,6 +2012,22 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                         autoTasks.push({ id: taskId, type: 'google', salonName, searchLocation, keyword: cleanedKeyword });
                         addedTasks.push(`[${searchLocation}] ${cleanedKeyword}`);
                     }
+                } else if (activeSearchType === 'seo') {
+                    const url = document.getElementById('urlToFindInput').value.trim();
+                    const keyword = document.getElementById('seoKeywordInput').value.trim();
+                    const searchLocation = document.getElementById('seoLocationInput').value.trim();
+
+                    if (!url || !keyword) {
+                        alert('計測対象URLと検索キーワードを入力してください。');
+                        return;
+                    }
+                    const taskId = `[seo]-${url}-${keyword}-${searchLocation || ''}`;
+                    if (autoTasks.some(t => t.id === taskId)) {
+                        existingTasks.push(`[${url}] ${keyword}`);
+                    } else {
+                        autoTasks.push({ id: taskId, type: 'seo', url, keyword, searchLocation: searchLocation || null });
+                        addedTasks.push(`[${url}] ${keyword}`);
+                    }
                 }
 
                 if (addedTasks.length > 0) {
@@ -1918,6 +2094,10 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                     .filter(t => t.type === 'google')
                     .map(t => t.id);
 
+                const seoTaskIds = tasksToRun // SEOタスク
+                    .filter(t => t.type === 'seo')
+                    .map(t => t.id);
+
                 // --- 経過時間表示タイマーを開始 ---
                 timerInterval = setInterval(() => {
                     const elapsedTotalSeconds = Math.floor((performance.now() - startTime) / 1000);
@@ -1965,7 +2145,9 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                                     taskNameForStatus = task.featurePageName || task.featurePageUrl;
                                 } else if (task.type === 'google') {
                                     taskNameForStatus = `[${task.searchLocation}] ${task.keyword}`;
-                                } else { // normal
+                                } else if (task.type === 'seo') {
+                                    taskNameForStatus = `[${task.url}] ${task.keyword}`;
+                                } else { // normal or default
                                     taskNameForStatus = `[${task.areaName}] ${task.serviceKeyword}`;
                                 }
                                 
@@ -1993,6 +2175,17 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                                     // MEOの場合
                                     const taskId = task.id;
                                     const fullKeyword = `[${task.searchLocation}] ${task.keyword}`;
+                                    const taskContainer = document.createElement('div');
+                                    taskContainer.id = `task-container-${taskId}`;
+                                    taskContainer.style.borderBottom = '1px solid #e5e5e7';
+                                    taskContainer.style.paddingBottom = '15px';
+                                    taskContainer.style.marginBottom = '15px';
+                                    taskContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${fullKeyword}」</h4><p>計測を開始します...</p>`;
+                                    resultArea.appendChild(taskContainer);
+                                } else if (task.type === 'seo') {
+                                    // SEOの場合
+                                    const taskId = task.id;
+                                    const fullKeyword = `[${task.url}] ${task.keyword}`;
                                     const taskContainer = document.createElement('div');
                                     taskContainer.id = `task-container-${taskId}`;
                                     taskContainer.style.borderBottom = '1px solid #e5e5e7';
@@ -2051,6 +2244,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                 promises.push(processStream(normalTaskIds));
                 promises.push(processStream(specialTaskIds));
                 promises.push(processStream(meoTaskIds));
+                promises.push(processStream(seoTaskIds));
 
                 try {
                     // すべてのストリーム処理が終わるのを待つ
@@ -2124,6 +2318,8 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                         } else if (activeSearchType === 'google') {
                             // MEOは、検索地点とサロン名でグループ化する
                             groupKey = `${historyItem.task.searchLocation} - ${historyItem.task.salonName}`;
+                        } else if (activeSearchType === 'seo') {
+                            groupKey = historyItem.task.url;
                         }
                         
                         if (!acc[groupKey]) { 
@@ -2229,6 +2425,9 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                             } else if (activeSearchType === 'google') {
                                 labelA = a.task.keyword;
                                 labelB = b.task.keyword;
+                            } else if (activeSearchType === 'seo') {
+                                labelA = a.task.keyword;
+                                labelB = b.task.keyword;
                             }
                             return labelA.localeCompare(labelB, 'ja');
                         });
@@ -2253,6 +2452,8 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                                 // 特集ページの場合、同じグラフに複数のサロンが表示される可能性があるため、サロン名を表示
                                 labelText = taskData.task.salonName;
                             } else if (activeSearchType === 'google') {
+                                labelText = taskData.task.keyword;
+                            } else if (activeSearchType === 'seo') {
                                 labelText = taskData.task.keyword;
                             }
 

@@ -22,6 +22,8 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from dotenv import load_dotenv
 from feature_page_scraper import check_feature_page_ranking # 新しいスクレイパーをインポート
 import threading # ロック機能のためにインポート
+from utils import sse_format, get_lat_lng_from_address # 共通関数をインポート
+from seo_scraper import check_seo_ranking # SEOスクレイパーをインポート
 
 # app.pyと同じ階層にある静的ファイル(css, js, html)を読み込めるように設定
 app = Flask(__name__, static_folder='.', static_url_path='')
@@ -79,10 +81,6 @@ def get_history_filename(task_type):
         return HISTORY_FILE_SEO
     else: # 'normal' or default
         return HISTORY_FILE_NORMAL
-
-def sse_format(data: dict) -> str:
-    """Server-Sent Eventsのフォーマットで文字列を返す"""
-    return f"data: {json.dumps(data)}\n\n"
 
 # --- ヘルパー関数 (ファイルの読み書き) ---
 def load_json_file(filename):
@@ -543,182 +541,6 @@ def check_meo_ranking_api():
 
     return app.response_class(generate_stream(), mimetype='text/event-stream')
 
-# --- SEO順位計測 ---
-def check_seo_ranking(driver, url_to_find, keyword, location_name=None):
-    """Google検索での掲載順位をスクレイピングするジェネレータ関数"""
-    last_url_checked = ""
-
-    # --- CAPTCHA検知とリトライのためのラッパー関数 ---
-    def attempt_search(attempt_num):
-        # この関数スコープ内でのみ使用する変数を定義
-        screenshot_path_local = None
-        last_url_checked_local = ""
-
-        try:
-            # --- 1. 検索実行 ---
-            search_url = f"https://www.google.com/search?q={urllib.parse.quote(keyword)}&hl=ja&num=100" # 一度に100件取得を試みる
-            driver.get(search_url)
-            last_url_checked_local = driver.current_url
-            time.sleep(1)
-
-            # --- ページネーション対応の検索ロジック ---
-            for page in range(1, 11): # 最大10ページ（約100位）までチェック
-                if page == 1:
-                    # Cookie同意画面が表示された場合の対応
-                    if "consent.google.com" in driver.current_url: # このチェックは外のロジックに移動
-                        return "consent_required", None
-
-                    timestamp = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
-                    safe_keyword = re.sub(r'[\\/:*?"<>|]', '_', keyword)
-                    base_filename = f"seo_{timestamp}_{safe_keyword}"
-                    temp_png_path = os.path.join('screenshots', f"temp_{base_filename}.png")
-                    driver.save_screenshot(temp_png_path)
-
-                    jpeg_filename = f"{base_filename}.jpg"
-                    jpeg_filepath = os.path.join('screenshots', jpeg_filename)
-                    try:
-                        with Image.open(temp_png_path) as img:
-                            if img.mode == 'RGBA': img = img.convert('RGB')
-                        img.save(jpeg_filepath, 'jpeg', quality=15)
-                        screenshot_path_local = jpeg_filepath
-                    finally:
-                        if os.path.exists(temp_png_path): os.remove(temp_png_path)
-                    
-                    # CAPTCHA画面が表示されていないかチェック
-                    if "g-recaptcha" in driver.page_source or "お使いのコンピュータ ネットワークから通常と異なるトラフィックが検出されました" in driver.page_source:
-                        app.logger.warning(f"CAPTCHAが検出されました。キーワード: {keyword}")
-                        # CAPTCHAを検出した場合、スクリーンショットパスを保持して特別な値を返す
-                        return "captcha", screenshot_path_local
-
-                # --- 検索結果の解析 ---
-                soup = BeautifulSoup(driver.page_source, 'lxml')
-                found_results_local = []
-                rank_offset_local = 0
-                search_results = soup.select('div[data-hveid]')
-                
-                page_rank = 0
-                for result_block in search_results:
-                    link_tag = result_block.find('a', href=True)
-                    h3_tag = result_block.find('h3')
-                    if not link_tag or not h3_tag:
-                        continue
-                    
-                    page_rank += 1
-                    found_url = link_tag['href']
-                    
-                    normalized_found_url = found_url.replace('https://', '').replace('http://', '').replace('www.', '').rstrip('/')
-                    normalized_target_url = url_to_find.replace('https://', '').replace('http://', '').replace('www.', '').rstrip('/')
-
-                    if normalized_target_url in normalized_found_url:
-                        if not found_results_local:
-                            found_results_local.append({
-                                "rank": rank_offset_local + page_rank,
-                                "title": h3_tag.get_text(strip=True),
-                                "url": found_url
-                            })
-                
-                rank_offset_local += page_rank
-                if found_results_local:
-                    break
-                
-                # 次のページへ
-                try:
-                    next_button = driver.find_element(By.CSS_SELECTOR, 'a#pnnext')
-                    driver.execute_script("arguments[0].click();", next_button)
-                    time.sleep(random.uniform(1.5, 3.0))
-                except Exception:
-                    break
-
-            # --- 最終結果の整形 ---
-            final_result = {
-                # "total_count": rank_offset_local, # 不要なため削除
-                "screenshot_path": screenshot_path_local,
-                "url": last_url_checked_local,
-                # "html": driver.page_source # メモリを圧迫するため削除
-            }
-            if found_results_local:
-                final_result["results"] = found_results_local
-            else:
-                final_result["rank"] = "圏外"
-
-            return "success", final_result
-
-        except Exception as e:
-            app.logger.error(f"attempt_search内でエラー: {e}\n{traceback.format_exc()}")
-            return "error", {"error": f"検索試行中にエラーが発生しました: {e}", "url": last_url_checked_local}
-
-    # --- メインの実行ロジック ---
-    try:
-        # --- 位置情報が指定されていれば設定 ---
-        if location_name:
-            try:
-                yield sse_format({"status": f"「{location_name}」の座標を取得しています..."})
-                latitude, longitude = get_lat_lng_from_address(location_name)
-                yield sse_format({"status": f"座標 ({latitude:.4f}, {longitude:.4f}) を取得しました。"})
-                time.sleep(0.5)
-                yield sse_format({"status": "ブラウザの位置情報を設定しています..."})
-                driver.execute_cdp_cmd(
-                    "Emulation.setGeolocationOverride",
-                    {"latitude": latitude, "longitude": longitude, "accuracy": 100},
-                )
-            except Exception as e:
-                yield sse_format({"error": f"位置情報の設定中にエラーが発生しました: {e}"})
-                return
-
-        # --- Cookie同意画面をスキップ ---
-        yield sse_format({"status": "Cookieポリシーに同意しています..."})
-        driver.get("https://www.google.com")
-        cookie_consent = {"name": "SOCS", "value": "CONSENT+PENDING+001"}
-        driver.add_cookie(cookie_consent)
-        time.sleep(0.5)
-
-        # --- 1回目の試行 ---
-        status_message = f"Googleで「{keyword}」を検索しています..."
-        yield sse_format({"status": status_message})
-        status, result = attempt_search(1) # 1回目の試行
-        
-        # Cookie同意画面の処理
-        if status == "consent_required":
-            yield sse_format({"status": "Cookie同意画面を処理しています..."})
-            try:
-                agree_button = driver.find_element(By.XPATH, '//button[.//div[text()="すべて受け入れる"]]')
-                agree_button.click()
-                time.sleep(1.5)
-                # 同意後、再度検索を試みる
-                status, result = attempt_search(1)
-            except Exception:
-                yield sse_format({"error": "Cookie同意画面の処理に失敗しました。"})
-                status, result = "error", {"error": "Cookie同意画面の処理に失敗"}
-
-        if status == "captcha":
-            yield sse_format({"status": "CAPTCHAが検出されたため、10秒待機後に再試行します..."})
-            time.sleep(10)
-            # --- 2回目の試行 ---
-            yield sse_format({"status": f"リトライ(1回目): Googleで「{keyword}」を検索しています..."})
-            status, result = attempt_search(2) # リトライ実行
-
-        # 最終的なステータスに基づいて結果を返す
-        if status == "success":
-            if result.get("results"):
-                yield sse_format({"status": "完了: 目的のURLを発見しました。"})
-            else:
-                yield sse_format({"status": "完了: URLは見つかりませんでした。"})
-            yield sse_format({"final_result": result, "status": "完了"})
-        elif status == "captcha":
-            # リトライでもCAPTCHAが出た場合、圏外として処理
-            final_result = { "rank": "CAPTCHA", "screenshot_path": result, "url": driver.current_url }
-            yield sse_format({"final_result": final_result, "status": "完了"})
-        elif status == "error":
-            # attempt_search内でエラーが発生した場合、エラーメッセージを送信
-            yield sse_format({"error": result.get("error", "不明なエラー")})
-            # 最終結果として圏外を返す
-            final_result = { "rank": "エラー", "screenshot_path": None, "url": result.get('url', '') }
-            yield sse_format({"final_result": final_result, "status": "完了"})
-
-    except Exception as e:
-        app.logger.error(f"check_seo_rankingのメインロジックでエラー: {e}\n{traceback.format_exc()}")
-        yield sse_format({"error": f"ブラウザの操作中にエラーが発生しました: {e}", "url": last_url_checked})
-
 @app.route('/check-seo-ranking', methods=['GET'])
 def check_seo_ranking_api():
     url_to_find = request.args.get('url')
@@ -1057,17 +879,43 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
                     app.logger.error(f"MEOタスク '{task.get('id', '不明')}' の処理中にエラーが発生しました: {e}")
                     update_history(history_meo, task, today, "エラー", None) # 履歴にエラーを記録
 
-            # --- 4. SEOタスクの処理 (無効化) ---
-            if seo_tasks:
-                app.logger.info(f"{len(seo_tasks)}件のSEOタスクは現在無効化されているため、スキップします。")
-                # フロントエンドにも通知
-                if stream_progress:
-                    for task in seo_tasks:
-                        job_counter += 1
-                        task_name = f"[{task.get('keyword')}]"
+            # --- 4. SEOタスクの処理 ---
+            for task in seo_tasks:
+                job_counter += 1
+                try:
+                    task_id = task['id']
+                    task_name = f"[{task.get('url')}] {task.get('keyword')}"
+
+                    if stream_progress:
                         yield sse_format({"progress": {"current": job_counter, "total": total_job_count, "task": task}})
-                        yield sse_format({"result": {"rank": "スキップ", "task_name": task_name, "task_id": task['id']}})
-                        time.sleep(0.1)
+                    else:
+                        app.logger.info(f"SEOタスク '{task_id}' の計測を開始...")
+
+                    result = {}
+                    scraper_generator = check_seo_ranking(driver, task['url'], task['keyword'], task.get('searchLocation'))
+                    for sse_message in scraper_generator:
+                        if stream_progress:
+                            data = json.loads(sse_message.split('data: ')[1])
+                            if 'status' in data:
+                                yield sse_format({"status": data['status'], "task_name": task_name})
+                        data = json.loads(sse_message.split('data: ')[1])
+                        if 'final_result' in data:
+                            result = data['final_result']
+
+                    rank_to_save = result.get('results', [{}])[0].get('rank', result.get('rank', '圏外'))
+                    screenshot_path_to_save = result.get('screenshot_path')
+
+                    update_history(history_seo, task, today, rank_to_save, screenshot_path_to_save)
+                    app.logger.info(f"SEOタスク '{task_id}' の結果: {rank_to_save}")
+
+                    if stream_progress:
+                        yield sse_format({"result": {"rank": rank_to_save, "task_name": task_name, "task_id": task_id}})
+                        time.sleep(1)
+                    else:
+                        time.sleep(random.uniform(5, 15))
+                except Exception as e:
+                    app.logger.error(f"SEOタスク '{task.get('id', '不明')}' の処理中にエラーが発生しました: {e}")
+                    update_history(history_seo, task, today, "エラー", None)
 
         except Exception as e:
             app.logger.error(f"自動計測ジョブ全体でエラーが発生しました: {e}")
