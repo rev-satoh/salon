@@ -24,6 +24,7 @@ from feature_page_scraper import check_feature_page_ranking # 新しいスクレ
 import threading # ロック機能のためにインポート
 from utils import sse_format, get_lat_lng_from_address # 共通関数をインポート
 from seo_scraper import check_seo_ranking # SEOスクレイパーをインポート
+from excel_generator import create_excel_report # Excel生成関数をインポート
 
 # app.pyと同じ階層にある静的ファイル(css, js, html)を読み込めるように設定
 app = Flask(__name__, static_folder='.', static_url_path='')
@@ -1068,6 +1069,33 @@ def run_auto_check_now_api():
     run_scheduled_check(task_ids_to_run=task_ids)
     app.logger.info("手動での自動計測ジョブが完了しました。")
     return jsonify({"message": f"{len(task_ids)}件のタスクを実行しました。ページをリロードして結果を確認してください。"}), 200
+
+@app.route('/download_excel', methods=['POST'])
+def download_excel():
+    """
+    フロントエンドからデータを受け取り、excel_generatorモジュールを使って
+    グラフ付きのExcelファイルを生成して返す。
+    """
+    data = request.get_json()
+    if not data or not all(k in data for k in ['groupKey', 'groupData', 'activeSearchType']):
+        return jsonify({"error": "必要なデータが不足しています。"}), 400
+
+    try:
+        # Excel生成ロジックを外部モジュールに委譲
+        excel_output = create_excel_report(
+            data['groupKey'], data['groupData'], data['activeSearchType']
+        )
+        # ファイルをレスポンスとして返す
+        return app.response_class(
+            excel_output.read(),
+            headers={
+                "Content-Disposition": f"attachment; filename={urllib.parse.quote(data['groupKey'])}.xlsx",
+                "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            }
+        )
+    except Exception as e:
+        app.logger.error(f"Excelファイル生成中にエラー: {e}\n{traceback.format_exc()}")
+        return jsonify({"error": f"Excelファイルの生成に失敗しました: {e}"}), 500
 
 # --- アプリケーションの起動とスケジューラの設定 ---
 scheduler = BackgroundScheduler(daemon=True)

@@ -732,59 +732,56 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
             });
             let rankChart = null; // グラフのインスタンスを保持する変数
 
-            // --- CSVエクスポート機能 ---
-            function exportToCsv(groupKey, groupData, activeSearchType) {
-                // 1. 全日付のリストを作成し、ソートする
-                const allDates = new Set();
-                groupData.forEach(task => task.log.forEach(entry => allDates.add(entry.date)));
-                const sortedDates = Array.from(allDates).sort((a, b) => new Date(a) - new Date(b));
+            // --- Excelエクスポート機能 ---
+            async function exportToExcel(button, groupKey, groupData, activeSearchType) {
+                const originalText = button.textContent;
+                button.textContent = '作成中...';
+                button.disabled = true;
 
-                // 2. ヘッダー行を作成
-                let headerLabel = 'キーワード';
-                if (activeSearchType === 'special') headerLabel = 'サロン名';
-                let csvContent = `"${headerLabel}",` + sortedDates.join(',') + '\n';
+                try {
+                    const response = await fetch('/download_excel', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ groupKey, groupData, activeSearchType })
+                    });
 
-                // 3. データ行を作成
-                groupData.forEach(taskData => {
-                    let rowLabel = '';
-                    if (activeSearchType === 'normal') {
-                        rowLabel = taskData.task.serviceKeyword;
-                    } else if (activeSearchType === 'special') {
-                        rowLabel = taskData.task.salonName;
-                    } else if (activeSearchType === 'google') {
-                        rowLabel = taskData.task.keyword;
-                    } else if (activeSearchType === 'seo') {
-                        rowLabel = taskData.task.keyword;
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || 'Excelファイルの生成に失敗しました。');
                     }
 
-                    const dataMap = new Map(taskData.log.map(entry => [entry.date, entry.rank]));
-                    const rowData = sortedDates.map(date => dataMap.get(date) || '').join(',');
-                    csvContent += `"${rowLabel}",${rowData}\n`;
-                });
+                    const blob = await response.blob();
+                    const link = document.createElement("a");
+                    const url = URL.createObjectURL(blob);
+                    link.setAttribute("href", url);
 
-                // 4. BOMを追加して文字化けを防ぐ
-                const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
-                const blob = new Blob([bom, csvContent], { type: 'text/csv;charset=utf-8;' });
+                    // ファイル名の生成
+                    const safeGroupKey = groupKey.replace(/[\\/:*?"<>|]/g, '_');
+                    const fileName = `${safeGroupKey}.xlsx`;
 
-                // 5. ダウンロードリンクを作成してクリック
-                const link = document.createElement("a");
-                const url = URL.createObjectURL(blob);
-                link.setAttribute("href", url);
+                    link.setAttribute("download", fileName);
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
 
-                // ファイル名の生成
+                } catch (error) {
+                    alert(`エラー: ${error.message}`);
+                } finally {
+                    button.textContent = originalText;
+                    button.disabled = false;
+                }
+            }
+
+            function generateFileName(groupKey, activeSearchType, extension) {
                 const safeGroupKey = groupKey.replace(/[\\/:*?"<>|]/g, '_');
                 let typeName = '';
                 if (activeSearchType === 'normal') typeName = 'HPB通常';
                 else if (activeSearchType === 'special') typeName = 'HPB特集';
                 else if (activeSearchType === 'google') typeName = 'MEO';
                 else if (activeSearchType === 'seo') typeName = 'SEO';
-                const fileName = `${safeGroupKey}_${typeName}履歴.csv`;
-
-                link.setAttribute("download", fileName);
-                link.style.visibility = 'hidden';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                const fileName = `${safeGroupKey}_${typeName}履歴.${extension}`;
+                return fileName;
             }
 
             // --- ヘルパー関数 ---
@@ -2394,7 +2391,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                         const excelButton = document.createElement('button');
                         excelButton.textContent = 'Excel出力';
                         excelButton.className = 'excel-button'; // スタイル適用のためクラス追加
-                        excelButton.onclick = () => exportToCsv(groupKey, groupData, activeSearchType);
+                        excelButton.onclick = (e) => exportToExcel(e.target, groupKey, groupData, activeSearchType);
 
                         controls.appendChild(upButton);
                         controls.appendChild(downButton);

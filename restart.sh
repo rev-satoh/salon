@@ -7,4 +7,6 @@ echo "--- Stopping any existing server on port 5001 ---"
 kill -9 $(lsof -t -i:5001) 2>/dev/null || true
 
 echo "--- Starting the server ---"
+# まずはフォアグラウンドで起動して、エラーが出ないか確認します。
+# このコマンドを実行すると、ターミナルはこのままになります。
 python app.py
