@@ -340,3 +340,37 @@ textarea:read-only:focus {
     padding: 16px 0;
     z-index: 10; /* 他の要素より手前に表示 */
 }
+
+/* --- スクロールボタンのスタイル --- */
+.scrollBtns {
+    position: fixed; /* ボタンを画面内の指定位置に固定表示する */
+    top: 50%;        /* 画面の上端から50%の位置 */
+    right: 1.5em;    /* 画面の右端からの距離 */
+    transform: translateY(-50%); /* Y軸方向に自身の高さの50%だけ上に移動 */
+    z-index: 100;    /* 他の要素より手前に表示 */
+}
+.scrollBtns a {
+    display: block;
+    margin: 4px 0;
+    padding: 0.4em 0.3em;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5); /* 半透明の黒 */
+    border-radius: 8px;
+    opacity: 0.7;
+    line-height: 1.1;
+    text-decoration: none;
+    text-align: center;
+    transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+.scrollBtns a:hover {
+    opacity: 1.0;
+    background-color: #007aff; /* ホバー時にテーマカラーに */
+}
+.scrollBtns .arrow  {
+    display: block;
+    font-size: 1.3em;
+}
+.scrollBtns .label {
+    display: block;
+    font-size: 0.6em;
+}
