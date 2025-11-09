@@ -185,3 +185,158 @@ footer {
 textarea:read-only:focus {
     outline: none;
 }
+
+/* --- ranking_checker.html から移動したスタイル --- */
+.checker-container { display: flex; flex-direction: column; gap: 15px; }
+.checker-container .form-group { display: flex; flex-direction: column; }
+.checker-container label { font-weight: 500; margin-bottom: 8px; }
+.checker-container input[type="text"] { padding: 10px 12px; border: 1px solid #c8c7cc; border-radius: 8px; font-size: 15px; }
+.checker-container select { padding: 10px 12px; border: 1px solid #c8c7cc; border-radius: 8px; font-size: 15px; background-color: white; }
+
+.result-area {
+    margin-top: 20px; padding: 16px; background-color: #f8f9fa;
+    border-radius: 8px; min-height: 50px; font-size: 18px;
+    font-weight: bold; text-align: center;
+}
+.button-container {
+    display: flex; gap: 10px; align-items: center; margin-top: 10px;
+}
+.area-row {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start; /* 上端を揃える */
+}
+.area-row .form-group {
+    flex: 1; /* 利用可能なスペースを均等に分配 */
+}
+
+/* --- レスポンシブ対応 --- */
+@media (max-width: 768px) {
+    .area-row, .button-container {
+        flex-direction: column; /* 縦積みに変更 */
+        align-items: stretch; /* 幅を親要素に合わせる */
+    }
+}
+/* --- トグルボタンのスタイル --- */
+.search-type-toggle {
+    display: flex;
+    gap: 10px;
+    flex-wrap: nowrap; /* ボタンが折り返さないようにする */
+    overflow-x: auto;  /* はみ出した場合に横スクロールできるようにする */
+    background-color: #e5e5e7;
+    padding: 4px;
+    border-radius: 8px;
+    width: auto;
+}
+.toggle-button {
+    padding: 6px 16px;
+    border: none;
+    background-color: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    transition: all 0.2s ease-in-out;
+}
+.toggle-button.active {
+    background-color: #ffffff;
+    color: #007aff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.toggle-button:not(.active):hover {
+    background-color: #d1d1d6;
+}
+.schedule-setting-inline {
+    border-left: none !important; padding-left: 0 !important; margin-left: 0 !important;
+}
+/* --- グラフ並び替えボタンのスタイル --- */
+.graph-controls {
+    display: flex;
+    gap: 5px;
+}
+.graph-controls button {
+    background-color: #f0f2f5;
+    border: 1px solid #d1d1d6;
+    border-radius: 6px;
+    padding: 2px 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.graph-controls button.excel-button {
+    background-color: #e5e5e7;
+    color: #1c1c1e;
+    font-size: 13px;
+    padding: 4px 10px;
+}
+
+/* --- 印刷用のスタイル --- */
+@media print {
+    /* ヘッダー、フッター、ナビゲーションを非表示 */
+    header, #footer-placeholder, #header-nav {
+        display: none !important;
+    }
+
+    /* 印刷ボタン自体を非表示 */
+    #printButton {
+        display: none !important;
+    }
+
+    /* ページタイトルと自動計測のヘッダーも非表示に */
+    main > div:first-child, /* 「順位チェッカー」と印刷ボタンのコンテナ */
+    .card > h3, /* 「自動計測 - 履歴グラフ」などの小見出し */
+    #noAutoHistoryMessage /* 「履歴はありません」のメッセージ */
+     {
+        display: none !important;
+    }
+
+    /* 計測タイプ選択、手動計測フォーム、タスク一覧、コピー機能など不要なUIを非表示 */
+    #searchTypeToggle,
+    .card:has(#checkRankButton), /* 手動計測セクション */
+    #autoTaskListToggle,
+    #autoTaskListContent,
+    #meoTaskCopySection,
+    #hpbNormalTaskCopySection, 
+    #hpbSpecialTaskCopySection,
+    #hpbSpecialTaskCopySection,
+    .graph-controls { /* グラフの並び替えボタン */
+        display: none !important;
+    }
+
+    /* メインコンテンツの余白を調整 */
+    main {
+        padding: 0 !important;
+    }
+
+    /* グラフと表がページをまたいで分割されないようにする */
+    .graph-wrapper {
+        page-break-inside: avoid;
+        border: 1px solid #ddd; /* 印刷時に境界線が見えるように */
+        padding: 15px;
+    }
+}
+
+/* --- テーブルの固定列スタイル --- */
+.sticky-table-container {
+    overflow-x: auto;
+    position: relative;
+}
+.sticky-table th:first-child,
+.sticky-table td:first-child {
+    position: -webkit-sticky; /* Safari用 */
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background-color: #f8f8f8; /* ヘッダーの背景色に合わせる (デフォルト) */
+}
+
+/* --- スクロール時に上部に固定するコントロール部分 --- */
+.sticky-controls {
+    position: -webkit-sticky; /* Safari用 */
+    position: sticky;
+    /* ヘッダーの高さ（約60px）分だけ下げる */
+    top: 60px; 
+    background-color: #f0f2f5; /* 背景色を指定しないと下のコンテンツが透ける */
+    padding: 16px 0;
+    z-index: 10; /* 他の要素より手前に表示 */
+}
