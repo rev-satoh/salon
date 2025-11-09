@@ -9,6 +9,7 @@ import traceback
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 from PIL import Image
+import config
 
 # 共通関数をutils.pyからインポート
 from utils import sse_format, get_lat_lng_from_address
@@ -25,7 +26,7 @@ def check_seo_ranking(driver, url_to_find, keyword, location_name=None):
         try:
             # --- 1. 検索実行 ---
             # num=100で100件表示をリクエスト
-            search_url = f"https://www.google.com/search?q={urllib.parse.quote(keyword)}&hl=ja&num=100"
+            search_url = f"https://www.google.com/search?q={urllib.parse.quote(keyword)}&hl=ja&num={config.SEO_RESULTS_PER_PAGE}"
             driver.get(search_url)
             last_url_checked_local = driver.current_url
             time.sleep(random.uniform(1.5, 2.5))
@@ -42,15 +43,15 @@ def check_seo_ranking(driver, url_to_find, keyword, location_name=None):
             timestamp = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
             safe_keyword = re.sub(r'[\\/:*?"<>|]', '_', keyword)
             base_filename = f"seo_{timestamp}_{safe_keyword}"
-            temp_png_path = os.path.join('screenshots', f"temp_{base_filename}.png")
+            temp_png_path = os.path.join(config.SCREENSHOT_DIR, f"temp_{base_filename}.png")
             driver.save_screenshot(temp_png_path)
 
             jpeg_filename = f"{base_filename}.jpg"
-            jpeg_filepath = os.path.join('screenshots', jpeg_filename)
+            jpeg_filepath = os.path.join(config.SCREENSHOT_DIR, jpeg_filename)
             try:
                 with Image.open(temp_png_path) as img:
                     if img.mode == 'RGBA': img = img.convert('RGB')
-                    img.save(jpeg_filepath, 'jpeg', quality=15)
+                    img.save(jpeg_filepath, 'jpeg', quality=config.SCREENSHOT_JPEG_QUALITY)
                 screenshot_path_local = jpeg_filepath
             finally:
                 if os.path.exists(temp_png_path): os.remove(temp_png_path)

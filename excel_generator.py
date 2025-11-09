@@ -1,5 +1,6 @@
 import pandas as pd
 import io
+import config
 
 def create_excel_report(group_key, group_data, active_search_type):
     """
@@ -29,7 +30,7 @@ def create_excel_report(group_key, group_data, active_search_type):
             # ランクが数値でない場合（'圏外', 'エラー', '枠無'など）は101を返す
             if not isinstance(rank, (int, float)):
                 # グラフの最下部に表示するためのダミーの大きな数値
-                return 101
+                return config.EXCEL_OUT_OF_RANGE_RANK
             return rank
 
         data_map = {entry['date']: entry['rank'] for entry in task_data['log']}
@@ -99,10 +100,10 @@ def create_excel_report(group_key, group_data, active_search_type):
         chart.set_y_axis({
             'name': '順位', 
             'reverse': True, # Y軸を反転させて上位を上にする
-            'min': 1,        # Y軸の最小値（グラフの上端）
-            'max': 101,      # Y軸の最大値（グラフの下端）
+            'min': config.EXCEL_CHART_Y_AXIS_MIN,        # Y軸の最小値（グラフの上端）
+            'max': config.EXCEL_CHART_Y_AXIS_MAX,      # Y軸の最大値（グラフの下端）
             # 101という数値を「圏外」という文字列で表示するための書式設定
-            'num_format': '[=101]"圏外";[<101]0'
+            'num_format': f'[={config.EXCEL_OUT_OF_RANGE_RANK}]"圏外";[<{config.EXCEL_OUT_OF_RANGE_RANK}]0'
         })
         chart.set_legend({'position': 'top'})
 

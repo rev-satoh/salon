@@ -5,6 +5,7 @@ import json
 from bs4 import BeautifulSoup
 from selenium.common.exceptions import TimeoutException
 from PIL import Image
+import config
 
 def sse_format(data: dict) -> str:
     """Server-Sent Eventsのフォーマットで文字列を返す"""
@@ -26,12 +27,12 @@ def check_feature_page_ranking(driver, feature_page_url, salon_names):
     last_html_content = "リクエストが実行されませんでした。"
 
     # スクリーンショット保存用ディレクトリを作成
-    if not os.path.exists('screenshots'):
-        os.makedirs('screenshots')
+    if not os.path.exists(config.SCREENSHOT_DIR):
+        os.makedirs(config.SCREENSHOT_DIR)
 
     try:
         # ページを1から順番にチェック（最大5ページ=100位まで）
-        for page in range(1, 6):
+        for page in range(1, config.HPB_MAX_PAGES + 1):
             # --- URL生成ロジックをパス形式に修正 ---
             base_url = feature_page_url
             # 既に入力URLにページ番号が含まれている場合、それを除去してベースURLを正規化
@@ -79,17 +80,17 @@ def check_feature_page_ranking(driver, feature_page_url, salon_names):
                 time.sleep(0.5)
 
                 timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-                temp_png_path = os.path.join('screenshots', f"temp_special_{timestamp}.png")
+                temp_png_path = os.path.join(config.SCREENSHOT_DIR, f"temp_special_{timestamp}.png")
                 driver.save_screenshot(temp_png_path)
 
                 jpeg_filename = f"screenshot_special_{timestamp}.jpg"
-                jpeg_filepath = os.path.join('screenshots', jpeg_filename)
+                jpeg_filepath = os.path.join(config.SCREENSHOT_DIR, jpeg_filename)
                 
                 try:
                     with Image.open(temp_png_path) as img:
                         if img.mode == 'RGBA':
                             img = img.convert('RGB')
-                        img.save(jpeg_filepath, 'jpeg', quality=15)
+                        img.save(jpeg_filepath, 'jpeg', quality=config.SCREENSHOT_JPEG_QUALITY)
                     screenshot_path = jpeg_filepath
                 finally:
                     if os.path.exists(temp_png_path):

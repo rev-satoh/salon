@@ -25,6 +25,7 @@ import threading # ロック機能のためにインポート
 from utils import sse_format, get_lat_lng_from_address # 共通関数をインポート
 from seo_scraper import check_seo_ranking # SEOスクレイパーをインポート
 from excel_generator import create_excel_report # Excel生成関数をインポート
+import config # 設定ファイルをインポート
 
 # app.pyと同じ階層にある静的ファイル(css, js, html)を読み込めるように設定
 app = Flask(__name__, static_folder='.', static_url_path='')
@@ -39,13 +40,6 @@ if not GOOGLE_API_KEY:
     app.logger.warning("GOOGLE_API_KEYが.envファイルに設定されていません。MEO計測機能は利用できません。")
 
 # --- グローバル変数と設定 ---
-AUTO_TASKS_FILE = 'auto_tasks.json'
-# --- 履歴ファイルをタイプ別に分割 ---
-HISTORY_FILE_NORMAL = 'history_normal.json'
-HISTORY_FILE_SPECIAL = 'history_special.json'
-HISTORY_FILE_MEO = 'history_meo.json'
-HISTORY_FILE_SEO = 'history_seo.json' # SEO履歴ファイルを追加
-SCHEDULER_CONFIG_FILE = 'scheduler_config.json'
 
 # --- 計測ジョブの同時実行を防ぐためのロック ---
 measurement_lock = threading.Lock()
@@ -56,32 +50,32 @@ def save_json_file(filename, data):
 
 def load_scheduler_config():
     """スケジューラ設定を読み込む。なければデフォルト値を返す"""
-    if not os.path.exists(SCHEDULER_CONFIG_FILE):
+    if not os.path.exists(config.SCHEDULER_CONFIG_FILE):
         return {"hour": 9, "minute": 0}
     try:
-        with open(SCHEDULER_CONFIG_FILE, 'r', encoding='utf-8') as f:
-            config = json.load(f)
-            if isinstance(config.get('hour'), int) and isinstance(config.get('minute'), int):
-                return config
+        with open(config.SCHEDULER_CONFIG_FILE, 'r', encoding='utf-8') as f:
+            loaded_config = json.load(f)
+            if isinstance(loaded_config.get('hour'), int) and isinstance(loaded_config.get('minute'), int):
+                return loaded_config
     except (json.JSONDecodeError, IOError, KeyError):
         pass
     return {"hour": 9, "minute": 0}
 
 def save_scheduler_config(config):
     """スケジューラ設定を保存する"""
-    with open(SCHEDULER_CONFIG_FILE, 'w', encoding='utf-8') as f:
+    with open(config.SCHEDULER_CONFIG_FILE, 'w', encoding='utf-8') as f:
         json.dump(config, f, indent=2)
 
 def get_history_filename(task_type):
     """タスクタイプに応じた履歴ファイル名を返す"""
     if task_type == 'special':
-        return HISTORY_FILE_SPECIAL
+        return config.HISTORY_FILE_SPECIAL
     elif task_type == 'google':
-        return HISTORY_FILE_MEO
+        return config.HISTORY_FILE_MEO
     elif task_type == 'seo':
-        return HISTORY_FILE_SEO
+        return config.HISTORY_FILE_SEO
     else: # 'normal' or default
-        return HISTORY_FILE_NORMAL
+        return config.HISTORY_FILE_NORMAL
 
 # --- ヘルパー関数 (ファイルの読み書き) ---
 def load_json_file(filename):
@@ -101,7 +95,7 @@ def index():
 @app.route('/screenshots/<path:filename>')
 def serve_screenshot(filename):
     """screenshotsディレクトリから画像を配信する"""
-    return app.send_static_file(os.path.join('screenshots', filename))
+    return app.send_static_file(os.path.join(config.SCREENSHOT_DIR, filename))
 
 # --- ホットペッパー順位計測 ---
 def check_hotpepper_ranking(driver, keyword, salon_name, area_codes):
@@ -151,8 +145,8 @@ def check_hotpepper_ranking(driver, keyword, salon_name, area_codes):
     }
     
     # スクリーンショット保存用ディレクトリを作成
-    if not os.path.exists('screenshots'):
-        os.makedirs('screenshots')
+    if not os.path.exists(config.SCREENSHOT_DIR):
+        os.makedirs(config.SCREENSHOT_DIR)
 
     try:
         # 最初にRefererとなるページにアクセスして、正規のセッションCookieを取得する
@@ -165,7 +159,7 @@ def check_hotpepper_ranking(driver, keyword, salon_name, area_codes):
             app.logger.warning(f"Refererページへのアクセスに失敗しました: {e}")
 
         # ページを1から順番にチェック（最大5ページ=100位まで）
-        for page in range(1, 6):
+        for page in range(1, config.HPB_MAX_PAGES + 1):
             # ページ番号をパラメータに追加
             params['pn'] = page
             # --- URL生成ロジックの修正 ---
@@ -215,18 +209,18 @@ def check_hotpepper_ranking(driver, keyword, salon_name, area_codes):
                 safe_area = re.sub(r'[\\/:*?"<>|]', '_', area_codes.get('areaName', ''))
                 base_filename = f"{timestamp}_{safe_area}_{safe_keyword}"
                 
-                temp_png_path = os.path.join('screenshots', f"temp_{timestamp}.png") # 一時ファイル名はタイムスタンプのみでOK
+                temp_png_path = os.path.join(config.SCREENSHOT_DIR, f"temp_{timestamp}.png") # 一時ファイル名はタイムスタンプのみでOK
                 driver.save_screenshot(temp_png_path)
 
                 # 最終的なファイル名を指定
                 jpeg_filename = f"{base_filename}.jpg"
-                jpeg_filepath = os.path.join('screenshots', jpeg_filename)
+                jpeg_filepath = os.path.join(config.SCREENSHOT_DIR, jpeg_filename)
                 
                 try:
                     with Image.open(temp_png_path) as img:
                         if img.mode == 'RGBA': # JPEGは透明度をサポートしないためRGBに変換
                             img = img.convert('RGB')
-                        img.save(jpeg_filepath, 'jpeg', quality=15) # qualityは0-95の範囲で調整可能
+                        img.save(jpeg_filepath, 'jpeg', quality=config.SCREENSHOT_JPEG_QUALITY) # qualityは0-95の範囲で調整可能
                     screenshot_path = jpeg_filepath
                     app.logger.info(f"画質を調整したスクリーンショットを {jpeg_filepath} に保存しました。")
                 finally:
@@ -305,15 +299,14 @@ def check_ranking_api():
             # WebDriverのライフサイクルをリクエストごとに管理
             chrome_options = Options()
             chrome_options.add_argument("--headless")
-            chrome_options.add_argument("--window-size=1200,800")
-            user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-            chrome_options.add_argument(f'user-agent={user_agent}')
+            chrome_options.add_argument(f"--window-size={config.DEFAULT_USER_AGENT}")
+            chrome_options.add_argument(f'user-agent={config.DEFAULT_USER_AGENT}')
             
             driver = None
             try:
                 yield sse_format({"status": "ブラウザを起動しています..."})
                 driver = webdriver.Chrome(options=chrome_options)
-                driver.set_page_load_timeout(30)
+                driver.set_page_load_timeout(config.WEBDRIVER_TIMEOUT)
                 # ジェネレータから得られる進捗をそのままクライアントに流す
                 yield from check_hotpepper_ranking(driver, serviceKeyword, salonName, areaCodes)
             except Exception as e:
@@ -440,17 +433,17 @@ def check_meo_ranking(driver, keyword, location_name):
         safe_location = re.sub(r'[\\/:*?"<>|]', '_', location_name)
         base_filename = f"{timestamp}_{safe_location}_{safe_keyword}"
 
-        temp_png_path = os.path.join('screenshots', f"temp_meo_{timestamp}.png")
+        temp_png_path = os.path.join(config.SCREENSHOT_DIR, f"temp_meo_{timestamp}.png")
         driver.save_screenshot(temp_png_path) # ページ全体を撮影
 
         jpeg_filename = f"{base_filename}.jpg"
-        jpeg_filepath = os.path.join('screenshots', jpeg_filename)
+        jpeg_filepath = os.path.join(config.SCREENSHOT_DIR, jpeg_filename)
         
         try:
             with Image.open(temp_png_path) as img:
                 if img.mode == 'RGBA':
                     img = img.convert('RGB')
-                img.save(jpeg_filepath, 'jpeg', quality=15) # qualityは0-95の範囲で調整可能
+                img.save(jpeg_filepath, 'jpeg', quality=config.SCREENSHOT_JPEG_QUALITY) # qualityは0-95の範囲で調整可能
             screenshot_path = jpeg_filepath
         finally:
             if os.path.exists(temp_png_path):
@@ -460,7 +453,7 @@ def check_meo_ranking(driver, keyword, location_name):
         yield sse_format({"status": "検索結果を解析しています..."})
         found_salons = []
         processed_aria_labels = set()
-        for i in range(3): # 3回スクロールして最大60件程度取得を試みる
+        for i in range(config.MEO_SCROLL_COUNT): # 3回スクロールして最大60件程度取得を試みる
             yield sse_format({"status": f"検索結果を解析中... ({i+1}/3)"})
             html = driver.page_source
             soup = BeautifulSoup(html, 'lxml')
@@ -532,7 +525,7 @@ def check_meo_ranking_api():
             driver = None
             try:
                 driver = webdriver.Chrome(options=chrome_options)
-                driver.set_page_load_timeout(30)
+                driver.set_page_load_timeout(config.WEBDRIVER_TIMEOUT)
                 yield from check_meo_ranking(driver, keyword, location)
             finally:
                 if driver:
@@ -556,10 +549,9 @@ def check_seo_ranking_api():
 
     def generate_stream():
         try:
-            # --- SEO計測用のボット検出回避オプション ---
-            user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36'
+            # --- SEO計測用のボット検出回避オプション --- # このコメントは変更なし
             chrome_options = Options()
-            chrome_options.add_argument(f'user-agent={user_agent}')
+            chrome_options.add_argument(f'user-agent={config.DEFAULT_USER_AGENT}')
             chrome_options.add_argument('--headless=new')
             chrome_options.add_argument("--window-size=1200,800")
             chrome_options.add_argument('--disable-blink-features=AutomationControlled')
@@ -569,7 +561,7 @@ def check_seo_ranking_api():
             driver = None
             try:
                 driver = webdriver.Chrome(options=chrome_options)
-                driver.set_page_load_timeout(30)
+                driver.set_page_load_timeout(config.WEBDRIVER_TIMEOUT)
                 # --- ボット検出回避のためのスクリプトを実行 ---
                 driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
                     "source": "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
@@ -606,14 +598,13 @@ def run_feature_page_tasks_api():
         try:
             chrome_options = Options()
             chrome_options.add_argument("--headless")
-            chrome_options.add_argument("--window-size=1200,800")
-            user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-            chrome_options.add_argument(f'user-agent={user_agent}')
+            chrome_options.add_argument(f"--window-size={config.DEFAULT_USER_AGENT}")
+            chrome_options.add_argument(f'user-agent={config.DEFAULT_USER_AGENT}')
             
             driver = None
             try:
                 driver = webdriver.Chrome(options=chrome_options)
-                driver.set_page_load_timeout(30)
+                driver.set_page_load_timeout(config.WEBDRIVER_TIMEOUT)
                 # 特集ページ用のスクレイパーを呼び出す
                 yield from check_feature_page_ranking(driver, feature_page_url, salon_names)
             finally:
@@ -640,15 +631,14 @@ def check_feature_page_ranking_api():
         try:
             chrome_options = Options()
             chrome_options.add_argument("--headless")
-            chrome_options.add_argument("--window-size=1200,800")
-            user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-            chrome_options.add_argument(f'user-agent={user_agent}')
+            chrome_options.add_argument(f"--window-size={config.DEFAULT_USER_AGENT}")
+            chrome_options.add_argument(f'user-agent={config.DEFAULT_USER_AGENT}')
             
             driver = None
             try:
                 yield sse_format({"status": "ブラウザを起動しています..."})
                 driver = webdriver.Chrome(options=chrome_options)
-                driver.set_page_load_timeout(30)
+                driver.set_page_load_timeout(config.WEBDRIVER_TIMEOUT)
                 # 特集ページ用のスクレイパーを呼び出す
                 yield from check_feature_page_ranking(driver, feature_page_url, [salon_name])
             except Exception as e:
@@ -677,14 +667,14 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
         return
     with app.app_context():
         app.logger.info("--- 自動計測ジョブを開始します ---")
-        all_tasks = load_json_file(AUTO_TASKS_FILE)
+        all_tasks = load_json_file(config.AUTO_TASKS_FILE)
 
         tasks_to_run = []
         if task_ids_to_run:
             # 渡されたIDの順序を維持しつつ、重複を除外する
             seen_ids = set()
             unique_task_ids = []
-            for task_id in task_ids_to_run:
+            for task_id in task_ids_to_run: # この行は変更なし
                 if task_id not in seen_ids:
                     seen_ids.add(task_id)
                     unique_task_ids.append(task_id)
@@ -696,10 +686,10 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
             tasks_to_run = all_tasks
 
         # --- タイプ別に履歴ファイルを読み込む ---
-        history_normal = load_json_file(HISTORY_FILE_NORMAL)
-        history_special = load_json_file(HISTORY_FILE_SPECIAL)
-        history_meo = load_json_file(HISTORY_FILE_MEO)
-        history_seo = load_json_file(HISTORY_FILE_SEO) # SEO履歴を読み込む
+        history_normal = load_json_file(config.HISTORY_FILE_NORMAL)
+        history_special = load_json_file(config.HISTORY_FILE_SPECIAL)
+        history_meo = load_json_file(config.HISTORY_FILE_MEO)
+        history_seo = load_json_file(config.HISTORY_FILE_SEO) # SEO履歴を読み込む
         today = datetime.date.today().strftime('%Y/%m/%d')
 
         # --- ロジック見直し：タスクをタイプ別に分割し、特集ページはURLでグループ化 ---
@@ -727,14 +717,13 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
         # --- 高速化のための変更: WebDriverを一度だけ起動 ---
         chrome_options = Options()
         chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--window-size=1200,800")
-        user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-        chrome_options.add_argument(f'user-agent={user_agent}')
+        chrome_options.add_argument(f"--window-size={config.DEFAULT_USER_AGENT}")
+        chrome_options.add_argument(f'user-agent={config.DEFAULT_USER_AGENT}')
         
         driver = None
         try:
             driver = webdriver.Chrome(options=chrome_options)
-            driver.set_page_load_timeout(30)
+            driver.set_page_load_timeout(config.WEBDRIVER_TIMEOUT)
             
             # --- ボット検出回避のためのスクリプトを実行 ---
             driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
@@ -776,7 +765,7 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
                     yield sse_format({"result": {"rank": rank_to_save, "total_count": result.get('total_count'), "task_name": task_name, "task_id": task_id}})
                     time.sleep(1) # フロントエンドでの表示のためのウェイト
                 else:
-                    time.sleep(random.uniform(5, 15)) # 5〜15秒のランダムな待機 (elif not stream_progress: から else: に変更)
+                    time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX)) # 5〜15秒のランダムな待機 (elif not stream_progress: から else: に変更)
 
             # --- 2. 特集ページタスクの処理（URLごとに一括） ---
             for url, tasks_in_group in special_tasks_grouped_by_url.items():
@@ -831,8 +820,8 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
                         yield sse_format({"result": {"rank": rank_to_save, "total_count": result.get('total_count'), "task_name": individual_task_name, "task_id": task_id}})
                         time.sleep(1)
                 
-                else:
-                    time.sleep(random.uniform(5, 15)) # 5〜15秒のランダムな待機 (elif not stream_progress: から else: に変更)
+                if not stream_progress:
+                    time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX)) # 5〜15秒のランダムな待機 (elif not stream_progress: から else: に変更)
 
             # --- 3. MEOタスクの処理 ---
             for task in meo_tasks:
@@ -875,7 +864,7 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
                         yield sse_format({"result": {"rank": rank_to_save, "total_count": result.get('total_count'), "task_name": task_name, "task_id": task_id}})
                         time.sleep(1)
                     else:
-                        time.sleep(random.uniform(5, 15))
+                        time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX))
                 except Exception as e:
                     app.logger.error(f"MEOタスク '{task.get('id', '不明')}' の処理中にエラーが発生しました: {e}")
                     update_history(history_meo, task, today, "エラー", None) # 履歴にエラーを記録
@@ -913,7 +902,7 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
                         yield sse_format({"result": {"rank": rank_to_save, "task_name": task_name, "task_id": task_id}})
                         time.sleep(1)
                     else:
-                        time.sleep(random.uniform(5, 15))
+                        time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX))
                 except Exception as e:
                     app.logger.error(f"SEOタスク '{task.get('id', '不明')}' の処理中にエラーが発生しました: {e}")
                     update_history(history_seo, task, today, "エラー", None)
@@ -924,12 +913,12 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
             if driver:
                 driver.quit() # 全てのタスクが終わったらブラウザを終了
             # --- タイプ別に履歴ファイルを保存 ---
-            save_json_file(HISTORY_FILE_NORMAL, history_normal)
-            save_json_file(HISTORY_FILE_SPECIAL, history_special)
-            save_json_file(HISTORY_FILE_MEO, history_meo)
-            save_json_file(HISTORY_FILE_SEO, history_seo) # SEO履歴を保存
+            save_json_file(config.HISTORY_FILE_NORMAL, history_normal)
+            save_json_file(config.HISTORY_FILE_SPECIAL, history_special)
+            save_json_file(config.HISTORY_FILE_MEO, history_meo)
+            save_json_file(config.HISTORY_FILE_SEO, history_seo) # SEO履歴を保存
             # 特集ページ名が更新された可能性があるので、タスクファイルも保存
-            save_json_file(AUTO_TASKS_FILE, all_tasks)
+            save_json_file(config.AUTO_TASKS_FILE, all_tasks)
             
             if stream_progress:
                 measurement_lock.release() # ストリーミングの場合はここで解放
@@ -962,13 +951,13 @@ def update_history(history, task, date_str, rank, screenshot_path):
 def handle_auto_tasks():
     if request.method == 'GET':
         # ファイルが存在しない場合や空の場合のハンドリングを追加
-        tasks = load_json_file(AUTO_TASKS_FILE)
+        tasks = load_json_file(config.AUTO_TASKS_FILE)
         return jsonify(tasks)
     if request.method == 'POST':
         tasks = request.get_json()
         if not isinstance(tasks, list):
             return jsonify({"error": "リクエストはリスト形式である必要があります"}), 400
-        save_json_file(AUTO_TASKS_FILE, tasks)
+        save_json_file(config.AUTO_TASKS_FILE, tasks)
         return jsonify({"message": "設定を保存しました"}), 200
 
 @app.route('/api/save-auto-history-entry', methods=['POST'])
@@ -1007,10 +996,10 @@ def save_auto_history_entry():
 @app.route('/api/auto-history', methods=['GET'])
 def get_auto_history():
     # --- 3つの履歴ファイルをマージして返す ---
-    history_normal = load_json_file(HISTORY_FILE_NORMAL)
-    history_special = load_json_file(HISTORY_FILE_SPECIAL)
-    history_meo = load_json_file(HISTORY_FILE_MEO)
-    history_seo = load_json_file(HISTORY_FILE_SEO) # SEO履歴を読み込む
+    history_normal = load_json_file(config.HISTORY_FILE_NORMAL)
+    history_special = load_json_file(config.HISTORY_FILE_SPECIAL)
+    history_meo = load_json_file(config.HISTORY_FILE_MEO)
+    history_seo = load_json_file(config.HISTORY_FILE_SEO) # SEO履歴を読み込む
     all_history = history_normal + history_special + history_meo + history_seo
     return jsonify(all_history)
 
@@ -1101,9 +1090,9 @@ def download_excel():
 scheduler = BackgroundScheduler(daemon=True)
 
 # 設定ファイルから実行時間を読み込む
-config = load_scheduler_config()
-run_hour = config.get('hour', 9)
-run_minute = config.get('minute', 0)
+scheduler_setting = load_scheduler_config()
+run_hour = scheduler_setting.get('hour', 9)
+run_minute = scheduler_setting.get('minute', 0)
 
 # 毎日指定された時間にジョブを実行
 scheduler.add_job(
@@ -1121,7 +1110,7 @@ def migrate_meo_history_ids():
     この関数はアプリケーション起動時に一度だけ実行される。
     """
     with app.app_context():
-        history_meo = load_json_file(HISTORY_FILE_MEO)
+        history_meo = load_json_file(config.HISTORY_FILE_MEO)
         updated = False
         for item in history_meo:
             task = item.get('task', {})
@@ -1143,7 +1132,7 @@ def migrate_meo_history_ids():
                     app.logger.warning(f"古いMEO履歴IDの形式が不正です。スキップします: {task_id}")
         
         if updated:
-            save_json_file(HISTORY_FILE_MEO, history_meo)
+            save_json_file(config.HISTORY_FILE_MEO, history_meo)
             app.logger.info("MEO履歴IDの移行が完了しました。")
 
 migrate_meo_history_ids()
