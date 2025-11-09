@@ -3573,5 +3573,173 @@
     "salonName": "ケイトステージラッシュ",
     "serviceKeyword": "",
     "type": "normal"
+  },
+  {
+    "id": "[google]-KATE stage LASH-岐阜駅-岐阜　まつげパーマ",
+    "type": "google",
+    "salonName": "KATE stage LASH",
+    "searchLocation": "岐阜駅",
+    "keyword": "岐阜　まつげパーマ"
+  },
+  {
+    "id": "[google]-KATE stage LASH-岐阜駅-まつ毛パーマ",
+    "type": "google",
+    "salonName": "KATE stage LASH",
+    "searchLocation": "岐阜駅",
+    "keyword": "まつ毛パーマ"
+  },
+  {
+    "id": "[google]-KATE stage LASH-岐阜駅-マツパ",
+    "type": "google",
+    "salonName": "KATE stage LASH",
+    "searchLocation": "岐阜駅",
+    "keyword": "マツパ"
+  },
+  {
+    "id": "[google]-KATE stage LASH-岐阜駅-まつぱ",
+    "type": "google",
+    "salonName": "KATE stage LASH",
+    "searchLocation": "岐阜駅",
+    "keyword": "まつぱ"
+  },
+  {
+    "id": "[google]-KATE stage LASH-岐阜駅-まつげ",
+    "type": "google",
+    "salonName": "KATE stage LASH",
+    "searchLocation": "岐阜駅",
+    "keyword": "まつげ"
+  },
+  {
+    "id": "[google]-KATE stage LASH-岐阜駅-眉毛",
+    "type": "google",
+    "salonName": "KATE stage LASH",
+    "searchLocation": "岐阜駅",
+    "keyword": "眉毛"
+  },
+  {
+    "id": "[google]-KATE stage LASH-岐阜駅-眉毛ワックス",
+    "type": "google",
+    "salonName": "KATE stage LASH",
+    "searchLocation": "岐阜駅",
+    "keyword": "眉毛ワックス"
+  },
+  {
+    "id": "[google]-KATE stage LASH-岐阜駅-眉毛WAX",
+    "type": "google",
+    "salonName": "KATE stage LASH",
+    "searchLocation": "岐阜駅",
+    "keyword": "眉毛WAX"
+  },
+  {
+    "id": "[google]-KATE stage LASH-岐阜駅-アイラッシュ",
+    "type": "google",
+    "salonName": "KATE stage LASH",
+    "searchLocation": "岐阜駅",
+    "keyword": "アイラッシュ"
+  },
+  {
+    "id": "[google]-KATE stage LASH-岐阜駅-アイブロウ",
+    "type": "google",
+    "salonName": "KATE stage LASH",
+    "searchLocation": "岐阜駅",
+    "keyword": "アイブロウ"
+  },
+  {
+    "id": "[google]-KATE stage LASH-岐阜駅-HBL",
+    "type": "google",
+    "salonName": "KATE stage LASH",
+    "searchLocation": "岐阜駅",
+    "keyword": "HBL"
+  },
+  {
+    "id": "[google]-KATE stage LASH-岐阜駅-ハリウッドブロウリフト",
+    "type": "google",
+    "salonName": "KATE stage LASH",
+    "searchLocation": "岐阜駅",
+    "keyword": "ハリウッドブロウリフト"
+  },
+  {
+    "id": "[google]-KATE stage LASH-岐阜駅-パリジェンヌ",
+    "type": "google",
+    "salonName": "KATE stage LASH",
+    "searchLocation": "岐阜駅",
+    "keyword": "パリジェンヌ"
+  },
+  {
+    "id": "[google]-KATE stage LASH-岐阜駅-岐阜　パリジェンヌ",
+    "type": "google",
+    "salonName": "KATE stage LASH",
+    "searchLocation": "岐阜駅",
+    "keyword": "岐阜　パリジェンヌ"
+  },
+  {
+    "id": "[google]-KATE stage LASH-岐阜駅-岐阜　HBL",
+    "type": "google",
+    "salonName": "KATE stage LASH",
+    "searchLocation": "岐阜駅",
+    "keyword": "岐阜　HBL"
+  },
+  {
+    "id": "[google]-KATE stage LASH-岐阜駅-岐阜　ハリウッドブロウ",
+    "type": "google",
+    "salonName": "KATE stage LASH",
+    "searchLocation": "岐阜駅",
+    "keyword": "岐阜　ハリウッドブロウ"
+  },
+  {
+    "id": "[google]-KATE stage LASH-岐阜駅-岐阜　眉毛ワックス",
+    "type": "google",
+    "salonName": "KATE stage LASH",
+    "searchLocation": "岐阜駅",
+    "keyword": "岐阜　眉毛ワックス"
+  },
+  {
+    "id": "[google]-KATE stage LASH-岐阜駅-岐阜　眉毛WAX",
+    "type": "google",
+    "salonName": "KATE stage LASH",
+    "searchLocation": "岐阜駅",
+    "keyword": "岐阜　眉毛WAX"
+  },
+  {
+    "id": "[google]-KATE stage LASH-岐阜駅-岐阜　眉毛",
+    "type": "google",
+    "salonName": "KATE stage LASH",
+    "searchLocation": "岐阜駅",
+    "keyword": "岐阜　眉毛"
+  },
+  {
+    "id": "[google]-KATE stage LASH-岐阜駅-岐阜　まつげ",
+    "type": "google",
+    "salonName": "KATE stage LASH",
+    "searchLocation": "岐阜駅",
+    "keyword": "岐阜　まつげ"
+  },
+  {
+    "id": "[google]-KATE stage LASH-岐阜駅-岐阜　マツパ",
+    "type": "google",
+    "salonName": "KATE stage LASH",
+    "searchLocation": "岐阜駅",
+    "keyword": "岐阜　マツパ"
+  },
+  {
+    "id": "[google]-KATE stage LASH-岐阜駅-岐阜　まつ毛パーマ",
+    "type": "google",
+    "salonName": "KATE stage LASH",
+    "searchLocation": "岐阜駅",
+    "keyword": "岐阜　まつ毛パーマ"
+  },
+  {
+    "id": "[google]-KATE stage LASH-岐阜駅-岐阜　アイブロウ",
+    "type": "google",
+    "salonName": "KATE stage LASH",
+    "searchLocation": "岐阜駅",
+    "keyword": "岐阜　アイブロウ"
+  },
+  {
+    "id": "[google]-KATE stage LASH-岐阜駅-岐阜　アイラッシュ",
+    "type": "google",
+    "salonName": "KATE stage LASH",
+    "searchLocation": "岐阜駅",
+    "keyword": "岐阜　アイラッシュ"
   }
 ]

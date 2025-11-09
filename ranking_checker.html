@@ -363,8 +363,9 @@
             <div id="meoTaskCopySection" style="display: none;">
                 <h4 style="margin-top: 0; margin-bottom: 10px; font-size: 16px; font-weight: 600;">MEOタスクを別地点にコピー</h4>
                 <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                    <select id="copySourceLocation" style="padding: 6px 10px; font-size: 14px; border-radius: 6px;"></select>
+                    <select id="copySourceLocation" style="padding: 6px 10px; font-size: 14px; border-radius: 6px; flex-basis: 150px;"></select>
                     <span style="font-weight: bold;">→</span>
+                    <input type="text" id="copyDestSalonName" placeholder="コピー先のサロン名（任意）" style="padding: 6px 10px; font-size: 14px; flex-grow: 1;">
                     <input type="text" id="copyDestLocation" placeholder="コピー先の検索地点 (例: 池袋駅)" style="padding: 6px 10px; font-size: 14px; flex-grow: 1;">
                     <button type="button" id="executeCopyButton" class="button-secondary" style="padding: 6px 12px; font-size: 13px;">コピー実行</button>
                 </div>
@@ -374,8 +375,9 @@
             <div id="hpbNormalTaskCopySection" style="display: none;">
                 <h4 style="margin-top: 0; margin-bottom: 10px; font-size: 16px; font-weight: 600;">HPB通常タスクを別エリアにコピー</h4>
                 <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                    <select id="copySourceArea" style="padding: 6px 10px; font-size: 14px; border-radius: 6px;"></select>
+                    <select id="copySourceArea" style="padding: 6px 10px; font-size: 14px; border-radius: 6px; flex-basis: 150px;"></select>
                     <span style="font-weight: bold;">→</span>
+                    <input type="text" id="copyDestSalonNameHpbNormal" placeholder="コピー先のサロン名（任意）" style="padding: 6px 10px; font-size: 14px; flex-grow: 1;">
                     <select id="copyDestArea" style="padding: 6px 10px; font-size: 14px; border-radius: 6px; flex-grow: 1;"></select>
                     <button type="button" id="executeHpbNormalCopyButton" class="button-secondary" style="padding: 6px 12px; font-size: 13px;">コピー実行</button>
                 </div>
@@ -385,8 +387,9 @@
             <div id="hpbSpecialTaskCopySection" style="display: none;">
                 <h4 style="margin-top: 0; margin-bottom: 10px; font-size: 16px; font-weight: 600;">HPB特集タスクを別ページにコピー</h4>
                 <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                    <select id="copySourceSpecialPage" style="padding: 6px 10px; font-size: 14px; border-radius: 6px;"></select>
+                    <select id="copySourceSpecialPage" style="padding: 6px 10px; font-size: 14px; border-radius: 6px; flex-basis: 150px;"></select>
                     <span style="font-weight: bold;">→</span>
+                    <input type="text" id="copyDestSalonNameHpbSpecial" placeholder="コピー先のサロン名（任意）" style="padding: 6px 10px; font-size: 14px; flex-grow: 1;">
                     <input type="text" id="copyDestSpecialPageUrl" placeholder="コピー先の特集ページURL" style="padding: 6px 10px; font-size: 14px; flex-grow: 1;">
                     <button type="button" id="executeHpbSpecialCopyButton" class="button-secondary" style="padding: 6px 12px; font-size: 13px;">コピー実行</button>
                 </div>
@@ -1253,6 +1256,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
             // --- MEOタスクコピー機能 ---
             const copySourceSelect = document.getElementById('copySourceLocation');
             const copyDestInput = document.getElementById('copyDestLocation');
+            const copyDestSalonNameInput = document.getElementById('copyDestSalonName');
             const copyButton = document.getElementById('executeCopyButton');
 
             function updateCopySourceLocations() {
@@ -1282,14 +1286,15 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
             copyButton.addEventListener('click', () => {
                 const sourceLocation = copySourceSelect.value;
                 const destLocation = copyDestInput.value.trim();
+                const destSalonName = copyDestSalonNameInput.value.trim();
 
                 if (!sourceLocation || !destLocation) {
                     alert('コピー元とコピー先の両方を指定してください。');
                     return;
                 }
 
-                if (sourceLocation === destLocation) {
-                    alert('コピー元とコピー先が同じです。');
+                if (sourceLocation === destLocation && !destSalonName) {
+                    alert('コピー元とコピー先が同じ地点です。別のサロン名を指定する場合のみコピーできます。');
                     return;
                 }
 
@@ -1300,7 +1305,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                 }
 
                 tasksToCopy.forEach(task => {
-                    const salonName = task.salonName;
+                    const salonName = destSalonName || task.salonName; // 新しいサロン名が指定されていれば使用
                     const originalKeyword = task.keyword;
                     let newKeyword = originalKeyword;
 
@@ -1323,11 +1328,13 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                 renderAutoTasks();
                 alert(`タスクのコピーが完了しました。「${destLocation}」のタスク一覧を確認してください。`);
                 copyDestInput.value = ''; // 入力欄をクリア
+                copyDestSalonNameInput.value = ''; // サロン名入力欄もクリア
             });
             
             // --- HPB通常タスクコピー機能 ---
             const copySourceAreaSelect = document.getElementById('copySourceArea');
             const copyDestAreaSelect = document.getElementById('copyDestArea');
+            const copyDestSalonNameHpbNormalInput = document.getElementById('copyDestSalonNameHpbNormal');
             const hpbNormalCopyButton = document.getElementById('executeHpbNormalCopyButton');
 
             function updateHpbNormalCopySources() {
@@ -1407,13 +1414,14 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                     return;
                 }
                 const { areaName: destAreaName, areaCodes: destAreaCodes } = JSON.parse(copyDestAreaSelect.value);
+                const destSalonName = copyDestSalonNameHpbNormalInput.value.trim();
 
                 if (!sourceAreaName || !destAreaName) {
-                    alert('コピー元とコピー先の両方を指定してください。');
+                    alert('コピー元とコピー先の両方のエリアを指定してください。');
                     return;
                 }
-                if (sourceAreaName === destAreaName) {
-                    alert('コピー元とコピー先が同じです。');
+                if (sourceAreaName === destAreaName && !destSalonName) {
+                    alert('コピー元とコピー先が同じエリアです。別のサロン名を指定する場合のみコピーできます。');
                     return;
                 }
 
@@ -1423,12 +1431,13 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                 }
 
                 tasksToCopy.forEach(task => {
-                    const newTaskId = `${task.salonName}-${destAreaName}-${task.serviceKeyword}`;
+                    const salonName = destSalonName || task.salonName;
+                    const newTaskId = `${salonName}-${destAreaName}-${task.serviceKeyword}`;
                     if (!autoTasks.some(t => t.id === newTaskId)) {
                         autoTasks.push({
                             id: newTaskId,
                             type: 'normal',
-                            salonName: task.salonName,
+                            salonName: salonName,
                             areaName: destAreaName,
                             areaCodes: destAreaCodes,
                             serviceKeyword: task.serviceKeyword
@@ -1439,11 +1448,13 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                 saveAutoTasks();
                 renderAutoTasks();
                 alert(`タスクのコピーが完了しました。「${destAreaName}」のタスク一覧を確認してください。`);
+                copyDestSalonNameHpbNormalInput.value = '';
             });
 
             // --- HPB特集タスクコピー機能 ---
             const copySourceSpecialPageSelect = document.getElementById('copySourceSpecialPage');
             const copyDestSpecialPageUrlInput = document.getElementById('copyDestSpecialPageUrl');
+            const copyDestSalonNameHpbSpecialInput = document.getElementById('copyDestSalonNameHpbSpecial');
             const hpbSpecialCopyButton = document.getElementById('executeHpbSpecialCopyButton');
 
             function updateHpbSpecialCopySources() {
@@ -1471,22 +1482,28 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
             hpbSpecialCopyButton.addEventListener('click', () => {
                 const sourceUrl = copySourceSpecialPageSelect.value;
                 const destUrl = copyDestSpecialPageUrlInput.value.trim();
+                const destSalonName = copyDestSalonNameHpbSpecialInput.value.trim();
+
                 if (!sourceUrl || !destUrl) { alert('コピー元とコピー先の両方を指定してください。'); return; }
-                if (sourceUrl === destUrl) { alert('コピー元とコピー先が同じです。'); return; }
+                if (sourceUrl === destUrl && !destSalonName) {
+                    alert('コピー元とコピー先が同じURLです。別のサロン名を指定する場合のみコピーできます。'); return;
+                }
 
                 const tasksToCopy = autoTasks.filter(task => task.type === 'special' && task.featurePageUrl === sourceUrl);
                 if (!confirm(`「${copySourceSpecialPageSelect.options[copySourceSpecialPageSelect.selectedIndex].text}」の${tasksToCopy.length}個のサロンを新しいURLにコピーしますか？`)) { return; }
 
                 tasksToCopy.forEach(task => {
-                    const newTaskId = `${task.salonName}-${destUrl}`;
+                    const salonName = destSalonName || task.salonName;
+                    const newTaskId = `${salonName}-${destUrl}`;
                     if (!autoTasks.some(t => t.id === newTaskId)) {
-                        autoTasks.push({ id: newTaskId, type: 'special', salonName: task.salonName, featurePageUrl: destUrl });
+                        autoTasks.push({ id: newTaskId, type: 'special', salonName: salonName, featurePageUrl: destUrl });
                     }
                 });
                 saveAutoTasks();
                 renderAutoTasks();
                 alert('タスクのコピーが完了しました。');
                 copyDestSpecialPageUrlInput.value = '';
+                copyDestSalonNameHpbSpecialInput.value = '';
             });
 
             // --- SEOタスクコピー機能 ---
