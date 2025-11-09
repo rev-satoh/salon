@@ -37,10 +37,7 @@ app = Flask(__name__, static_folder='.', static_url_path='')
 CORS(app)
 
 # --- 環境変数の読み込み ---
-load_dotenv()
-GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
-if not GOOGLE_API_KEY:
-    # 起動時にキーがない場合は警告を出す
+if not config.GOOGLE_API_KEY:
     app.logger.warning("GOOGLE_API_KEYが.envファイルに設定されていません。MEO計測機能は利用できません。")
 
 # --- グローバル変数と設定 ---
