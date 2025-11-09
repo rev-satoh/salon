@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const HISTORY_FILE = path.join(__dirname, 'history_meo.json');
-const TARGET_LOCATIONS = ['香椎駅', '岐阜駅'];
+const TARGET_LOCATIONS = ['香椎駅', '岐阜駅', '岐阜市', '広島　八丁堀駅'];
 const SALON_NAMES_TO_DELETE = ['ケイトステージラッシュ', 'KATE stage LASH'];
 
 /**
