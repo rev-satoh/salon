@@ -10,4 +10,4 @@ APScheduler==3.10.4
 Pillow==10.4.0
 openpyxl
 python-dotenv==1.0.1
-pandas==2.2.2
+pandas==2.1.4
