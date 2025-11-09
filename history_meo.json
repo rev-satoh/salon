@@ -126,8 +126,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_100627_福山駅_まつげパーマ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_141631_福山駅_まつげパーマ.jpg"
       }
     ]
   },
@@ -323,8 +323,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_100611_福山駅_福山　まつげパーマ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_141615_福山駅_福山　まつげパーマ.jpg"
       }
     ]
   },
@@ -520,8 +520,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_100643_福山駅_まつ毛パーマ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_141648_福山駅_まつ毛パーマ.jpg"
       }
     ]
   },
@@ -717,8 +717,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_100700_福山駅_マツパ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_141706_福山駅_マツパ.jpg"
       }
     ]
   },
@@ -915,7 +915,7 @@
       {
         "date": "2025/11/09",
         "rank": "圏外",
-        "screenshot": "screenshots/251109_100717_福山駅_まつぱ.jpg"
+        "screenshot": "screenshots/251109_141724_福山駅_まつぱ.jpg"
       }
     ]
   },
@@ -1111,8 +1111,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_100733_福山駅_まつげ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_141742_福山駅_まつげ.jpg"
       }
     ]
   },
@@ -1308,8 +1308,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_100749_福山駅_眉毛.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_141759_福山駅_眉毛.jpg"
       }
     ]
   },
@@ -1505,8 +1505,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 2,
-        "screenshot": "screenshots/251109_100805_福山駅_眉毛ワックス.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_141816_福山駅_眉毛ワックス.jpg"
       }
     ]
   },
@@ -1703,7 +1703,7 @@
       {
         "date": "2025/11/09",
         "rank": "圏外",
-        "screenshot": "screenshots/251109_100821_福山駅_眉毛WAX.jpg"
+        "screenshot": "screenshots/251109_141833_福山駅_眉毛WAX.jpg"
       }
     ]
   },
@@ -1899,8 +1899,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_100838_福山駅_アイラッシュ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_141850_福山駅_アイラッシュ.jpg"
       }
     ]
   },
@@ -2096,8 +2096,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 3,
-        "screenshot": "screenshots/251109_100853_福山駅_アイブロウ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_141907_福山駅_アイブロウ.jpg"
       }
     ]
   },
@@ -2294,7 +2294,7 @@
       {
         "date": "2025/11/09",
         "rank": "圏外",
-        "screenshot": "screenshots/251109_100909_福山駅_HBL.jpg"
+        "screenshot": "screenshots/251109_141924_福山駅_HBL.jpg"
       }
     ]
   },
@@ -2491,7 +2491,7 @@
       {
         "date": "2025/11/09",
         "rank": "圏外",
-        "screenshot": "screenshots/251109_100925_福山駅_ハリウッドブロウリフト.jpg"
+        "screenshot": "screenshots/251109_141941_福山駅_ハリウッドブロウリフト.jpg"
       }
     ]
   },
@@ -2687,8 +2687,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_100941_福山駅_パリジェンヌ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_141958_福山駅_パリジェンヌ.jpg"
       }
     ]
   },
@@ -2884,8 +2884,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_101004_福山駅_福山　パリジェンヌ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_142022_福山駅_福山　パリジェンヌ.jpg"
       }
     ]
   },
@@ -3082,7 +3082,7 @@
       {
         "date": "2025/11/09",
         "rank": "圏外",
-        "screenshot": "screenshots/251109_101028_福山駅_福山　HBL.jpg"
+        "screenshot": "screenshots/251109_142047_福山駅_福山　HBL.jpg"
       }
     ]
   },
@@ -3279,7 +3279,7 @@
       {
         "date": "2025/11/09",
         "rank": "圏外",
-        "screenshot": "screenshots/251109_101050_福山駅_福山　ハリウッドブロウ.jpg"
+        "screenshot": "screenshots/251109_142110_福山駅_福山　ハリウッドブロウ.jpg"
       }
     ]
   },
@@ -3475,8 +3475,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 2,
-        "screenshot": "screenshots/251109_101113_福山駅_福山　眉毛ワックス.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_142134_福山駅_福山　眉毛ワックス.jpg"
       }
     ]
   },
@@ -3672,8 +3672,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 2,
-        "screenshot": "screenshots/251109_101135_福山駅_福山　眉毛WAX.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_142157_福山駅_福山　眉毛WAX.jpg"
       }
     ]
   },
@@ -3869,8 +3869,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_101159_福山駅_福山　眉毛.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_142230_福山駅_福山　眉毛.jpg"
       }
     ]
   },
@@ -4066,8 +4066,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_101222_福山駅_福山　まつげ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_142256_福山駅_福山　まつげ.jpg"
       }
     ]
   },
@@ -4263,8 +4263,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_101245_福山駅_福山　マツパ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_142319_福山駅_福山　マツパ.jpg"
       }
     ]
   },
@@ -4460,8 +4460,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_101308_福山駅_福山　まつ毛パーマ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_142343_福山駅_福山　まつ毛パーマ.jpg"
       }
     ]
   },
@@ -4658,7 +4658,7 @@
       {
         "date": "2025/11/09",
         "rank": "圏外",
-        "screenshot": "screenshots/251109_101324_福山市_HBL.jpg"
+        "screenshot": "screenshots/251109_142401_福山市_HBL.jpg"
       }
     ]
   },
@@ -4854,8 +4854,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 3,
-        "screenshot": "screenshots/251109_101347_福山市_アイブロウ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_142424_福山市_アイブロウ.jpg"
       }
     ]
   },
@@ -5051,8 +5051,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_101410_福山市_アイラッシュ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_142448_福山市_アイラッシュ.jpg"
       }
     ]
   },
@@ -5249,7 +5249,7 @@
       {
         "date": "2025/11/09",
         "rank": "圏外",
-        "screenshot": "screenshots/251109_101433_福山市_ハリウッドブロウ.jpg"
+        "screenshot": "screenshots/251109_142512_福山市_ハリウッドブロウ.jpg"
       }
     ]
   },
@@ -5445,8 +5445,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_101456_福山市_パリジェンヌ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_142536_福山市_パリジェンヌ.jpg"
       }
     ]
   },
@@ -5642,8 +5642,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_101514_福山市_まつげ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_142554_福山市_まつげ.jpg"
       }
     ]
   },
@@ -5839,8 +5839,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_101535_福山市_まつげパーマ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_142617_福山市_まつげパーマ.jpg"
       }
     ]
   },
@@ -6036,8 +6036,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_101555_福山市_まつ毛パーマ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_142638_福山市_まつ毛パーマ.jpg"
       }
     ]
   },
@@ -6233,8 +6233,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_101613_福山市_マツパ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_142657_福山市_マツパ.jpg"
       }
     ]
   },
@@ -6430,8 +6430,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_101632_福山市_眉毛.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_142717_福山市_眉毛.jpg"
       }
     ]
   },
@@ -6627,8 +6627,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 2,
-        "screenshot": "screenshots/251109_101654_福山市_眉毛ワックス.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_142741_福山市_眉毛ワックス.jpg"
       }
     ]
   },
@@ -6825,7 +6825,7 @@
       {
         "date": "2025/11/09",
         "rank": "圏外",
-        "screenshot": "screenshots/251109_101712_福山市_眉毛WAX.jpg"
+        "screenshot": "screenshots/251109_142801_福山市_眉毛WAX.jpg"
       }
     ]
   },
@@ -7021,8 +7021,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 3,
-        "screenshot": "screenshots/251109_101734_福山駅_福山　アイブロウ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_142825_福山駅_福山　アイブロウ.jpg"
       }
     ]
   },
@@ -7218,8 +7218,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_101757_福山駅_福山　アイラッシュ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_142849_福山駅_福山　アイラッシュ.jpg"
       }
     ]
   },
@@ -7415,8 +7415,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_101820_福山市_福山　パリジェンヌ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_142913_福山市_福山　パリジェンヌ.jpg"
       }
     ]
   },
@@ -7613,7 +7613,7 @@
       {
         "date": "2025/11/09",
         "rank": "圏外",
-        "screenshot": "screenshots/251109_101842_福山市_福山　HBL.jpg"
+        "screenshot": "screenshots/251109_142936_福山市_福山　HBL.jpg"
       }
     ]
   },
@@ -7809,8 +7809,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_101905_福山市_福山　まつげパーマ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_143000_福山市_福山　まつげパーマ.jpg"
       }
     ]
   },
@@ -8006,8 +8006,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_101923_福山市_福山　まつ毛パーマ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_143019_福山市_福山　まつ毛パーマ.jpg"
       }
     ]
   },
@@ -8203,8 +8203,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_101940_福山市_福山　マツパ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_143038_福山市_福山　マツパ.jpg"
       }
     ]
   },
@@ -8400,8 +8400,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_101958_福山市_福山　まつげ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_143057_福山市_福山　まつげ.jpg"
       }
     ]
   },
@@ -8597,8 +8597,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_102016_福山市_福山　眉毛.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_143117_福山市_福山　眉毛.jpg"
       }
     ]
   },
@@ -8794,8 +8794,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 2,
-        "screenshot": "screenshots/251109_102040_福山市_福山　眉毛ワックス.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_143144_福山市_福山　眉毛ワックス.jpg"
       }
     ]
   },
@@ -8991,8 +8991,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 2,
-        "screenshot": "screenshots/251109_102103_福山市_福山　眉毛WAX.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_143209_福山市_福山　眉毛WAX.jpg"
       }
     ]
   },
@@ -9189,7 +9189,7 @@
       {
         "date": "2025/11/09",
         "rank": "圏外",
-        "screenshot": "screenshots/251109_102126_福山市_まつぱ.jpg"
+        "screenshot": "screenshots/251109_143233_福山市_まつぱ.jpg"
       }
     ]
   },
@@ -9385,8 +9385,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 3,
-        "screenshot": "screenshots/251109_102149_福山市_福山　アイブロウ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_143257_福山市_福山　アイブロウ.jpg"
       }
     ]
   },
@@ -9582,8 +9582,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": 1,
-        "screenshot": "screenshots/251109_102206_福山市_福山　アイラッシュ.jpg"
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_143315_福山市_福山　アイラッシュ.jpg"
       }
     ]
   },
@@ -9780,7 +9780,7 @@
       {
         "date": "2025/11/09",
         "rank": "圏外",
-        "screenshot": "screenshots/251109_102229_福山市_福山　ハリウッドブロウ.jpg"
+        "screenshot": "screenshots/251109_143341_福山市_福山　ハリウッドブロウ.jpg"
       }
     ]
   },
@@ -28476,6 +28476,2556 @@
         "date": "2025/11/09",
         "rank": 3,
         "screenshot": "screenshots/251109_125028_香椎駅_香椎　アイラッシュ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島市-HBL",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島市-HBL",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島市",
+      "keyword": "HBL"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_133917_広島市_HBL.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島市-HBL",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島市-HBL",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島市",
+      "keyword": "HBL"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_133917_広島市_HBL.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島市-アイブロウ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島市-アイブロウ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島市",
+      "keyword": "アイブロウ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 52,
+        "screenshot": "screenshots/251109_133933_広島市_アイブロウ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島市-アイブロウ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島市-アイブロウ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島市",
+      "keyword": "アイブロウ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_133933_広島市_アイブロウ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島市-アイラッシュ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島市-アイラッシュ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島市",
+      "keyword": "アイラッシュ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_133954_広島市_アイラッシュ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島市-アイラッシュ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島市-アイラッシュ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島市",
+      "keyword": "アイラッシュ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_133954_広島市_アイラッシュ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島市-ハリウッドブロウ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島市-ハリウッドブロウ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島市",
+      "keyword": "ハリウッドブロウ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "枠無",
+        "screenshot": null
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島市-ハリウッドブロウ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島市-ハリウッドブロウ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島市",
+      "keyword": "ハリウッドブロウ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "枠無",
+        "screenshot": null
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島市-パリジェンヌ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島市-パリジェンヌ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島市",
+      "keyword": "パリジェンヌ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 8,
+        "screenshot": "screenshots/251109_134034_広島市_パリジェンヌ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島市-パリジェンヌ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島市-パリジェンヌ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島市",
+      "keyword": "パリジェンヌ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134034_広島市_パリジェンヌ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島市-まつげ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島市-まつげ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島市",
+      "keyword": "まつげ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134056_広島市_まつげ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島市-まつげ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島市-まつげ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島市",
+      "keyword": "まつげ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134056_広島市_まつげ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島市-まつげパーマ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島市-まつげパーマ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島市",
+      "keyword": "まつげパーマ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134118_広島市_まつげパーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島市-まつげパーマ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島市-まつげパーマ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島市",
+      "keyword": "まつげパーマ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134118_広島市_まつげパーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島市-まつ毛パーマ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島市-まつ毛パーマ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島市",
+      "keyword": "まつ毛パーマ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134141_広島市_まつ毛パーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島市-まつ毛パーマ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島市-まつ毛パーマ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島市",
+      "keyword": "まつ毛パーマ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134141_広島市_まつ毛パーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島市-マツパ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島市-マツパ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島市",
+      "keyword": "マツパ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134204_広島市_マツパ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島市-マツパ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島市-マツパ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島市",
+      "keyword": "マツパ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134204_広島市_マツパ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島市-眉毛",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島市-眉毛",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島市",
+      "keyword": "眉毛"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134227_広島市_眉毛.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島市-眉毛",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島市-眉毛",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島市",
+      "keyword": "眉毛"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134227_広島市_眉毛.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島市-眉毛ワックス",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島市-眉毛ワックス",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島市",
+      "keyword": "眉毛ワックス"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134250_広島市_眉毛ワックス.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島市-眉毛ワックス",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島市-眉毛ワックス",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島市",
+      "keyword": "眉毛ワックス"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134250_広島市_眉毛ワックス.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島市-眉毛WAX",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島市-眉毛WAX",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島市",
+      "keyword": "眉毛WAX"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134313_広島市_眉毛WAX.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島市-眉毛WAX",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島市-眉毛WAX",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島市",
+      "keyword": "眉毛WAX"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134313_広島市_眉毛WAX.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島市-広島　パリジェンヌ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島市-広島　パリジェンヌ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島市",
+      "keyword": "広島　パリジェンヌ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 3,
+        "screenshot": "screenshots/251109_134336_広島市_広島　パリジェンヌ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島市-広島　パリジェンヌ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島市-広島　パリジェンヌ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島市",
+      "keyword": "広島　パリジェンヌ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134336_広島市_広島　パリジェンヌ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島市-広島　HBL",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島市-広島　HBL",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島市",
+      "keyword": "広島　HBL"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "枠無",
+        "screenshot": null
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島市-広島　HBL",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島市-広島　HBL",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島市",
+      "keyword": "広島　HBL"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "枠無",
+        "screenshot": null
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島市-広島　まつげパーマ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島市-広島　まつげパーマ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島市",
+      "keyword": "広島　まつげパーマ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134416_広島市_広島　まつげパーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島市-広島　まつげパーマ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島市-広島　まつげパーマ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島市",
+      "keyword": "広島　まつげパーマ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134416_広島市_広島　まつげパーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島市-広島　まつ毛パーマ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島市-広島　まつ毛パーマ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島市",
+      "keyword": "広島　まつ毛パーマ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134438_広島市_広島　まつ毛パーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島市-広島　まつ毛パーマ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島市-広島　まつ毛パーマ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島市",
+      "keyword": "広島　まつ毛パーマ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134438_広島市_広島　まつ毛パーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島市-広島　マツパ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島市-広島　マツパ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島市",
+      "keyword": "広島　マツパ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134500_広島市_広島　マツパ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島市-広島　マツパ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島市-広島　マツパ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島市",
+      "keyword": "広島　マツパ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134500_広島市_広島　マツパ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島市-広島　まつげ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島市-広島　まつげ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島市",
+      "keyword": "広島　まつげ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134523_広島市_広島　まつげ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島市-広島　まつげ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島市-広島　まつげ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島市",
+      "keyword": "広島　まつげ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134523_広島市_広島　まつげ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島市-広島　眉毛",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島市-広島　眉毛",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島市",
+      "keyword": "広島　眉毛"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134546_広島市_広島　眉毛.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島市-広島　眉毛",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島市-広島　眉毛",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島市",
+      "keyword": "広島　眉毛"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134546_広島市_広島　眉毛.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島市-広島　眉毛ワックス",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島市-広島　眉毛ワックス",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島市",
+      "keyword": "広島　眉毛ワックス"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 39,
+        "screenshot": "screenshots/251109_134609_広島市_広島　眉毛ワックス.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島市-広島　眉毛ワックス",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島市-広島　眉毛ワックス",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島市",
+      "keyword": "広島　眉毛ワックス"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134609_広島市_広島　眉毛ワックス.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島市-広島　眉毛WAX",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島市-広島　眉毛WAX",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島市",
+      "keyword": "広島　眉毛WAX"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 40,
+        "screenshot": "screenshots/251109_134631_広島市_広島　眉毛WAX.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島市-広島　眉毛WAX",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島市-広島　眉毛WAX",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島市",
+      "keyword": "広島　眉毛WAX"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134631_広島市_広島　眉毛WAX.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島市-まつぱ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島市-まつぱ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島市",
+      "keyword": "まつぱ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134654_広島市_まつぱ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島市-まつぱ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島市-まつぱ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島市",
+      "keyword": "まつぱ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134654_広島市_まつぱ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島市-広島　アイブロウ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島市-広島　アイブロウ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島市",
+      "keyword": "広島　アイブロウ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 35,
+        "screenshot": "screenshots/251109_134716_広島市_広島　アイブロウ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島市-広島　アイブロウ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島市-広島　アイブロウ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島市",
+      "keyword": "広島　アイブロウ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134716_広島市_広島　アイブロウ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島市-広島　アイラッシュ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島市-広島　アイラッシュ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島市",
+      "keyword": "広島　アイラッシュ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 21,
+        "screenshot": "screenshots/251109_134739_広島市_広島　アイラッシュ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島市-広島　アイラッシュ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島市-広島　アイラッシュ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島市",
+      "keyword": "広島　アイラッシュ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134739_広島市_広島　アイラッシュ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島市-広島　ハリウッドブロウ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島市-広島　ハリウッドブロウ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島市",
+      "keyword": "広島　ハリウッドブロウ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134759_広島市_広島　ハリウッドブロウ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島市-広島　ハリウッドブロウ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島市-広島　ハリウッドブロウ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島市",
+      "keyword": "広島　ハリウッドブロウ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134759_広島市_広島　ハリウッドブロウ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-広島　まつげパーマ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-広島　まつげパーマ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "広島　まつげパーマ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134818_広島　八丁堀駅_広島　まつげパーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島　八丁堀駅-広島　まつげパーマ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島　八丁堀駅-広島　まつげパーマ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "広島　まつげパーマ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134818_広島　八丁堀駅_広島　まつげパーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-まつげパーマ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-まつげパーマ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "まつげパーマ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134838_広島　八丁堀駅_まつげパーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島　八丁堀駅-まつげパーマ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島　八丁堀駅-まつげパーマ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "まつげパーマ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134838_広島　八丁堀駅_まつげパーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-まつ毛パーマ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-まつ毛パーマ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "まつ毛パーマ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134857_広島　八丁堀駅_まつ毛パーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島　八丁堀駅-まつ毛パーマ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島　八丁堀駅-まつ毛パーマ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "まつ毛パーマ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134857_広島　八丁堀駅_まつ毛パーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-マツパ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-マツパ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "マツパ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134917_広島　八丁堀駅_マツパ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島　八丁堀駅-マツパ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島　八丁堀駅-マツパ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "マツパ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134917_広島　八丁堀駅_マツパ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-まつぱ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-まつぱ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "まつぱ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134937_広島　八丁堀駅_まつぱ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島　八丁堀駅-まつぱ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島　八丁堀駅-まつぱ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "まつぱ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134937_広島　八丁堀駅_まつぱ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-まつげ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-まつげ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "まつげ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134956_広島　八丁堀駅_まつげ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島　八丁堀駅-まつげ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島　八丁堀駅-まつげ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "まつげ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_134956_広島　八丁堀駅_まつげ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-眉毛",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-眉毛",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "眉毛"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_135020_広島　八丁堀駅_眉毛.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島　八丁堀駅-眉毛",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島　八丁堀駅-眉毛",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "眉毛"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_135020_広島　八丁堀駅_眉毛.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-眉毛ワックス",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-眉毛ワックス",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "眉毛ワックス"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_135041_広島　八丁堀駅_眉毛ワックス.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島　八丁堀駅-眉毛ワックス",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島　八丁堀駅-眉毛ワックス",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "眉毛ワックス"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_135041_広島　八丁堀駅_眉毛ワックス.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-眉毛WAX",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-眉毛WAX",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "眉毛WAX"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_135101_広島　八丁堀駅_眉毛WAX.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島　八丁堀駅-眉毛WAX",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島　八丁堀駅-眉毛WAX",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "眉毛WAX"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_135101_広島　八丁堀駅_眉毛WAX.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-アイラッシュ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-アイラッシュ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "アイラッシュ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_135122_広島　八丁堀駅_アイラッシュ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島　八丁堀駅-アイラッシュ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島　八丁堀駅-アイラッシュ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "アイラッシュ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_135122_広島　八丁堀駅_アイラッシュ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-アイブロウ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-アイブロウ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "アイブロウ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_135146_広島　八丁堀駅_アイブロウ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島　八丁堀駅-アイブロウ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島　八丁堀駅-アイブロウ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "アイブロウ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_135146_広島　八丁堀駅_アイブロウ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-HBL",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-HBL",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "HBL"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_135206_広島　八丁堀駅_HBL.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島　八丁堀駅-HBL",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島　八丁堀駅-HBL",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "HBL"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_135206_広島　八丁堀駅_HBL.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-ハリウッドブロウリフト",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-ハリウッドブロウリフト",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "ハリウッドブロウリフト"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "枠無",
+        "screenshot": null
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島　八丁堀駅-ハリウッドブロウリフト",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島　八丁堀駅-ハリウッドブロウリフト",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "ハリウッドブロウリフト"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "枠無",
+        "screenshot": null
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-パリジェンヌ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-パリジェンヌ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "パリジェンヌ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 2,
+        "screenshot": "screenshots/251109_135250_広島　八丁堀駅_パリジェンヌ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島　八丁堀駅-パリジェンヌ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島　八丁堀駅-パリジェンヌ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "パリジェンヌ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_135250_広島　八丁堀駅_パリジェンヌ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-広島　パリジェンヌ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-広島　パリジェンヌ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "広島　パリジェンヌ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_135313_広島　八丁堀駅_広島　パリジェンヌ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島　八丁堀駅-広島　パリジェンヌ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島　八丁堀駅-広島　パリジェンヌ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "広島　パリジェンヌ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_135313_広島　八丁堀駅_広島　パリジェンヌ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-広島　HBL",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-広島　HBL",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "広島　HBL"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "枠無",
+        "screenshot": null
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島　八丁堀駅-広島　HBL",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島　八丁堀駅-広島　HBL",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "広島　HBL"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "枠無",
+        "screenshot": null
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-広島　ハリウッドブロウ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-広島　ハリウッドブロウ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "広島　ハリウッドブロウ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_135353_広島　八丁堀駅_広島　ハリウッドブロウ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島　八丁堀駅-広島　ハリウッドブロウ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島　八丁堀駅-広島　ハリウッドブロウ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "広島　ハリウッドブロウ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_135353_広島　八丁堀駅_広島　ハリウッドブロウ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-広島　眉毛ワックス",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-広島　眉毛ワックス",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "広島　眉毛ワックス"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 17,
+        "screenshot": "screenshots/251109_135418_広島　八丁堀駅_広島　眉毛ワックス.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島　八丁堀駅-広島　眉毛ワックス",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島　八丁堀駅-広島　眉毛ワックス",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "広島　眉毛ワックス"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_135418_広島　八丁堀駅_広島　眉毛ワックス.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-広島　眉毛WAX",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-広島　眉毛WAX",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "広島　眉毛WAX"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 17,
+        "screenshot": "screenshots/251109_135443_広島　八丁堀駅_広島　眉毛WAX.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島　八丁堀駅-広島　眉毛WAX",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島　八丁堀駅-広島　眉毛WAX",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "広島　眉毛WAX"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_135443_広島　八丁堀駅_広島　眉毛WAX.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-広島　眉毛",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-広島　眉毛",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "広島　眉毛"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 10,
+        "screenshot": "screenshots/251109_135510_広島　八丁堀駅_広島　眉毛.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島　八丁堀駅-広島　眉毛",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島　八丁堀駅-広島　眉毛",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "広島　眉毛"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_135510_広島　八丁堀駅_広島　眉毛.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-広島　まつげ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-広島　まつげ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "広島　まつげ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 8,
+        "screenshot": "screenshots/251109_135537_広島　八丁堀駅_広島　まつげ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島　八丁堀駅-広島　まつげ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島　八丁堀駅-広島　まつげ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "広島　まつげ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_135537_広島　八丁堀駅_広島　まつげ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-広島　マツパ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-広島　マツパ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "広島　マツパ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_135602_広島　八丁堀駅_広島　マツパ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島　八丁堀駅-広島　マツパ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島　八丁堀駅-広島　マツパ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "広島　マツパ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_135602_広島　八丁堀駅_広島　マツパ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-広島　まつ毛パーマ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-広島　まつ毛パーマ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "広島　まつ毛パーマ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 8,
+        "screenshot": "screenshots/251109_135626_広島　八丁堀駅_広島　まつ毛パーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島　八丁堀駅-広島　まつ毛パーマ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島　八丁堀駅-広島　まつ毛パーマ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "広島　まつ毛パーマ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_135626_広島　八丁堀駅_広島　まつ毛パーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-広島　アイブロウ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-広島　アイブロウ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "広島　アイブロウ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 12,
+        "screenshot": "screenshots/251109_135651_広島　八丁堀駅_広島　アイブロウ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島　八丁堀駅-広島　アイブロウ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島　八丁堀駅-広島　アイブロウ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "広島　アイブロウ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_135651_広島　八丁堀駅_広島　アイブロウ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-広島　アイラッシュ",
+    "task": {
+      "id": "[google]-ケイトステージラッシュ-広島　八丁堀駅-広島　アイラッシュ",
+      "type": "google",
+      "salonName": "ケイトステージラッシュ",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "広島　アイラッシュ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 10,
+        "screenshot": "screenshots/251109_135715_広島　八丁堀駅_広島　アイラッシュ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-広島　八丁堀駅-広島　アイラッシュ",
+    "task": {
+      "id": "[google]-KATE stage LASH-広島　八丁堀駅-広島　アイラッシュ",
+      "type": "google",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "広島　八丁堀駅",
+      "keyword": "広島　アイラッシュ"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_135715_広島　八丁堀駅_広島　アイラッシュ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山駅-福山　まつげパーマ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山駅-福山　まつげパーマ",
+      "keyword": "福山　まつげパーマ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_141615_福山駅_福山　まつげパーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山駅-まつげパーマ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山駅-まつげパーマ",
+      "keyword": "まつげパーマ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_141631_福山駅_まつげパーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山駅-まつ毛パーマ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山駅-まつ毛パーマ",
+      "keyword": "まつ毛パーマ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_141648_福山駅_まつ毛パーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山駅-マツパ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山駅-マツパ",
+      "keyword": "マツパ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_141706_福山駅_マツパ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山駅-まつぱ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山駅-まつぱ",
+      "keyword": "まつぱ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_141724_福山駅_まつぱ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山駅-まつげ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山駅-まつげ",
+      "keyword": "まつげ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_141742_福山駅_まつげ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山駅-眉毛",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山駅-眉毛",
+      "keyword": "眉毛",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_141759_福山駅_眉毛.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山駅-眉毛ワックス",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山駅-眉毛ワックス",
+      "keyword": "眉毛ワックス",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 2,
+        "screenshot": "screenshots/251109_141816_福山駅_眉毛ワックス.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山駅-眉毛WAX",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山駅-眉毛WAX",
+      "keyword": "眉毛WAX",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_141833_福山駅_眉毛WAX.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山駅-アイラッシュ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山駅-アイラッシュ",
+      "keyword": "アイラッシュ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_141850_福山駅_アイラッシュ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山駅-アイブロウ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山駅-アイブロウ",
+      "keyword": "アイブロウ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 3,
+        "screenshot": "screenshots/251109_141907_福山駅_アイブロウ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山駅-HBL",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山駅-HBL",
+      "keyword": "HBL",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_141924_福山駅_HBL.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山駅-ハリウッドブロウリフト",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山駅-ハリウッドブロウリフト",
+      "keyword": "ハリウッドブロウリフト",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_141941_福山駅_ハリウッドブロウリフト.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山駅-パリジェンヌ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山駅-パリジェンヌ",
+      "keyword": "パリジェンヌ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_141958_福山駅_パリジェンヌ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山駅-福山　パリジェンヌ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山駅-福山　パリジェンヌ",
+      "keyword": "福山　パリジェンヌ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_142022_福山駅_福山　パリジェンヌ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山駅-福山　HBL",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山駅-福山　HBL",
+      "keyword": "福山　HBL",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_142047_福山駅_福山　HBL.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山駅-福山　ハリウッドブロウ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山駅-福山　ハリウッドブロウ",
+      "keyword": "福山　ハリウッドブロウ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_142110_福山駅_福山　ハリウッドブロウ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山駅-福山　眉毛ワックス",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山駅-福山　眉毛ワックス",
+      "keyword": "福山　眉毛ワックス",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 2,
+        "screenshot": "screenshots/251109_142134_福山駅_福山　眉毛ワックス.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山駅-福山　眉毛WAX",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山駅-福山　眉毛WAX",
+      "keyword": "福山　眉毛WAX",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 2,
+        "screenshot": "screenshots/251109_142157_福山駅_福山　眉毛WAX.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山駅-福山　眉毛",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山駅-福山　眉毛",
+      "keyword": "福山　眉毛",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_142230_福山駅_福山　眉毛.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山駅-福山　まつげ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山駅-福山　まつげ",
+      "keyword": "福山　まつげ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_142256_福山駅_福山　まつげ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山駅-福山　マツパ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山駅-福山　マツパ",
+      "keyword": "福山　マツパ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_142319_福山駅_福山　マツパ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山駅-福山　まつ毛パーマ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山駅-福山　まつ毛パーマ",
+      "keyword": "福山　まつ毛パーマ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_142343_福山駅_福山　まつ毛パーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山市-HBL",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山市-HBL",
+      "keyword": "HBL",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_142401_福山市_HBL.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山市-アイブロウ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山市-アイブロウ",
+      "keyword": "アイブロウ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 3,
+        "screenshot": "screenshots/251109_142424_福山市_アイブロウ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山市-アイラッシュ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山市-アイラッシュ",
+      "keyword": "アイラッシュ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_142448_福山市_アイラッシュ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山市-ハリウッドブロウ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山市-ハリウッドブロウ",
+      "keyword": "ハリウッドブロウ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_142512_福山市_ハリウッドブロウ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山市-パリジェンヌ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山市-パリジェンヌ",
+      "keyword": "パリジェンヌ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_142536_福山市_パリジェンヌ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山市-まつげ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山市-まつげ",
+      "keyword": "まつげ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_142554_福山市_まつげ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山市-まつげパーマ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山市-まつげパーマ",
+      "keyword": "まつげパーマ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_142617_福山市_まつげパーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山市-まつ毛パーマ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山市-まつ毛パーマ",
+      "keyword": "まつ毛パーマ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_142638_福山市_まつ毛パーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山市-マツパ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山市-マツパ",
+      "keyword": "マツパ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_142657_福山市_マツパ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山市-眉毛",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山市-眉毛",
+      "keyword": "眉毛",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_142717_福山市_眉毛.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山市-眉毛ワックス",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山市-眉毛ワックス",
+      "keyword": "眉毛ワックス",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 2,
+        "screenshot": "screenshots/251109_142741_福山市_眉毛ワックス.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山市-眉毛WAX",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山市-眉毛WAX",
+      "keyword": "眉毛WAX",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_142801_福山市_眉毛WAX.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山駅-福山　アイブロウ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山駅-福山　アイブロウ",
+      "keyword": "福山　アイブロウ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 3,
+        "screenshot": "screenshots/251109_142825_福山駅_福山　アイブロウ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山駅-福山　アイラッシュ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山駅-福山　アイラッシュ",
+      "keyword": "福山　アイラッシュ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山駅",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_142849_福山駅_福山　アイラッシュ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山市-福山　パリジェンヌ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山市-福山　パリジェンヌ",
+      "keyword": "福山　パリジェンヌ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_142913_福山市_福山　パリジェンヌ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山市-福山　HBL",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山市-福山　HBL",
+      "keyword": "福山　HBL",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_142936_福山市_福山　HBL.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山市-福山　まつげパーマ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山市-福山　まつげパーマ",
+      "keyword": "福山　まつげパーマ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_143000_福山市_福山　まつげパーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山市-福山　まつ毛パーマ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山市-福山　まつ毛パーマ",
+      "keyword": "福山　まつ毛パーマ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_143019_福山市_福山　まつ毛パーマ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山市-福山　マツパ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山市-福山　マツパ",
+      "keyword": "福山　マツパ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_143038_福山市_福山　マツパ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山市-福山　まつげ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山市-福山　まつげ",
+      "keyword": "福山　まつげ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_143057_福山市_福山　まつげ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山市-福山　眉毛",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山市-福山　眉毛",
+      "keyword": "福山　眉毛",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_143117_福山市_福山　眉毛.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山市-福山　眉毛ワックス",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山市-福山　眉毛ワックス",
+      "keyword": "福山　眉毛ワックス",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 2,
+        "screenshot": "screenshots/251109_143144_福山市_福山　眉毛ワックス.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山市-福山　眉毛WAX",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山市-福山　眉毛WAX",
+      "keyword": "福山　眉毛WAX",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 2,
+        "screenshot": "screenshots/251109_143209_福山市_福山　眉毛WAX.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山市-まつぱ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山市-まつぱ",
+      "keyword": "まつぱ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_143233_福山市_まつぱ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山市-福山　アイブロウ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山市-福山　アイブロウ",
+      "keyword": "福山　アイブロウ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 3,
+        "screenshot": "screenshots/251109_143257_福山市_福山　アイブロウ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山市-福山　アイラッシュ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山市-福山　アイラッシュ",
+      "keyword": "福山　アイラッシュ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": 1,
+        "screenshot": "screenshots/251109_143315_福山市_福山　アイラッシュ.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[google]-KATE stage LASH-福山市-福山　ハリウッドブロウ",
+    "task": {
+      "id": "[google]-KATE stage LASH-福山市-福山　ハリウッドブロウ",
+      "keyword": "福山　ハリウッドブロウ",
+      "salonName": "KATE stage LASH",
+      "searchLocation": "福山市",
+      "type": "google"
+    },
+    "log": [
+      {
+        "date": "2025/11/09",
+        "rank": "圏外",
+        "screenshot": "screenshots/251109_143341_福山市_福山　ハリウッドブロウ.jpg"
       }
     ]
   }

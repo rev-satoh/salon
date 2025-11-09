@@ -2,9 +2,11 @@ Flask==3.0.3
 Flask-Cors==4.0.1
 gunicorn==22.0.0
 requests==2.31.0
-beautifulsoup4
-lxml
-selenium
-webdriver-manager
-APScheduler
-Pillow
+beautifulsoup4==4.12.3
+lxml==5.2.2
+selenium==4.24.0
+webdriver-manager==4.0.2
+APScheduler==3.10.4
+Pillow==10.5.0
+openpyxl
+python-dotenv==1.0.1
