@@ -1,9 +1,15 @@
 # /Users/satoudaisuke/anaconda/salon/config.py
+import os
+from dotenv import load_dotenv
 
 """
 アプリケーション全体の設定を管理するファイル。
 このファイルを変更することで、コードを直接編集せずにアプリケーションの挙動を調整できます。
 """
+
+# --- 環境変数の読み込み ---
+load_dotenv()
+GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
 
 # --- ファイルパス設定 ---
 # 各種データや設定を保存するファイル名

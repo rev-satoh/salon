@@ -4,6 +4,7 @@ import os
 import json
 from bs4 import BeautifulSoup
 from selenium.common.exceptions import TimeoutException
+from flask import current_app
 from PIL import Image
 import config
 
@@ -48,6 +49,7 @@ def check_feature_page_ranking(driver, feature_page_url, salon_names):
             try:
                 driver.get(url)
                 time.sleep(1)
+                current_app.logger.info(f"特集ページにアクセスしました: {url}")
             except TimeoutException:
                 break
 
@@ -60,11 +62,13 @@ def check_feature_page_ranking(driver, feature_page_url, salon_names):
                 current_page_span = soup.select_one('ul.paging span.current')
                 if current_page_span:
                     try:
-                        current_page_num = int(current_page_span.get_text(strip=True))
+                        current_page_num = int(current_page_span.get_text(strip=True)) # この行は変更なし
                         if current_page_num < page:
                             # 要求したページより前のページが表示されている場合、検索の終端とみなす
+                            current_app.logger.info(f"ページネーションがスタックしました。要求ページ: {page}, 現在のページ: {current_page_num}。検索を終了します。")
                             break
                     except (ValueError, TypeError):
+                        current_app.logger.warning("現在のページ番号の解析に失敗しました。")
                         pass # ページ番号が解析できなくても処理は続行
                 else:
                     # ページネーション自体が見つからない場合も終端とみなす
@@ -100,11 +104,13 @@ def check_feature_page_ranking(driver, feature_page_url, salon_names):
                 if count_span:
                     try:
                         total_count = int(count_span.get_text(strip=True))
+                        current_app.logger.info(f"総件数を取得: {total_count}件")
                     except (ValueError, TypeError):
                         total_count = 0
 
             all_salons_on_page = soup.select('h3.slcHead a')
             if not all_salons_on_page:
+                current_app.logger.info(f"ページ {page} でサロンが見つかりませんでした。検索を終了します。")
                 break
 
             for i, salon_tag in enumerate(all_salons_on_page):
@@ -116,6 +122,7 @@ def check_feature_page_ranking(driver, feature_page_url, salon_names):
                         found_salons_map[salon_name].append({"rank": rank, "foundSalonName": current_salon_name})
 
     except Exception as e:
+        current_app.logger.error(f"特集ページ解析中にエラー: {e}")
         # エラー発生時にも、それまでに取得した情報を返す
         yield sse_format({
             "error": f"特集ページ解析中にエラー: {e}",

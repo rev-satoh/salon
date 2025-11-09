@@ -10547,8 +10547,8 @@
       },
       {
         "date": "2025/11/09",
-        "rank": "圏外",
-        "screenshot": "screenshots/251109_103523_岐阜駅_まつげ.jpg"
+        "rank": "エラー",
+        "screenshot": null
       }
     ]
   },
@@ -11124,7 +11124,7 @@
       {
         "date": "2025/11/09",
         "rank": "圏外",
-        "screenshot": "screenshots/251109_112257_岐阜駅_HBL.jpg"
+        "screenshot": "screenshots/251109_120204_岐阜駅_HBL.jpg"
       }
     ]
   },

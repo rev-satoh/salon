@@ -25,7 +25,8 @@ import threading # ロック機能のためにインポート
 from utils import sse_format, get_lat_lng_from_address # 共通関数をインポート
 from hpb_scraper import check_hotpepper_ranking
 from meo_scraper import check_meo_ranking
-from task_runner import run_scheduled_check
+from task_runner import run_scheduled_check, update_history
+from driver_manager import get_webdriver
 from seo_scraper import check_seo_ranking # SEOスクレイパーをインポート
 from excel_generator import create_excel_report # Excel生成関数をインポート
 import config # 設定ファイルをインポート
@@ -123,215 +124,19 @@ def check_ranking_api():
 
     def generate_stream():
         try:
-            # WebDriverのライフサイクルをリクエストごとに管理
-            chrome_options = Options()
-            chrome_options.add_argument("--headless")
-            chrome_options.add_argument(f"--window-size={config.DEFAULT_USER_AGENT}")
-            chrome_options.add_argument(f'user-agent={config.DEFAULT_USER_AGENT}')
-            
-            driver = None
             try:
                 yield sse_format({"status": "ブラウザを起動しています..."})
-                driver = webdriver.Chrome(options=chrome_options)
-                driver.set_page_load_timeout(config.WEBDRIVER_TIMEOUT)
-                # ジェネレータから得られる進捗をそのままクライアントに流す
-                yield from check_hotpepper_ranking(driver, serviceKeyword, salonName, areaCodes)
+                with get_webdriver() as driver:
+                    yield from check_hotpepper_ranking(driver, serviceKeyword, salonName, areaCodes)
             except Exception as e:
+                yield sse_format({"status": "ブラウザを起動しています..."})
                 app.logger.error(f"手動計測でのWebDriver生成中にエラー: {e}")
                 yield sse_format({"error": "ブラウザの起動に失敗しました。"})
-            finally:
-                if driver:
-                    driver.quit()
         finally:
             measurement_lock.release() # ストリームが終了したら必ずロックを解放
 
     # ストリーミングレスポンスを返す
     return app.response_class(generate_stream(), mimetype='text/event-stream')
-
-# --- MEO順位計測 ---
-def get_lat_lng_from_address(address):
-    """地名から緯度・経度を取得する"""
-    if not GOOGLE_API_KEY:
-        raise ValueError("Google APIキーが設定されていません。")
-
-    geocode_url = f"https://maps.googleapis.com/maps/api/geocode/json?address={urllib.parse.quote(address)}&key={GOOGLE_API_KEY}&language=ja"
-    response = requests.get(geocode_url)
-    response.raise_for_status()
-    data = response.json()
-
-    if data['status'] == 'OK':
-        location = data['results'][0]['geometry']['location']
-        return location['lat'], location['lng']
-    else:
-        raise ValueError(f"ジオコーディングに失敗しました: {data.get('error_message', data['status'])}")
-
-def check_meo_ranking(driver, keyword, location_name):
-    """Googleマップでの掲載順位をスクレイピングし、見つかった店舗をすべてリストアップするジェネレータ関数"""
-    if not GOOGLE_API_KEY:
-        yield sse_format({"error": "Google APIキーが設定されていません。"})
-        return
-    
-    # エラー発生時に備え、デバッグ用変数を初期化
-    last_url_checked = ""
-    screenshot_path = None
-
-    try:
-        # 1. 検索地点の座標を取得
-        yield sse_format({"status": f"「{location_name}」の座標を取得しています..."})
-        latitude, longitude = get_lat_lng_from_address(location_name)
-        yield sse_format({"status": f"座標 ({latitude:.4f}, {longitude:.4f}) を取得しました。"})
-        time.sleep(0.5)
-
-    except ValueError as e:
-        yield sse_format({"error": str(e)})
-        return
-    except requests.RequestException as e:
-        yield sse_format({"error": f"Google Geocoding APIへの接続に失敗しました: {e}"})
-        return
-
-    try:
-        yield sse_format({"status": "ブラウザの位置情報を設定しています..."})
-        driver.execute_cdp_cmd(
-            "Emulation.setGeolocationOverride",
-            {
-                "latitude": latitude,
-                "longitude": longitude,
-                "accuracy": 100,
-            },
-        )
-
-        # --- 検索URLをより正確に指定するように改善 ---
-        # 緯度経度と言語・国コードをURLに含めることで、検索の精度と安定性を向上させる
-        search_params = f"{urllib.parse.quote(keyword)}/@{latitude},{longitude},15z"
-        search_url = f"https://www.google.com/maps/search/{search_params}?hl=ja&gl=JP"
-        yield sse_format({"status": f"Googleマップで「{keyword}」を検索しています..."})
-        driver.get(search_url)
-
-        # --- スクレイピング処理 ---
-        # Googleマップの検索結果は動的に読み込まれるため、スクロールして要素を読み込ませる
-        # 検索結果のリストが含まれる可能性のある親要素を探す
-        scrollable_element_selector = 'div[role="feed"]' 
-        
-        try:
-            # 検索結果のフィードが表示されるまで最大10秒待機
-            wait = WebDriverWait(driver, 10)
-            scrollable_element = wait.until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, scrollable_element_selector))
-            )
-            time.sleep(1) # 描画の安定化のため少し待つ
-        except TimeoutException:
-            # マップ枠が表示されなかった場合
-            app.logger.info(f"MEO計測でマップ枠が表示されませんでした。キーワード: {keyword}")
-            # --- 修正: 結果を「枠無」に戻す ---
-            final_result = {"rank": "枠無", "results": [], "total_count": 0, "screenshot_path": None, "url": driver.current_url, "html": driver.page_source}
-            yield sse_format({"final_result": final_result, "status": "完了"})
-            return
-
-        # --- 検索結果の妥当性チェックを一旦無効化 ---
-        # Googleマップの仕様変更により、ヘッダーから正確な地名を取得するのが困難になったため、
-        # 「エリア不一致」の判定が誤動作するケースが増えていました。
-        # このため、このチェックを一旦削除し、検索が実行された結果を正として処理を続行します。
-        app.logger.info("MEO計測のエリア一致チェックは現在無効化されています。")
-
-        last_url_checked = driver.current_url
-
-        # --- スクリーンショット撮影処理の修正: ウィンドウリサイズ方式に戻す ---
-        yield sse_format({"status": "スクリーンショットを撮影しています..."})
-        # 確実にパネル全体を描画させるため、一度一番下までスクロールする
-        try:
-            driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", scrollable_element)
-            time.sleep(1) # スクロール後の描画を待つ
-            panel_height = driver.execute_script("return arguments[0].scrollHeight", scrollable_element)
-            # ウィンドウの高さをパネルの高さに合わせる（最小800px、最大8000pxの制限を追加）
-            window_height = max(800, min(panel_height, 8000))
-            driver.set_window_size(1200, window_height)
-            time.sleep(0.5)
-
-            # スクリーンショット撮影前に、スクロール位置を一番上に戻して検索バーを確実に表示させる
-            driver.execute_script("arguments[0].scrollTop = 0", scrollable_element)
-            app.logger.info("スクリーンショット撮影のため、スクロール位置をトップに戻しました。")
-            time.sleep(0.5)
-        except Exception as e:
-            app.logger.warning(f"スクリーンショットのためのリサイズ中にエラーが発生: {e}")
-
-        # --- ファイル名生成ロジックの改善 (yyMMdd形式, 接頭辞なし) ---
-        timestamp = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
-        safe_keyword = re.sub(r'[\\/:*?"<>|]', '_', keyword)
-        safe_location = re.sub(r'[\\/:*?"<>|]', '_', location_name)
-        base_filename = f"{timestamp}_{safe_location}_{safe_keyword}"
-
-        temp_png_path = os.path.join(config.SCREENSHOT_DIR, f"temp_meo_{timestamp}.png")
-        driver.save_screenshot(temp_png_path) # ページ全体を撮影
-
-        jpeg_filename = f"{base_filename}.jpg"
-        jpeg_filepath = os.path.join(config.SCREENSHOT_DIR, jpeg_filename)
-        
-        try:
-            with Image.open(temp_png_path) as img:
-                if img.mode == 'RGBA':
-                    img = img.convert('RGB')
-                img.save(jpeg_filepath, 'jpeg', quality=config.SCREENSHOT_JPEG_QUALITY) # qualityは0-95の範囲で調整可能
-            screenshot_path = jpeg_filepath
-        finally:
-            if os.path.exists(temp_png_path):
-                os.remove(temp_png_path)
-
-        # --- 店舗情報解析ロジック ---
-        yield sse_format({"status": "検索結果を解析しています..."})
-        found_salons = []
-        processed_aria_labels = set()
-        for i in range(config.MEO_SCROLL_COUNT): # 3回スクロールして最大60件程度取得を試みる
-            yield sse_format({"status": f"検索結果を解析中... ({i+1}/3)"})
-            html = driver.page_source
-            soup = BeautifulSoup(html, 'lxml')
-            
-            result_blocks = soup.select('div[role="feed"] > div > div[jsaction]')
-            for item_block in result_blocks:
-                # 広告要素は除外
-                if item_block.find('span', string=re.compile(r'\b広告\b')):
-                    continue
-                
-                name_element = item_block.find('a', {'aria-label': True})
-                if name_element and name_element['aria-label'] not in processed_aria_labels:
-                    salon_name = name_element['aria-label'].strip()
-                    found_salons.append({"rank": len(found_salons) + 1, "foundSalonName": salon_name})
-                    processed_aria_labels.add(salon_name)
-
-            # スクロールして新しい項目を読み込む
-            try:
-                scroll_target = driver.find_element(By.CSS_SELECTOR, scrollable_element_selector)
-                driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", scroll_target)
-                time.sleep(2.5) # 読み込み待機
-            except Exception as scroll_error:
-                app.logger.warning(f"スクロール中にエラーが発生しました: {scroll_error}。ループを中断します。")
-                break
-
-        # --- 最終結果の整形 ---
-        yield sse_format({"status": "結果を解析しています..."})
-        time.sleep(0.5)
-
-        final_result = {
-            "total_count": len(found_salons), # 実際にカウントしたオーガニック検索の件数
-            "screenshot_path": screenshot_path,
-            "url": last_url_checked,
-            "html": driver.page_source, # 最終的なHTMLを保存
-            "results": found_salons
-        }
-
-        yield sse_format({"final_result": final_result, "status": "完了"})
-
-    except (ValueError, requests.RequestException) as e:
-        app.logger.error(f"MEO計測の準備中にエラーが発生しました: {e}")
-        yield sse_format({"error": str(e)})
-    except Exception as e:
-        app.logger.error(f"MEO計測処理中にエラーが発生しました: {e}")
-        # エラー時にもデバッグ情報を返す
-        yield sse_format({
-            "error": f"ブラウザの操作中にエラーが発生しました: {e}",
-            "url": last_url_checked,
-            "html": driver.page_source if 'driver' in locals() and driver else "HTMLの取得に失敗しました。",
-            "screenshot_path": screenshot_path
-        })
 
 @app.route('/check-meo-ranking', methods=['GET'])
 def check_meo_ranking_api():
@@ -346,17 +151,12 @@ def check_meo_ranking_api():
 
     def generate_stream():
         try:
-            chrome_options = Options()
-            chrome_options.add_argument("--headless")
-            chrome_options.add_argument("--window-size=1200,800")
-            driver = None
             try:
-                driver = webdriver.Chrome(options=chrome_options)
-                driver.set_page_load_timeout(config.WEBDRIVER_TIMEOUT)
-                yield from check_meo_ranking(driver, keyword, location)
-            finally:
-                if driver:
-                    driver.quit()
+                with get_webdriver() as driver:
+                    yield from check_meo_ranking(driver, keyword, location)
+            except Exception as e:
+                app.logger.error(f"MEO計測でのWebDriver生成中にエラー: {e}")
+                yield sse_format({"error": "ブラウザの起動に失敗しました。"})
         finally:
             measurement_lock.release()
 
@@ -376,27 +176,12 @@ def check_seo_ranking_api():
 
     def generate_stream():
         try:
-            # --- SEO計測用のボット検出回避オプション --- # このコメントは変更なし
-            chrome_options = Options()
-            chrome_options.add_argument(f'user-agent={config.DEFAULT_USER_AGENT}')
-            chrome_options.add_argument('--headless=new')
-            chrome_options.add_argument("--window-size=1200,800")
-            chrome_options.add_argument('--disable-blink-features=AutomationControlled')
-            chrome_options.add_argument('--accept-lang=ja-JP,ja;q=0.9,en-US;q=0.8,en;q=0.7')
-            chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-            chrome_options.add_experimental_option('useAutomationExtension', False)
-            driver = None
             try:
-                driver = webdriver.Chrome(options=chrome_options)
-                driver.set_page_load_timeout(config.WEBDRIVER_TIMEOUT)
-                # --- ボット検出回避のためのスクリプトを実行 ---
-                driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
-                    "source": "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
-                })
-                yield from check_seo_ranking(driver, url_to_find, keyword, location) # locationを渡す
-            finally:
-                if driver:
-                    driver.quit()
+                with get_webdriver(is_seo=True) as driver:
+                    yield from check_seo_ranking(driver, url_to_find, keyword, location) # locationを渡す
+            except Exception as e:
+                app.logger.error(f"SEO計測でのWebDriver生成中にエラー: {e}")
+                yield sse_format({"error": "ブラウザの起動に失敗しました。"})
         finally:
             measurement_lock.release()
 
@@ -423,20 +208,13 @@ def run_feature_page_tasks_api():
 
     def generate_stream():
         try:
-            chrome_options = Options()
-            chrome_options.add_argument("--headless")
-            chrome_options.add_argument(f"--window-size={config.DEFAULT_USER_AGENT}")
-            chrome_options.add_argument(f'user-agent={config.DEFAULT_USER_AGENT}')
-            
-            driver = None
             try:
-                driver = webdriver.Chrome(options=chrome_options)
-                driver.set_page_load_timeout(config.WEBDRIVER_TIMEOUT)
-                # 特集ページ用のスクレイパーを呼び出す
-                yield from check_feature_page_ranking(driver, feature_page_url, salon_names)
-            finally:
-                if driver:
-                    driver.quit()
+                with get_webdriver() as driver:
+                    # 特集ページ用のスクレイパーを呼び出す
+                    yield from check_feature_page_ranking(driver, feature_page_url, salon_names)
+            except Exception as e:
+                app.logger.error(f"特集ページ一括計測でのWebDriver生成中にエラー: {e}")
+                yield sse_format({"error": "ブラウザの起動に失敗しました。"})
         finally:
             measurement_lock.release()
 
@@ -456,323 +234,19 @@ def check_feature_page_ranking_api():
 
     def generate_stream():
         try:
-            chrome_options = Options()
-            chrome_options.add_argument("--headless")
-            chrome_options.add_argument(f"--window-size={config.DEFAULT_USER_AGENT}")
-            chrome_options.add_argument(f'user-agent={config.DEFAULT_USER_AGENT}')
-            
-            driver = None
             try:
                 yield sse_format({"status": "ブラウザを起動しています..."})
-                driver = webdriver.Chrome(options=chrome_options)
-                driver.set_page_load_timeout(config.WEBDRIVER_TIMEOUT)
-                # 特集ページ用のスクレイパーを呼び出す
-                yield from check_feature_page_ranking(driver, feature_page_url, [salon_name])
+                with get_webdriver() as driver:
+                    # 特集ページ用のスクレイパーを呼び出す
+                    yield from check_feature_page_ranking(driver, feature_page_url, [salon_name])
             except Exception as e:
                 app.logger.error(f"特集ページ計測でのWebDriver生成中にエラー: {e}")
                 yield sse_format({"error": "ブラウザの起動に失敗しました。"})
-            finally:
-                if driver:
-                    driver.quit()
         finally:
             measurement_lock.release()
 
     return app.response_class(generate_stream(), mimetype='text/event-stream')
 
-
-# --- スケジューリング関連 ---
-def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
-    """
-    指定されたタスク、またはすべてのタスクを実行し、結果を履歴ファイルに保存する
-    :param task_ids_to_run: 実行するタスクIDのリスト。Noneの場合は全タスクを実行。
-    """
-    # --- ロックの取得を試みる ---
-    if not measurement_lock.acquire(blocking=False):
-        app.logger.warning("自動計測ジョブを開始しようとしましたが、既に別の計測が実行中のためスキップします。")
-        if stream_progress:
-            yield sse_format({"error": "現在、他の計測タスクが実行中です。"})
-        return
-    with app.app_context():
-        app.logger.info("--- 自動計測ジョブを開始します ---")
-        all_tasks = load_json_file(config.AUTO_TASKS_FILE)
-
-        tasks_to_run = []
-        if task_ids_to_run:
-            # 渡されたIDの順序を維持しつつ、重複を除外する
-            seen_ids = set()
-            unique_task_ids = []
-            for task_id in task_ids_to_run: # この行は変更なし
-                if task_id not in seen_ids:
-                    seen_ids.add(task_id)
-                    unique_task_ids.append(task_id)
-            task_ids_to_run = unique_task_ids
-            app.logger.info(f"選択された {len(task_ids_to_run)} 件のタスクを実行します。ID: {task_ids_to_run}")
-            tasks_to_run = [task for task in all_tasks if task.get('id') in task_ids_to_run]
-        else:
-            app.logger.info("スケジュールされた全タスクを実行します。")
-            tasks_to_run = all_tasks
-
-        # --- タイプ別に履歴ファイルを読み込む ---
-        history_normal = load_json_file(config.HISTORY_FILE_NORMAL)
-        history_special = load_json_file(config.HISTORY_FILE_SPECIAL)
-        history_meo = load_json_file(config.HISTORY_FILE_MEO)
-        history_seo = load_json_file(config.HISTORY_FILE_SEO) # SEO履歴を読み込む
-        today = datetime.date.today().strftime('%Y/%m/%d')
-
-        # --- ロジック見直し：タスクをタイプ別に分割し、特集ページはURLでグループ化 ---
-        normal_tasks = []
-        special_tasks_grouped_by_url = {}
-        meo_tasks = []
-        seo_tasks = [] # ループの外で初期化
-        for task in tasks_to_run:
-            task_type = task.get('type', 'normal')
-            if task_type == 'special':
-                url = task['featurePageUrl']
-                if url not in special_tasks_grouped_by_url:
-                    special_tasks_grouped_by_url[url] = []
-                special_tasks_grouped_by_url[url].append(task)
-            elif task_type == 'google':
-                meo_tasks.append(task)
-            elif task_type == 'seo':
-                seo_tasks.append(task)
-            else:
-                normal_tasks.append(task)
-
-        total_job_count = len(normal_tasks) + len(special_tasks_grouped_by_url) + len(meo_tasks) + len(seo_tasks)
-        job_counter = 0
-
-        # --- 高速化のための変更: WebDriverを一度だけ起動 ---
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")
-        chrome_options.add_argument(f"--window-size={config.DEFAULT_USER_AGENT}")
-        chrome_options.add_argument(f'user-agent={config.DEFAULT_USER_AGENT}')
-        
-        driver = None
-        try:
-            driver = webdriver.Chrome(options=chrome_options)
-            driver.set_page_load_timeout(config.WEBDRIVER_TIMEOUT)
-            
-            # --- ボット検出回避のためのスクリプトを実行 ---
-            driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
-                "source": "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"
-            })
-
-            # --- 1. 通常検索タスクの処理 ---
-            for task in normal_tasks:
-                job_counter += 1
-                task_id = task['id']
-                # --- areaNameをtaskから直接取得するように修正 ---
-                area_name_for_task = task.get('areaName', '')
-                task_name = f"[{area_name_for_task}] {task.get('serviceKeyword', '')}"
-                task['areaName'] = area_name_for_task # 念のためtaskオブジェクトにもareaNameをセット
-
-                if stream_progress:
-                    yield sse_format({"progress": {"current": job_counter, "total": total_job_count, "task": task}})
-                else:
-                    app.logger.info(f"タスク '{task_id}' の計測を開始...")
-
-                result = {}
-                scraper_generator = check_hotpepper_ranking(driver, task['serviceKeyword'], task['salonName'], task['areaCodes'])
-                for sse_message in scraper_generator:
-                    if stream_progress:
-                        data = json.loads(sse_message.split('data: ')[1])
-                        if 'status' in data:
-                            yield sse_format({"status": data['status'], "task_name": task_name})
-                    data = json.loads(sse_message.split('data: ')[1])
-                    if 'final_result' in data:
-                        result = data['final_result']
-
-                rank_to_save = result.get('results', [{}])[0].get('rank', '圏外')
-                screenshot_path_to_save = result.get('screenshot_path')
-
-                update_history(history_normal, task, today, rank_to_save, screenshot_path_to_save)
-                app.logger.info(f"タスク '{task_id}' の結果: {rank_to_save}位")
-
-                if stream_progress:
-                    yield sse_format({"result": {"rank": rank_to_save, "total_count": result.get('total_count'), "task_name": task_name, "task_id": task_id}})
-                    time.sleep(1) # フロントエンドでの表示のためのウェイト
-                else:
-                    time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX)) # 5〜15秒のランダムな待機 (elif not stream_progress: から else: に変更)
-
-            # --- 2. 特集ページタスクの処理（URLごとに一括） ---
-            for url, tasks_in_group in special_tasks_grouped_by_url.items():
-                job_counter += 1
-                salon_names_in_group = [t['salonName'] for t in tasks_in_group]
-                
-                # フロントエンドに進捗を伝えるための代表タスク
-                representative_task = tasks_in_group[0]
-                task_name = representative_task.get('featurePageName', url)
-
-                if stream_progress:
-                    yield sse_format({"progress": {"current": job_counter, "total": total_job_count, "task": representative_task}})
-                else:
-                    app.logger.info(f"特集ページ '{url}' の一括計測を開始... 対象サロン: {salon_names_in_group}")
-
-                result = {}
-                scraper_generator = check_feature_page_ranking(driver, url, salon_names_in_group)
-                for sse_message in scraper_generator:
-                    if stream_progress:
-                        data = json.loads(sse_message.split('data: ')[1])
-                        if 'status' in data:
-                            yield sse_format({"status": data['status'], "task_name": task_name})
-                    
-                    data = json.loads(sse_message.split('data: ')[1])
-                    if 'final_result' in data:
-                        result = data['final_result']
-
-                # グループ内の各タスクについて履歴を更新
-                for task in tasks_in_group:
-                    task_id = task['id']
-                    salon_name = task['salonName']
-                    
-                    # ページタイトルが取得でき、タスクに未設定なら保存
-                    page_title = result.get('page_title')
-                    if page_title and not task.get('featurePageName'):
-                        task['featurePageName'] = page_title
-                        # all_tasks内の該当タスクも更新
-                        original_task = next((t for t in all_tasks if t.get('id') == task_id), None)
-                        if original_task:
-                            original_task['featurePageName'] = page_title
-
-                    salon_results = result.get('results_map', {}).get(salon_name, [])
-                    rank_to_save = salon_results[0]['rank'] if salon_results else '圏外'
-                    screenshot_path_to_save = result.get('screenshot_path')
-
-                    update_history(history_special, task, today, rank_to_save, screenshot_path_to_save)
-                    app.logger.info(f"タスク '{task_id}' ({salon_name}) の結果: {rank_to_save}位")
-
-                    if stream_progress:
-                        # 個別のタスク名を生成して結果を送信
-                        individual_task_name = f"[{task['salonName']}] {task.get('featurePageName', task.get('featurePageUrl'))}"
-                        yield sse_format({"result": {"rank": rank_to_save, "total_count": result.get('total_count'), "task_name": individual_task_name, "task_id": task_id}})
-                        time.sleep(1)
-                
-                if not stream_progress:
-                    time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX)) # 5〜15秒のランダムな待機 (elif not stream_progress: から else: に変更)
-
-            # --- 3. MEOタスクの処理 ---
-            for task in meo_tasks:
-                job_counter += 1
-                try:
-                    task_id = task['id']
-                    task_name = f"[{task.get('searchLocation', '')}] {task.get('keyword', '')}"
-
-                    if stream_progress:
-                        yield sse_format({"progress": {"current": job_counter, "total": total_job_count, "task": task}})
-                    else:
-                        app.logger.info(f"MEOタスク '{task_id}' の計測を開始...")
-
-                    result = {}
-                    scraper_generator = check_meo_ranking(driver, task['keyword'], task['searchLocation'])
-                    for sse_message in scraper_generator:
-                        if stream_progress:
-                            data = json.loads(sse_message.split('data: ')[1])
-                            if 'status' in data:
-                                yield sse_format({"status": data['status'], "task_name": task_name})
-                        data = json.loads(sse_message.split('data: ')[1])
-                        if 'final_result' in data:
-                            result = data['final_result']
-
-                    # MEOの結果から自店の順位を特定
-                    # --- 修正: 「枠無」の場合を正しく処理する ---
-                    if result.get("rank") == "枠無":
-                        # 地図枠自体が表示されなかった場合
-                        rank_to_save = "枠無"
-                    else:
-                        my_salon_result = next((r for r in result.get('results', []) if task['salonName'].lower() in r.get('foundSalonName', '').lower()), None)
-                        rank_to_save = my_salon_result['rank'] if my_salon_result else '圏外'
-                    
-                    screenshot_path_to_save = result.get('screenshot_path')
-
-                    update_history(history_meo, task, today, rank_to_save, screenshot_path_to_save)
-                    app.logger.info(f"MEOタスク '{task_id}' の結果: {rank_to_save}")
-
-                    if stream_progress:
-                        yield sse_format({"result": {"rank": rank_to_save, "total_count": result.get('total_count'), "task_name": task_name, "task_id": task_id}})
-                        time.sleep(1)
-                    else:
-                        time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX))
-                except Exception as e:
-                    app.logger.error(f"MEOタスク '{task.get('id', '不明')}' の処理中にエラーが発生しました: {e}")
-                    update_history(history_meo, task, today, "エラー", None) # 履歴にエラーを記録
-
-            # --- 4. SEOタスクの処理 ---
-            for task in seo_tasks:
-                job_counter += 1
-                try:
-                    task_id = task['id']
-                    task_name = f"[{task.get('url')}] {task.get('keyword')}"
-
-                    if stream_progress:
-                        yield sse_format({"progress": {"current": job_counter, "total": total_job_count, "task": task}})
-                    else:
-                        app.logger.info(f"SEOタスク '{task_id}' の計測を開始...")
-
-                    result = {}
-                    scraper_generator = check_seo_ranking(driver, task['url'], task['keyword'], task.get('searchLocation'))
-                    for sse_message in scraper_generator:
-                        if stream_progress:
-                            data = json.loads(sse_message.split('data: ')[1])
-                            if 'status' in data:
-                                yield sse_format({"status": data['status'], "task_name": task_name})
-                        data = json.loads(sse_message.split('data: ')[1])
-                        if 'final_result' in data:
-                            result = data['final_result']
-
-                    rank_to_save = result.get('results', [{}])[0].get('rank', result.get('rank', '圏外'))
-                    screenshot_path_to_save = result.get('screenshot_path')
-
-                    update_history(history_seo, task, today, rank_to_save, screenshot_path_to_save)
-                    app.logger.info(f"SEOタスク '{task_id}' の結果: {rank_to_save}")
-
-                    if stream_progress:
-                        yield sse_format({"result": {"rank": rank_to_save, "task_name": task_name, "task_id": task_id}})
-                        time.sleep(1)
-                    else:
-                        time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX))
-                except Exception as e:
-                    app.logger.error(f"SEOタスク '{task.get('id', '不明')}' の処理中にエラーが発生しました: {e}")
-                    update_history(history_seo, task, today, "エラー", None)
-
-        except Exception as e:
-            app.logger.error(f"自動計測ジョブ全体でエラーが発生しました: {e}")
-        finally:
-            if driver:
-                driver.quit() # 全てのタスクが終わったらブラウザを終了
-            # --- タイプ別に履歴ファイルを保存 ---
-            save_json_file(config.HISTORY_FILE_NORMAL, history_normal)
-            save_json_file(config.HISTORY_FILE_SPECIAL, history_special)
-            save_json_file(config.HISTORY_FILE_MEO, history_meo)
-            save_json_file(config.HISTORY_FILE_SEO, history_seo) # SEO履歴を保存
-            # 特集ページ名が更新された可能性があるので、タスクファイルも保存
-            save_json_file(config.AUTO_TASKS_FILE, all_tasks)
-            
-            if stream_progress:
-                measurement_lock.release() # ストリーミングの場合はここで解放
-                yield sse_format({"final_status": f"すべての計測が完了しました。（{total_job_count}件）"})
-            else:
-                app.logger.info("--- 自動計測ジョブが完了しました ---")
-                measurement_lock.release() # 通常のジョブの場合はここで解放
-
-def update_history(history, task, date_str, rank, screenshot_path):
-    """履歴リストを更新するヘルパー関数"""
-    task_id = task['id']
-    task_history = next((item for item in history if item["id"] == task_id), None)
-    log_entry = {'date': date_str, 'rank': rank, 'screenshot': screenshot_path}
-
-    if task_history:
-        date_entry = next((d for d in task_history['log'] if d['date'] == date_str), None)
-        if date_entry:
-            date_entry.update(log_entry)
-        else:
-            task_history['log'].append(log_entry)
-            task_history['log'].sort(key=lambda x: datetime.datetime.strptime(x['date'], '%Y/%m/%d'))
-    else:
-        history.append({
-            "id": task_id,
-            "task": task,
-            "log": [log_entry]
-        })
 
 @app.route('/api/auto-tasks', methods=['GET', 'POST'])
 def handle_auto_tasks():
@@ -802,20 +276,9 @@ def save_auto_history_entry():
     # --- 正しい履歴ファイルを読み書きする ---
     history_filename = get_history_filename(task.get('type'))
     history = load_json_file(history_filename)
-    task_history = next((item for item in history if item["id"] == task_id), None)
-    log_entry = {'date': today, 'rank': result.get('rank', '圏外'), 'screenshot': result.get('screenshot_path')}
-
-    if task_history:
-        date_entry = next((d for d in task_history['log'] if d['date'] == today), None)
-        if date_entry:
-            date_entry.update(log_entry)
-        else:
-            # ログを日付でソートしてから追加
-            task_history['log'].append(log_entry)
-            task_history['log'].sort(key=lambda x: datetime.datetime.strptime(x['date'], '%Y/%m/%d'))
-
-    else:
-        history.append({"id": task_id, "task": task, "log": [log_entry]})
+    
+    # update_history関数を呼び出す
+    update_history(history, task, today, result.get('rank', '圏外'), result.get('screenshot_path'))
 
     save_json_file(history_filename, history)
     return jsonify({"message": f"タスク '{task_id}' の履歴を保存しました。"}), 200
@@ -867,8 +330,9 @@ def run_tasks_manually():
         return jsonify({"error": "実行するタスクIDのリストが必要です。"}), 400
 
     def generate_stream():
-        # run_scheduled_check と同様のロジックだが、進捗をyieldで返す
-        yield from run_scheduled_check(task_ids_to_run=task_ids, stream_progress=True)
+        with app.app_context():
+            # run_scheduled_check と同様のロジックだが、進捗をyieldで返す
+            yield from run_scheduled_check(task_ids_to_run=task_ids, stream_progress=True)
 
     return app.response_class(generate_stream(), mimetype='text/event-stream')
 
