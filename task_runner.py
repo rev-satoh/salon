@@ -114,7 +114,7 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
                     else: current_app.logger.info(f"タスク '{task_id}' の計測を開始...")
     
                     result = {}
-                    for sse_message in check_hotpepper_ranking(driver, task['serviceKeyword'], task['salonName'], task['areaCodes']):
+                    for sse_message in check_hotpepper_ranking(driver, task.get('serviceKeyword', ''), task['salonName'], task['areaCodes']):
                         data = json.loads(sse_message.split('data: ')[1])
                         if stream_progress and 'status' in data: yield sse_format({"status": data['status'], "task_name": task_name})
                         if 'final_result' in data: result = data['final_result']
