@@ -52,7 +52,7 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
     :param task_ids_to_run: 実行するタスクIDのリスト。Noneの場合は全タスクを実行。
     """
     current_app.logger.info("--- 自動計測ジョブを開始します ---")
-    all_tasks = load_json_file(config.AUTO_TASKS_FILE)
+    all_tasks = load_json_file(config.TASKS_FILE)
 
     tasks_to_run = []
     if task_ids_to_run:
@@ -69,10 +69,10 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
         current_app.logger.info("スケジュールされた全タスクを実行します。")
         tasks_to_run = all_tasks
 
-    history_normal = load_json_file(config.HISTORY_FILE_NORMAL)
-    history_special = load_json_file(config.HISTORY_FILE_SPECIAL)
-    history_meo = load_json_file(config.HISTORY_FILE_MEO)
-    history_seo = load_json_file(config.HISTORY_FILE_SEO)
+    history_normal = load_json_file(config.HISTORY_FILES['normal'])
+    history_special = load_json_file(config.HISTORY_FILES['special'])
+    history_meo = load_json_file(config.HISTORY_FILES['google'])
+    history_seo = load_json_file(config.HISTORY_FILES['seo'])
     today = datetime.date.today().strftime('%Y/%m/%d')
 
     normal_tasks = []
@@ -242,11 +242,11 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
         if stream_progress:
             yield sse_format({"error": f"計測ジョブ全体で予期せぬエラーが発生しました: {e}"})
     finally:
-        save_json_file(config.HISTORY_FILE_NORMAL, history_normal)
-        save_json_file(config.HISTORY_FILE_SPECIAL, history_special)
-        save_json_file(config.HISTORY_FILE_MEO, history_meo)
-        save_json_file(config.HISTORY_FILE_SEO, history_seo)
-        save_json_file(config.AUTO_TASKS_FILE, all_tasks)
+        save_json_file(config.HISTORY_FILES['normal'], history_normal)
+        save_json_file(config.HISTORY_FILES['special'], history_special)
+        save_json_file(config.HISTORY_FILES['google'], history_meo)
+        save_json_file(config.HISTORY_FILES['seo'], history_seo)
+        save_json_file(config.TASKS_FILE, all_tasks)
         
         if stream_progress:
             yield sse_format({"final_status": f"すべての計測が完了しました。（{total_job_count}件）"})

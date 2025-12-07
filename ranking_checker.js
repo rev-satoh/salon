@@ -40,6 +40,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const scrollToManualCheckButton = document.getElementById('scrollToManualCheckButton');
 
     const seoTaskCopySection = document.getElementById('seoTaskCopySection'); // SEOコピーセクション
+
+    // --- 状態管理オブジェクト ---
+    const state = {
+        isMeasuring: false
+    };
     // --- 自動計測タスクを保持するグローバル変数 ---
     let autoTasks = [];
 
@@ -443,9 +448,8 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
     }
 
     // --- UIの状態を管理する関数 ---
-    let isMeasuring = false;
     function setMeasuringState(measuring) {
-        isMeasuring = measuring;
+        state.isMeasuring = measuring;
         // 計測実行ボタンの状態を更新
         checkRankButton.disabled = measuring;
         manualTriggerButton.disabled = measuring;
@@ -453,9 +457,9 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
         // 計測中はモード切替とタスク追加/コピーボタンを無効化
         searchTypeToggle.querySelectorAll('button').forEach(btn => btn.disabled = measuring);
         addAutoTaskButton.disabled = measuring;
-        copyButton.disabled = measuring; // MEOコピーボタン
-        hpbNormalCopyButton.disabled = measuring; // HPB通常コピーボタン
-        hpbSpecialCopyButton.disabled = measuring; // HPB特集コピーボタン
+        document.getElementById('executeCopyButton').disabled = measuring; // MEOコピーボタン
+        document.getElementById('executeHpbNormalCopyButton').disabled = measuring; // HPB通常コピーボタン
+        document.getElementById('executeHpbSpecialCopyButton').disabled = measuring; // HPB特集コピーボタン
     }
 
     checkRankButton.addEventListener('click', async () => {
@@ -597,7 +601,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                     const data = JSON.parse(event.data);
 
                     if (data.error) {
-                        keywordResultContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${fullKeyword}」</h4><p style="color: red;">エラー: ${data.error}</p>`;
+                        keywordResultContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${escapeHtml(fullKeyword)}」</h4><p style="color: red;">エラー: ${escapeHtml(data.error)}</p>`;
                         eventSource.close();
                         reject(new Error(data.error));
                         return;
@@ -605,7 +609,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
 
                     if (data.status) {
                         // 詳細なステータスを個別の結果エリアに表示
-                        keywordResultContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${fullKeyword}」</h4><p>${data.status}</p>`;
+                        keywordResultContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${escapeHtml(fullKeyword)}」</h4><p>${escapeHtml(data.status)}</p>`;
                     }
 
                     if (data.final_result) {
@@ -726,7 +730,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                             }).catch(err => console.error('履歴の保存に失敗しました:', err));
                         }
 
-                        keywordResultContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${fullKeyword}」</h4>${totalCountHtml}${resultMessageHtml}`;
+                        keywordResultContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${escapeHtml(fullKeyword)}」</h4>${totalCountHtml}${resultMessageHtml}`;
                         keywordResultContainer.style.cursor = 'pointer';
                         keywordResultContainer.title = 'クリックして詳細（スクショとデバッグ情報）を表示';
                         keywordResultContainer.onclick = () => openResultInNewTab(result);
@@ -737,7 +741,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                 };
 
                 eventSource.onerror = (err) => {
-                    keywordResultContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${fullKeyword}」</h4><p style="color: red;">エラー: サーバーとの接続に失敗しました。</p>`;
+                    keywordResultContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${escapeHtml(fullKeyword)}」</h4><p style="color: red;">エラー: サーバーとの接続に失敗しました。</p>`;
                     eventSource.close();
                     reject(err);
                 };
@@ -1260,9 +1264,10 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                 groupHeader.appendChild(groupCheckbox);
 
                 const groupLabel = document.createElement('label');
-                groupLabel.textContent = groupKey;
+                groupLabel.textContent = groupKey; // この行は変更なし
                 groupLabel.style.cursor = 'pointer';
                 groupLabel.style.flexGrow = '1'; // この行は変更なし
+                groupLabel.onclick = () => groupCheckbox.click();
                 groupHeader.appendChild(groupLabel);
 
                 autoTaskList.appendChild(groupHeader);
@@ -1280,10 +1285,8 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
 
                 groupCheckbox.addEventListener('change', (e) => {
                     const isChecked = e.target.checked;
-                    const key = e.target.dataset.groupKey;
-                    taskUl.querySelectorAll(`.auto-task-checkbox[data-group-key="${key}"]`).forEach(cb => {
-                        cb.checked = isChecked;
-                    });
+                    const key = e.target.dataset.groupKey; // この行は変更なし
+                    taskUl.querySelectorAll(`.auto-task-checkbox[data-group-key="${key}"]`).forEach(cb => { cb.checked = isChecked; });
                 });
             });
         } else if (activeSearchType === 'normal') { // HPB通常検索のグループ化を追加
@@ -1326,7 +1329,21 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                 autoTaskList.appendChild(groupHeader);
 
                 tasksInGroup.sort((a, b) => (a.serviceKeyword || '').localeCompare(b.serviceKeyword || '', 'ja'));
-                tasksInGroup.forEach(task => renderTaskItem(task, autoTaskList, groupKey)); // この行は変更なし
+                
+                // --- 修正点1: グループごとの<ul>を作成 ---
+                const taskUl = document.createElement('ul');
+                taskUl.style.listStyle = 'none';
+                taskUl.style.paddingLeft = '0'; // インデントはrenderTaskItem側で調整
+                autoTaskList.appendChild(taskUl);
+
+                tasksInGroup.forEach(task => renderTaskItem(task, taskUl, groupKey));
+
+                // --- 修正点2: グループチェックボックスのイベントリスナーを追加 ---
+                groupCheckbox.addEventListener('change', (e) => {
+                    const isChecked = e.target.checked;
+                    const key = e.target.dataset.groupKey;
+                    taskUl.querySelectorAll(`.auto-task-checkbox[data-group-key="${key}"]`).forEach(cb => { cb.checked = isChecked; });
+                });
             });
         } else if (activeSearchType === 'special') { // HPB特集検索のグループ化を追加
             const groupedTasks = filteredTasks.reduce((acc, task) => {
@@ -1374,7 +1391,18 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                 autoTaskList.appendChild(groupHeader);
 
                 tasksInGroup.sort((a, b) => (a.salonName || '').localeCompare(b.salonName || '', 'ja'));
-                tasksInGroup.forEach(task => renderTaskItem(task, autoTaskList, groupKey));
+                
+                const taskUl = document.createElement('ul');
+                taskUl.style.listStyle = 'none';
+                taskUl.style.paddingLeft = '0';
+                autoTaskList.appendChild(taskUl);
+
+                tasksInGroup.forEach(task => renderTaskItem(task, taskUl, groupKey));
+
+                groupCheckbox.addEventListener('change', (e) => {
+                    const isChecked = e.target.checked;
+                    taskUl.querySelectorAll(`.auto-task-checkbox[data-group-key="${groupKey}"]`).forEach(cb => { cb.checked = isChecked; });
+                });
             });
         } else if (activeSearchType === 'seo') { // SEOのグループ化を追加
             const groupedTasks = filteredTasks.reduce((acc, task) => {
@@ -1416,15 +1444,23 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                 autoTaskList.appendChild(groupHeader);
 
                 tasksInGroup.sort((a, b) => (a.keyword || '').localeCompare(b.keyword || '', 'ja'));
-                tasksInGroup.forEach(task => renderTaskItem(task, autoTaskList, groupKey));
+                
+                const taskUl = document.createElement('ul');
+                taskUl.style.listStyle = 'none';
+                taskUl.style.paddingLeft = '0';
+                autoTaskList.appendChild(taskUl);
+
+                tasksInGroup.forEach(task => renderTaskItem(task, taskUl, groupKey));
+
+                groupCheckbox.addEventListener('change', (e) => {
+                    const isChecked = e.target.checked;
+                    taskUl.querySelectorAll(`.auto-task-checkbox[data-group-key="${groupKey}"]`).forEach(cb => { cb.checked = isChecked; });
+                });
             });
-        } else { // 特集ページの場合 (グループ化なし)
-            // ソートして表示
-            filteredTasks.sort((a, b) => (a.id).localeCompare(b.id, 'ja'));
-            filteredTasks.forEach(task => {
-                renderTaskItem(task, autoTaskList);
-            });
-        }
+        } // 以前のelseブロックは、すべての検索タイプがif/else ifで処理されるため到達不能。
+          // そのため、このブロックは削除します。
+          // もしグループ化しないタスクタイプが将来的に追加される場合は、
+          // そのための新しいelse ifブロックを追加する必要があります。
     };
 
     function renderTaskItem(task, parentElement, groupKey = null) {
@@ -1450,11 +1486,11 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
         taskLabel.style.cursor = 'pointer';
         taskLabel.style.marginRight = '10px';
         // グループチェックボックスと連動させるためのイベントを追加
-        taskLabel.onclick = (e) => { if (e.target.tagName !== 'INPUT') checkbox.click(); };
+        taskLabel.addEventListener('click', (e) => { if (e.target.tagName !== 'INPUT') checkbox.click(); });
 
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
-        checkbox.className = 'auto-task-checkbox';
+        checkbox.classList.add('auto-task-checkbox');
         checkbox.value = task.id;
         if (groupKey) {
             checkbox.dataset.groupKey = groupKey;
@@ -1480,7 +1516,7 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
         deleteButton.textContent = '削除';
         deleteButton.className = 'button-secondary';
         deleteButton.style.padding = '4px 8px';
-        deleteButton.style.fontSize = '13px';
+        deleteButton.style.fontSize = '12px';
         deleteButton.style.flexShrink = '0';
         deleteButton.onclick = () => {
             if (confirm(`「${taskText.textContent}」を削除しますか？`)) {
@@ -1492,21 +1528,6 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
         };
         li.appendChild(deleteButton);
         parentElement.appendChild(li);
-
-        // グループチェックボックスのイベントリスナー
-        if (groupKey) {
-            const groupCheckbox = document.querySelector(`input[type="checkbox"][data-group-key="${groupKey}"]`);
-            if (groupCheckbox) {
-                groupCheckbox.addEventListener('change', (e) => {
-                    const isChecked = e.target.checked; // この行は変更なし
-                    const key = e.target.dataset.groupKey;
-                    // 同じ親要素内の、同じグループキーを持つタスクチェックボックスの状態を同期
-                    parentElement.querySelectorAll(`.auto-task-checkbox[data-group-key="${key}"]`).forEach(cb => {
-                        cb.checked = isChecked;
-                    });
-                });
-            }
-        }
     };
 
     addAutoTaskButton.addEventListener('click', () => {
@@ -1639,6 +1660,13 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
         autoTaskList.querySelectorAll('.auto-task-checkbox').forEach(cb => {
             cb.checked = e.target.checked;
         });
+        // グループチェックボックスも同期
+        const isChecked = e.target.checked;
+        autoTaskList.querySelectorAll('input[type="checkbox"][data-group-key]').forEach(groupCb => {
+            if (groupCb.checked !== isChecked) {
+                groupCb.checked = isChecked;
+            }
+        });
     });
 
     manualTriggerButton.addEventListener('click', async () => {
@@ -1675,23 +1703,6 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
         const startTime = performance.now();
         let timerInterval = null;
 
-        // --- 処理を通常検索と特集ページ検索に分割 ---
-        const normalTaskIds = tasksToRun
-            .filter(t => (t.type || 'normal') === 'normal')
-            .map(t => t.id);
-
-        const specialTaskIds = tasksToRun // 特集ページタスク
-            .filter(t => t.type === 'special')
-            .map(t => t.id);
-
-        const meoTaskIds = tasksToRun // MEOタスク
-            .filter(t => t.type === 'google')
-            .map(t => t.id);
-
-        const seoTaskIds = tasksToRun // SEOタスク
-            .filter(t => t.type === 'seo')
-            .map(t => t.id);
-
         // --- 経過時間表示タイマーを開始 ---
         timerInterval = setInterval(() => {
             const elapsedTotalSeconds = Math.floor((performance.now() - startTime) / 1000);
@@ -1706,139 +1717,158 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
             }
         }, 1000);
 
-        const promises = [];
-
         // --- 汎用的なストリーム処理関数 ---
-        const processStream = (taskIds) => {
+        const processStream = (taskIds) => { // この関数は1回だけ呼び出されるように変更
             if (taskIds.length === 0) {
                 return Promise.resolve();
             }
 
-            return new Promise((resolve, reject) => {
-                const params = new URLSearchParams({ task_ids: JSON.stringify(taskIds) });
-                const eventSource = new EventSource(`/api/run-tasks-manually?${params.toString()}`);
+            // EventSourceはPOSTリクエストのbodyを直接サポートしないため、fetch APIで代用
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const response = await fetch('/api/run-tasks-manually', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ task_ids: taskIds })
+                    });
 
-                eventSource.onmessage = (event) => {
-                    const data = JSON.parse(event.data);
-
-                    if (data.error) {
-                        const errorContainer = document.createElement('div');
-                        errorContainer.innerHTML = `<p style="color: red;">エラー: ${data.error}</p>`;
-                        resultArea.appendChild(errorContainer);
-                        eventSource.close();
-                        reject(new Error(data.error));
-                        return;
+                    if (!response.body) {
+                        throw new Error('Response body is missing');
                     }
 
-                    if (data.progress) {
-                        const { current, total, task } = data.progress;
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder();
 
-                        // --- 全体の進捗状況を更新 ---
-                        let taskNameForStatus = '';
-                        if (task.type === 'special') {
-                            taskNameForStatus = task.featurePageName || task.featurePageUrl;
-                        } else if (task.type === 'google') {
-                            taskNameForStatus = `[${task.searchLocation}] ${task.keyword}`;
-                        } else if (task.type === 'seo') {
-                            taskNameForStatus = `[${task.url}] ${task.keyword}`;
-                        } else { // normal or default
-                            taskNameForStatus = `[${task.areaName}] ${task.serviceKeyword}`;
+                    const processText = ({ done, value }) => {
+                        if (done) {
+                            resolve();
+                            return;
                         }
-                        
-                        const overallStatusContainer = document.getElementById('overallStatus');
-                        if (overallStatusContainer) {
-                            overallStatusContainer.textContent = `${current} / ${total} 件目: 「${taskNameForStatus}」を計測中... `; // 末尾にスペース
-                        }                        
-                        if (task.type === 'special') {
-                            // 特集ページの場合
-                            const tasksInGroup = tasksToRun.filter(t => t.featurePageUrl === task.featurePageUrl);
-                            tasksInGroup.forEach(groupTask => {
-                                const taskId = groupTask.id;
-                                const fullKeyword = `[${groupTask.salonName}] ${groupTask.featurePageName || groupTask.featurePageUrl}`;
-                                const taskContainer = document.createElement('div');
-                                taskContainer.id = `task-container-${taskId}`;
-                                taskContainer.style.borderBottom = '1px solid #e5e5e7';
-                                taskContainer.style.paddingBottom = '15px';
-                                taskContainer.style.marginBottom = '15px';
-                                taskContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${fullKeyword}」</h4><p>計測を開始します...</p>`;
-                                resultArea.appendChild(taskContainer);
-                            });
-                        } else if (task.type === 'google') {
-                            // MEOの場合
-                            const taskId = task.id;
-                            const fullKeyword = `[${task.searchLocation}] ${task.keyword}`;
-                            const taskContainer = document.createElement('div');
-                            taskContainer.id = `task-container-${taskId}`;
-                            taskContainer.style.borderBottom = '1px solid #e5e5e7';
-                            taskContainer.style.paddingBottom = '15px';
-                            taskContainer.style.marginBottom = '15px';
-                            taskContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${fullKeyword}」</h4><p>計測を開始します...</p>`;
-                            resultArea.appendChild(taskContainer);
-                        } else if (task.type === 'seo') {
-                            // SEOの場合
-                            const taskId = task.id;
-                            const fullKeyword = `[${task.url}] ${task.keyword}`;
-                            const taskContainer = document.createElement('div');
-                            taskContainer.id = `task-container-${taskId}`;
-                            taskContainer.style.borderBottom = '1px solid #e5e5e7';
-                            taskContainer.style.paddingBottom = '15px';
-                            taskContainer.style.marginBottom = '15px';
-                            taskContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${fullKeyword}」</h4><p>計測を開始します...</p>`;
-                            resultArea.appendChild(taskContainer);
-                        } else {
-                            const taskId = task.id;
-                            const fullKeyword = `[${task.areaName}] ${task.serviceKeyword}`;
-                            const taskContainer = document.createElement('div');
-                            taskContainer.id = `task-container-${taskId}`;
-                            taskContainer.style.borderBottom = '1px solid #e5e5e7';
-                            taskContainer.style.paddingBottom = '15px';
-                            taskContainer.style.marginBottom = '15px';
-                            taskContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${fullKeyword}」</h4><p>計測を開始します...</p>`;
-                            resultArea.appendChild(taskContainer);
-                        }
-                    }
 
-                    if (data.status) {
-                        // statusイベントは特定のタスクIDに紐付かない場合があるため、最後のコンテナを更新
-                        const lastContainer = resultArea.querySelector('div:last-of-type');
-                        if (lastContainer) {
-                            lastContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${data.task_name}」</h4><p>${data.status}</p>`;
-                        }
-                    }
+                        const chunk = decoder.decode(value, { stream: true });
+                        // SSEは "data: {...}\n\n" の形式で送られてくるので、それで分割
+                        const lines = chunk.split('\n\n');
 
-                    if (data.result) {
-                        const { rank, total_count, task_name, task_id } = data.result;
-                        const taskContainer = document.getElementById(`task-container-${task_id}`);
-                        if (!taskContainer) return; // 対応するコンテナがなければ何もしない
-                        const totalCountHtml = (total_count !== undefined) ? `<p style="font-size: 14px; color: #6c6c70; margin-bottom: 10px;">検索結果総数: <strong style="color: #1c1c1e;">${total_count}</strong> 件</p>` : '';
-                        const resultMessageHtml = `<p style="margin: 0; font-size: 18px; font-weight: bold;"><span style="color: #007aff; font-size: 1.3em;">${rank}</span> 位</p>`;
-                        taskContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${task_name}」</h4>${totalCountHtml}${resultMessageHtml}`;
-                    }
+                        lines.forEach(line => {
+                            if (line.startsWith('data: ')) {
+                                const jsonData = line.substring(6);
+                                if (!jsonData) return;
 
-                    if (data.final_status) {
-                        eventSource.close();
-                        resolve(); // ストリームが完了したらPromiseを解決
-                    }
-                };
+                                const data = JSON.parse(jsonData);
 
-                eventSource.onerror = (err) => {
+                                if (data.error) {
+                                    const errorContainer = document.createElement('div');
+                                    errorContainer.innerHTML = `<p style="color: red;">エラー: ${escapeHtml(data.error)}</p>`;
+                                    resultArea.appendChild(errorContainer);
+                                    reject(new Error(data.error));
+                                    return;
+                                }
+
+                                if (data.progress) {
+                                    const { current, total, task } = data.progress;
+
+                                    // --- 全体の進捗状況を更新 ---
+                                    let taskNameForStatus = '';
+                                    if (task.type === 'special') {
+                                        taskNameForStatus = task.featurePageName || task.featurePageUrl;
+                                    } else if (task.type === 'google') {
+                                        taskNameForStatus = `[${task.searchLocation}] ${task.keyword}`;
+                                    } else if (task.type === 'seo') {
+                                        taskNameForStatus = `[${task.url}] ${task.keyword}`;
+                                    } else { // normal or default
+                                        taskNameForStatus = `[${task.areaName}] ${task.serviceKeyword}`;
+                                    }
+                                    
+                                    const overallStatusContainer = document.getElementById('overallStatus');
+                                    if (overallStatusContainer) {
+                                        overallStatusContainer.textContent = `${current} / ${total} 件目: 「${taskNameForStatus}」を計測中... `; // 末尾にスペース
+                                    }                        
+                                    if (task.type === 'google') {
+                                        // MEOの場合
+                                        const taskId = task.id;
+                                        const fullKeyword = `[${task.searchLocation}] ${task.keyword}`;
+                                        const taskContainer = document.createElement('div');
+                                        taskContainer.id = `task-container-${taskId}`;
+                                        taskContainer.style.borderBottom = '1px solid #e5e5e7';
+                                        taskContainer.style.paddingBottom = '15px';
+                                        taskContainer.style.marginBottom = '15px';
+                                        taskContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${fullKeyword}」</h4><p>計測を開始します...</p>`;
+                                        resultArea.appendChild(taskContainer);
+                                    } else if (task.type === 'seo') {
+                                        // SEOの場合
+                                        const taskId = task.id;
+                                        const fullKeyword = `[${task.url}] ${task.keyword}`;
+                                        const taskContainer = document.createElement('div');
+                                        taskContainer.id = `task-container-${taskId}`;
+                                        taskContainer.style.borderBottom = '1px solid #e5e5e7';
+                                        taskContainer.style.paddingBottom = '15px';
+                                        taskContainer.style.marginBottom = '15px';
+                                        taskContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${fullKeyword}」</h4><p>計測を開始します...</p>`;
+                                        resultArea.appendChild(taskContainer);
+                                    } else {
+                                        const taskId = task.id;
+                                        const fullKeyword = `[${task.areaName}] ${task.serviceKeyword}`;
+                                        const taskContainer = document.createElement('div');
+                                        taskContainer.id = `task-container-${taskId}`;
+                                        taskContainer.style.borderBottom = '1px solid #e5e5e7';
+                                        taskContainer.style.paddingBottom = '15px';
+                                        taskContainer.style.marginBottom = '15px';
+                                        taskContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${fullKeyword}」</h4><p>計測を開始します...</p>`;
+                                        resultArea.appendChild(taskContainer);
+                                    }
+                                }
+
+                                if (data.status) {
+                                    // statusイベントは特定のタスクIDに紐付かない場合があるため、最後のコンテナを更新
+                                    const lastContainer = resultArea.querySelector('div:last-of-type');
+                                    if (lastContainer) {
+                                        lastContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${escapeHtml(data.task_name)}」</h4><p>${escapeHtml(data.status)}</p>`;
+                                    }
+                                }
+
+                                if (data.result) {
+                                    const { rank, total_count, task_name, task_id } = data.result;
+                                    let taskContainer = document.getElementById(`task-container-${task_id}`);
+                                    
+                                    // --- 堅牢性の向上: コンテナが見つからない場合は新規作成 ---
+                                    if (!taskContainer) {
+                                        console.warn(`Task container for ${task_id} not found. Creating a new one.`);
+                                        taskContainer = document.createElement('div');
+                                        taskContainer.id = `task-container-${task_id}`;
+                                        resultArea.appendChild(taskContainer);
+                                    }
+                                    const totalCountHtml = (total_count !== undefined) ? `<p style="font-size: 14px; color: #6c6c70; margin-bottom: 10px;">検索結果総数: <strong style="color: #1c1c1e;">${total_count}</strong> 件</p>` : '';
+                                    
+                                    const resultMessageHtml = `<p style="margin: 0; font-size: 18px; font-weight: bold;"><span style="color: #007aff; font-size: 1.3em;">${rank}</span> 位</p>`;
+                                    taskContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${escapeHtml(task_name)}」</h4>${totalCountHtml}${resultMessageHtml}`;
+                                }
+
+                                if (data.final_status) {
+                                    // ストリームの終端なので、ここでループを抜ける
+                                    return;
+                                }
+                            }
+                        });
+                        // 次のデータを読み込む
+                        reader.read().then(processText);
+                    };
+
+                    reader.read().then(processText);
+
+                } catch (err) {
                     console.error("EventSource failed:", err);
                     const errorContainer = document.createElement('div');
-                    errorContainer.innerHTML = `<p style="color: red;">サーバーとの接続に失敗しました。</p>`;
+                    errorContainer.innerHTML = `<p style="color: red;">サーバーとの接続に失敗しました。</p>`; // このメッセージは固定なのでエスケープ不要
                     resultArea.appendChild(errorContainer);
-                    eventSource.close();
                     reject(err);
                 }
             });
-        }
-
-        // 各タイプのタスクをそれぞれ（並行して）実行
-        promises.push(processStream(normalTaskIds));
-        promises.push(processStream(specialTaskIds));
-        promises.push(processStream(meoTaskIds));
-        promises.push(processStream(seoTaskIds));
+        };
 
         try {
+            // --- 修正点: 全てのタスクIDを1つのリクエストにまとめて送信 ---
+            const allTaskIds = Array.from(selectedTaskIds);
+            const promises = [processStream(allTaskIds)];
             // すべてのストリーム処理が終わるのを待つ
             await Promise.all(promises);
             // --- タイマーを停止 ---
@@ -2320,10 +2350,14 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
     // --- ページ読み込み時にタスク一覧の表示状態を復元 ---
     const taskListVisible = localStorage.getItem('taskListVisible');
     if (taskListVisible === 'true') {
+        autoTaskListContent.style.display = 'block'; // 明示的に表示がtrueなら表示
+        taskListToggleIcon.style.transform = 'rotate(180deg)'; // アイコンも開いた状態に
+    } else if (taskListVisible === 'false') { // 明示的に非表示がtrueなら非表示
+        autoTaskListContent.style.display = 'none';
+        taskListToggleIcon.style.transform = 'rotate(0deg)'; // アイコンは閉じた状態に
+    } else { // localStorageに設定がない場合（初回アクセスなど）、デフォルトで表示する
         autoTaskListContent.style.display = 'block';
-        taskListToggleIcon.style.transform = 'rotate(180deg)';
-    } else {
-        taskListToggleIcon.style.transform = 'rotate(0deg)';
+        taskListToggleIcon.style.transform = 'rotate(180deg)'; // アイコンは開いた状態に
     }
     fetchSchedule();
 

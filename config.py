@@ -13,12 +13,15 @@ GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
 
 # --- ファイルパス設定 ---
 # 各種データや設定を保存するファイル名
-AUTO_TASKS_FILE = 'auto_tasks.json'
-HISTORY_FILE_NORMAL = 'history_normal.json'
-HISTORY_FILE_SPECIAL = 'history_special.json'
-HISTORY_FILE_MEO = 'history_meo.json'
-HISTORY_FILE_SEO = 'history_seo.json'
+TASKS_FILE = 'auto_tasks.json'
 SCHEDULER_CONFIG_FILE = 'scheduler_config.json'
+
+HISTORY_FILES = {
+    'normal': 'history_normal.json',
+    'special': 'history_special.json',
+    'google': 'history_meo.json',
+    'seo': 'history_seo.json'
+}
 
 # --- スクレイピング共通設定 ---
 # Seleniumのページ読み込みタイムアウト時間（秒）
