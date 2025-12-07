@@ -46,6 +46,172 @@ def update_history(history, task, date_str, rank, screenshot_path):
             "log": [log_entry]
         })
 
+def _run_normal_tasks(driver, tasks, history, today, stream_progress, job_counter, total_job_count):
+    """HPB通常検索タスクを実行する"""
+    for task in tasks:
+        job_counter += 1
+        task_id = task['id']
+        area_name_for_task = task.get('areaName', '')
+        task_name = f"[{area_name_for_task}] {task.get('serviceKeyword', '')}"
+        task['areaName'] = area_name_for_task
+
+        if stream_progress:
+            yield sse_format({"progress": {"current": job_counter, "total": total_job_count, "task": task}})
+        else:
+            current_app.logger.info(f"タスク '{task_id}' の計測を開始...")
+
+        result = {}
+        try:
+            for sse_message in check_hotpepper_ranking(driver, task.get('serviceKeyword', ''), task['salonName'], task['areaCodes']):
+                data = json.loads(sse_message.split('data: ')[1])
+                if stream_progress and 'status' in data:
+                    yield sse_format({"status": data['status'], "task_name": task_name})
+                if 'final_result' in data:
+                    result = data['final_result']
+        except Exception as e:
+            current_app.logger.error(f"HPB通常タスク '{task_id}' の実行中にエラー: {e}")
+            result = {"rank": "エラー"}
+
+        rank_to_save = result.get('results', [{}])[0].get('rank', result.get('rank', '圏外'))
+        update_history(history, task, today, rank_to_save, result.get('screenshot_path'))
+        current_app.logger.info(f"タスク '{task_id}' の結果: {rank_to_save}位")
+
+        if stream_progress:
+            yield sse_format({"result": {"rank": rank_to_save, "total_count": result.get('total_count'), "task_name": task_name, "task_id": task_id}})
+            time.sleep(1)
+        else:
+            time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX))
+    return job_counter
+
+def _run_special_tasks(driver, tasks_grouped, history, all_tasks, today, stream_progress, job_counter, total_job_count):
+    """HPB特集ページタスクを実行する"""
+    for url, tasks_in_group in tasks_grouped.items():
+        job_counter += 1
+        salon_names_in_group = [t['salonName'] for t in tasks_in_group]
+        representative_task = tasks_in_group[0]
+        task_name = representative_task.get('featurePageName', url)
+
+        if stream_progress:
+            yield sse_format({"progress": {"current": job_counter, "total": total_job_count, "task": representative_task}})
+        else:
+            current_app.logger.info(f"特集ページ '{url}' の一括計測を開始... 対象サロン: {salon_names_in_group}")
+
+        result = {}
+        try:
+            for sse_message in check_feature_page_ranking(driver, url, salon_names_in_group):
+                data = json.loads(sse_message.split('data: ')[1])
+                if stream_progress and 'status' in data:
+                    yield sse_format({"status": data['status'], "task_name": task_name})
+                if 'final_result' in data:
+                    result = data['final_result']
+        except Exception as e:
+            current_app.logger.error(f"HPB特集タスク '{url}' の実行中にエラー: {e}")
+            result = {}
+
+        for task in tasks_in_group:
+            task_id = task['id']
+            salon_name = task['salonName']
+            page_title = result.get('page_title')
+            if page_title and not task.get('featurePageName'):
+                task['featurePageName'] = page_title
+                original_task = next((t for t in all_tasks if t.get('id') == task_id), None)
+                if original_task: original_task['featurePageName'] = page_title
+
+            salon_results = result.get('results_map', {}).get(salon_name, [])
+            rank_to_save = salon_results[0]['rank'] if salon_results else '圏外'
+            update_history(history, task, today, rank_to_save, result.get('screenshot_path'))
+            current_app.logger.info(f"タスク '{task_id}' ({salon_name}) の結果: {rank_to_save}位")
+
+            if stream_progress:
+                individual_task_name = f"[{task['salonName']}] {task.get('featurePageName', task.get('featurePageUrl'))}"
+                yield sse_format({"result": {"rank": rank_to_save, "total_count": result.get('total_count'), "task_name": individual_task_name, "task_id": task_id}})
+                time.sleep(1)
+        
+        if not stream_progress:
+            time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX))
+    return job_counter
+
+def _run_meo_tasks(driver, tasks_grouped, history, today, stream_progress, job_counter, total_job_count):
+    """MEOタスクを実行する"""
+    for (location, keyword), tasks_in_group in tasks_grouped.items():
+        job_counter += 1
+        representative_task = tasks_in_group[0]
+        task_name = f"[{location}] {keyword}"
+
+        if stream_progress:
+            yield sse_format({"progress": {"current": job_counter, "total": total_job_count, "task": representative_task}})
+        else:
+            current_app.logger.info(f"MEO一括計測 '{task_name}' を開始...")
+
+        result = {}
+        try:
+            scraper_generator = check_meo_ranking(driver, keyword, location)
+            for sse_message in scraper_generator:
+                data = json.loads(sse_message.split('data: ')[1])
+                if stream_progress and 'status' in data:
+                    yield sse_format({"status": data['status'], "task_name": task_name})
+                if 'final_result' in data:
+                    result = data['final_result']
+        except Exception as e:
+            current_app.logger.error(f"MEOタスク '{task_name}' の実行中にエラー: {e}")
+            result = {}
+
+        for task in tasks_in_group:
+            try:
+                task_id = task['id']
+                if result.get("rank") == "枠無":
+                    rank_to_save = "枠無"
+                else:
+                    my_salon_result = next((r for r in result.get('results', []) if task['salonName'].lower() in r.get('foundSalonName', '').lower()), None)
+                    rank_to_save = my_salon_result['rank'] if my_salon_result else '圏外'
+                
+                screenshot_path_to_save = result.get('screenshot_path')
+                update_history(history, task, today, rank_to_save, screenshot_path_to_save)
+                current_app.logger.info(f"MEOタスク '{task_id}' の結果: {rank_to_save}")
+
+                if stream_progress:
+                    individual_task_name = f"[{task['salonName']}] {task_name}"
+                    yield sse_format({"result": {"rank": rank_to_save, "total_count": result.get('total_count'), "task_name": individual_task_name, "task_id": task_id}})
+                    time.sleep(1)
+            except Exception as e:
+                current_app.logger.error(f"MEOタスク '{task.get('id', '不明')}' の結果処理中にエラー: {e}")
+                update_history(history, task, today, "エラー", None)
+
+        if not stream_progress:
+            time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX))
+    return job_counter
+
+def _run_seo_tasks(driver, tasks, history, today, stream_progress, job_counter, total_job_count):
+    """SEOタスクを実行する"""
+    for task in tasks:
+        job_counter += 1
+        try:
+            task_id = task['id']
+            task_name = f"[{task.get('url')}] {task.get('keyword')}"
+
+            if stream_progress: yield sse_format({"progress": {"current": job_counter, "total": total_job_count, "task": task}})
+            else: current_app.logger.info(f"SEOタスク '{task_id}' の計測を開始...")
+
+            result = {}
+            for sse_message in check_seo_ranking(driver, task['url'], task['keyword'], task.get('searchLocation')):
+                data = json.loads(sse_message.split('data: ')[1])
+                if stream_progress and 'status' in data: yield sse_format({"status": data['status'], "task_name": task_name})
+                if 'final_result' in data: result = data['final_result']
+
+            rank_to_save = result.get('results', [{}])[0].get('rank', result.get('rank', '圏外'))
+            update_history(history, task, today, rank_to_save, result.get('screenshot_path'))
+            current_app.logger.info(f"SEOタスク '{task_id}' の結果: {rank_to_save}")
+
+            if stream_progress:
+                yield sse_format({"result": {"rank": rank_to_save, "task_name": task_name, "task_id": task_id}})
+                time.sleep(1)
+            else:
+                time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX))
+        except Exception as e:
+            current_app.logger.error(f"SEOタスク '{task.get('id', '不明')}' の処理中にエラーが発生しました: {e}")
+            update_history(history, task, today, "エラー", None)
+    return job_counter
+
 def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
     """
     指定されたタスク、またはすべてのタスクを実行し、結果を履歴ファイルに保存する
@@ -103,145 +269,38 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
         # --- HPB通常, 特集, MEOタスクの処理 ---
         if normal_tasks or special_tasks_grouped_by_url or meo_tasks_grouped:
             with get_webdriver(is_seo=False) as driver:
-                for task in normal_tasks:
-                    job_counter += 1
-                    task_id = task['id']
-                    area_name_for_task = task.get('areaName', '')
-                    task_name = f"[{area_name_for_task}] {task.get('serviceKeyword', '')}"
-                    task['areaName'] = area_name_for_task
-    
-                    if stream_progress: yield sse_format({"progress": {"current": job_counter, "total": total_job_count, "task": task}})
-                    else: current_app.logger.info(f"タスク '{task_id}' の計測を開始...")
-    
-                    result = {}
-                    for sse_message in check_hotpepper_ranking(driver, task.get('serviceKeyword', ''), task['salonName'], task['areaCodes']):
-                        data = json.loads(sse_message.split('data: ')[1])
-                        if stream_progress and 'status' in data: yield sse_format({"status": data['status'], "task_name": task_name})
-                        if 'final_result' in data: result = data['final_result']
-    
-                    rank_to_save = result.get('results', [{}])[0].get('rank', '圏外')
-                    update_history(history_normal, task, today, rank_to_save, result.get('screenshot_path'))
-                    current_app.logger.info(f"タスク '{task_id}' の結果: {rank_to_save}位")
-    
-                    if stream_progress:
-                        yield sse_format({"result": {"rank": rank_to_save, "total_count": result.get('total_count'), "task_name": task_name, "task_id": task_id}})
-                        time.sleep(1)
-                    else:
-                        time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX))
-    
-                for url, tasks_in_group in special_tasks_grouped_by_url.items():
-                    job_counter += 1
-                    salon_names_in_group = [t['salonName'] for t in tasks_in_group]
-                    representative_task = tasks_in_group[0]
-                    task_name = representative_task.get('featurePageName', url)
-    
-                    if stream_progress: yield sse_format({"progress": {"current": job_counter, "total": total_job_count, "task": representative_task}})
-                    else: current_app.logger.info(f"特集ページ '{url}' の一括計測を開始... 対象サロン: {salon_names_in_group}")
-    
-                    result = {}
-                    for sse_message in check_feature_page_ranking(driver, url, salon_names_in_group):
-                        data = json.loads(sse_message.split('data: ')[1])
-                        if stream_progress and 'status' in data: yield sse_format({"status": data['status'], "task_name": task_name})
-                        if 'final_result' in data: result = data['final_result']
-    
-                    for task in tasks_in_group:
-                        task_id = task['id']
-                        salon_name = task['salonName']
-                        page_title = result.get('page_title')
-                        if page_title and not task.get('featurePageName'):
-                            task['featurePageName'] = page_title
-                            original_task = next((t for t in all_tasks if t.get('id') == task_id), None)
-                            if original_task: original_task['featurePageName'] = page_title
-    
-                        salon_results = result.get('results_map', {}).get(salon_name, [])
-                        rank_to_save = salon_results[0]['rank'] if salon_results else '圏外'
-                        update_history(history_special, task, today, rank_to_save, result.get('screenshot_path'))
-                        current_app.logger.info(f"タスク '{task_id}' ({salon_name}) の結果: {rank_to_save}位")
-    
-                        if stream_progress:
-                            individual_task_name = f"[{task['salonName']}] {task.get('featurePageName', task.get('featurePageUrl'))}"
-                            yield sse_format({"result": {"rank": rank_to_save, "total_count": result.get('total_count'), "task_name": individual_task_name, "task_id": task_id}})
-                            time.sleep(1)
-                    
-                    if not stream_progress: time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX))
-    
-                # --- MEOタスクの処理（グループ化対応） ---
-                for (location, keyword), tasks_in_group in meo_tasks_grouped.items():
-                    job_counter += 1
-                    representative_task = tasks_in_group[0]
-                    task_name = f"[{location}] {keyword}"
-    
-                    if stream_progress: yield sse_format({"progress": {"current": job_counter, "total": total_job_count, "task": representative_task}})
-                    else: current_app.logger.info(f"MEO一括計測 '{task_name}' を開始...")
-    
-                    result = {}
-                    scraper_generator = check_meo_ranking(driver, keyword, location)
-                    for sse_message in scraper_generator:
-                        data = json.loads(sse_message.split('data: ')[1])
-                        if stream_progress and 'status' in data: yield sse_format({"status": data['status'], "task_name": task_name})
-                        if 'final_result' in data: result = data['final_result']
-    
-                    # グループ内の各タスク（サロン）について履歴を更新
-                    for task in tasks_in_group:
-                        try:
-                            task_id = task['id']
-                            if result.get("rank") == "枠無":
-                                rank_to_save = "枠無"
-                            else:
-                                my_salon_result = next((r for r in result.get('results', []) if task['salonName'].lower() in r.get('foundSalonName', '').lower()), None)
-                                rank_to_save = my_salon_result['rank'] if my_salon_result else '圏外'
-                            
-                            screenshot_path_to_save = result.get('screenshot_path')
-    
-                            update_history(history_meo, task, today, rank_to_save, screenshot_path_to_save)
-                            current_app.logger.info(f"MEOタスク '{task_id}' の結果: {rank_to_save}")
-    
-                            if stream_progress:
-                                individual_task_name = f"[{task['salonName']}] {task_name}"
-                                yield sse_format({"result": {"rank": rank_to_save, "total_count": result.get('total_count'), "task_name": individual_task_name, "task_id": task_id}})
-                                time.sleep(1)
-                        except Exception as e:
-                            current_app.logger.error(f"MEOタスク '{task.get('id', '不明')}' の処理中にエラーが発生しました: {e}")
-                            update_history(history_meo, task, today, "エラー", None)
-    
-                    if not stream_progress:
-                        time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX))
+                # HPB通常タスク
+                yield from _run_normal_tasks(driver, normal_tasks, history_normal, today, stream_progress, job_counter, total_job_count)
+                job_counter = len(normal_tasks)
+
+                # HPB特集タスク
+                yield from _run_special_tasks(driver, special_tasks_grouped_by_url, history_special, all_tasks, today, stream_progress, job_counter, total_job_count)
+                job_counter += len(special_tasks_grouped_by_url)
+
+                # MEOタスク
+                yield from _run_meo_tasks(driver, meo_tasks_grouped, history_meo, today, stream_progress, job_counter, total_job_count)
+                job_counter += len(meo_tasks_grouped)
     
         # --- SEOタスクの処理 ---
         if seo_tasks:
             with get_webdriver(is_seo=True) as driver:
-                for task in seo_tasks:
-                    job_counter += 1
-                    try:
-                        task_id = task['id']
-                        task_name = f"[{task.get('url')}] {task.get('keyword')}"
-    
-                        if stream_progress: yield sse_format({"progress": {"current": job_counter, "total": total_job_count, "task": task}})
-                        else: current_app.logger.info(f"SEOタスク '{task_id}' の計測を開始...")
-    
-                        result = {}
-                        for sse_message in check_seo_ranking(driver, task['url'], task['keyword'], task.get('searchLocation')):
-                            data = json.loads(sse_message.split('data: ')[1])
-                            if stream_progress and 'status' in data: yield sse_format({"status": data['status'], "task_name": task_name})
-                            if 'final_result' in data: result = data['final_result']
-    
-                        rank_to_save = result.get('results', [{}])[0].get('rank', result.get('rank', '圏外'))
-                        update_history(history_seo, task, today, rank_to_save, result.get('screenshot_path'))
-                        current_app.logger.info(f"SEOタスク '{task_id}' の結果: {rank_to_save}")
-    
-                        if stream_progress:
-                            yield sse_format({"result": {"rank": rank_to_save, "task_name": task_name, "task_id": task_id}})
-                            time.sleep(1)
-                        else:
-                            time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX))
-                    except Exception as e:
-                        current_app.logger.error(f"SEOタスク '{task.get('id', '不明')}' の処理中にエラーが発生しました: {e}")
-                        update_history(history_seo, task, today, "エラー", None)
+                yield from _run_seo_tasks(driver, seo_tasks, history_seo, today, stream_progress, job_counter, total_job_count)
+
     except Exception as e:
         current_app.logger.error(f"自動計測ジョブ全体でエラーが発生しました: {e}")
         if stream_progress:
             yield sse_format({"error": f"計測ジョブ全体で予期せぬエラーが発生しました: {e}"})
     finally:
+        # 履歴を保存する前に、tasks.jsonの順序にソートする
+        task_id_order = {task['id']: i for i, task in enumerate(all_tasks)}
+        
+        history_normal.sort(key=lambda x: task_id_order.get(x['id'], float('inf')))
+        history_special.sort(key=lambda x: task_id_order.get(x['id'], float('inf')))
+        history_meo.sort(key=lambda x: task_id_order.get(x['id'], float('inf')))
+        history_seo.sort(key=lambda x: task_id_order.get(x['id'], float('inf')))
+        
+        current_app.logger.info("履歴データをタスク定義ファイルの順序に並び替えて保存します。")
+
         save_json_file(config.HISTORY_FILES['normal'], history_normal)
         save_json_file(config.HISTORY_FILES['special'], history_special)
         save_json_file(config.HISTORY_FILES['google'], history_meo)

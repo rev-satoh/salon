@@ -1,32 +1,5 @@
 [
   {
-    "id": "[seo]-https://eyelash4.com/-ハリウッドブロウ-福山駅",
-    "task": {
-      "id": "[seo]-https://eyelash4.com/-ハリウッドブロウ-福山駅",
-      "type": "seo",
-      "url": "https://eyelash4.com/",
-      "keyword": "ハリウッドブロウ",
-      "searchLocation": "福山駅"
-    },
-    "log": [
-      {
-        "date": "2025/10/03",
-        "rank": "圏外",
-        "screenshot": "screenshots/seo_251003_174715_ハリウッドブロウ.jpg"
-      },
-      {
-        "date": "2025/10/04",
-        "rank": "圏外",
-        "screenshot": "screenshots/seo_251004_224424_ハリウッドブロウ.jpg"
-      },
-      {
-        "date": "2025/10/05",
-        "rank": "圏外",
-        "screenshot": "screenshots/seo_251005_104408_ハリウッドブロウ.jpg"
-      }
-    ]
-  },
-  {
     "id": "[seo]-https://eyelash4.com/-まつげパーマ-福山駅",
     "task": {
       "id": "[seo]-https://eyelash4.com/-まつげパーマ-福山駅",
@@ -320,6 +293,33 @@
         "date": "2025/10/05",
         "rank": "圏外",
         "screenshot": "screenshots/seo_251005_104352_HBL.jpg"
+      }
+    ]
+  },
+  {
+    "id": "[seo]-https://eyelash4.com/-ハリウッドブロウ-福山駅",
+    "task": {
+      "id": "[seo]-https://eyelash4.com/-ハリウッドブロウ-福山駅",
+      "type": "seo",
+      "url": "https://eyelash4.com/",
+      "keyword": "ハリウッドブロウ",
+      "searchLocation": "福山駅"
+    },
+    "log": [
+      {
+        "date": "2025/10/03",
+        "rank": "圏外",
+        "screenshot": "screenshots/seo_251003_174715_ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/04",
+        "rank": "圏外",
+        "screenshot": "screenshots/seo_251004_224424_ハリウッドブロウ.jpg"
+      },
+      {
+        "date": "2025/10/05",
+        "rank": "圏外",
+        "screenshot": "screenshots/seo_251005_104408_ハリウッドブロウ.jpg"
       }
     ]
   }

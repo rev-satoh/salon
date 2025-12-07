@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const hpbNormalTaskCopySection = document.getElementById('hpbNormalTaskCopySection');
     const hpbSpecialTaskCopySection = document.getElementById('hpbSpecialTaskCopySection');
     const printButton = document.getElementById('printButton');
+    const toggleAllTablesButton = document.getElementById('toggleAllTablesButton');
     const modeHelpButton = document.getElementById('modeHelpButton');
     const scrollToManualCheckButton = document.getElementById('scrollToManualCheckButton');
 
@@ -1898,6 +1899,46 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
         }
     });
 
+    // --- 表の表示/非表示状態を管理するヘルパー関数 ---
+    const HIDDEN_TABLES_STORAGE_KEY = 'hiddenTablesState';
+
+    function getHiddenTablesState() {
+        try {
+            const state = localStorage.getItem(HIDDEN_TABLES_STORAGE_KEY);
+            return state ? JSON.parse(state) : {};
+        } catch (e) {
+            console.error("Failed to parse hidden tables state:", e);
+            return {};
+        }
+    }
+
+    function saveHiddenTablesState(state) {
+        localStorage.setItem(HIDDEN_TABLES_STORAGE_KEY, JSON.stringify(state));
+    }
+
+    // --- 全ての表の表示/非表示を切り替える ---
+    toggleAllTablesButton.addEventListener('click', () => {
+        const allTableContainers = document.querySelectorAll('.sticky-table-container');
+        if (allTableContainers.length === 0) return;
+
+        // 現在のボタンの状態で、隠すか表示するかを判断
+        const shouldHide = toggleAllTablesButton.textContent === 'すべての表を隠す';
+        
+        const currentState = getHiddenTablesState();
+
+        document.querySelectorAll('.graph-wrapper').forEach(wrapper => {
+            const tableContainer = wrapper.querySelector('.sticky-table-container');
+            const groupKey = wrapper.dataset.groupKey;
+
+            if (tableContainer) tableContainer.style.display = shouldHide ? 'none' : '';
+            currentState[groupKey] = shouldHide;
+        });
+
+        saveHiddenTablesState(currentState);
+        toggleAllTablesButton.textContent = shouldHide ? 'すべての表を表示' : 'すべての表を隠す';
+    });
+    // --- ここまでヘルパー関数 ---
+
     const fetchAndDisplayAutoHistory = async () => {
         try {
             const response = await fetch(`/api/auto-history?_=${new Date().getTime()}`);
@@ -1969,6 +2010,23 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                 }
                 return a[0].localeCompare(b[0], 'ja'); // どちらも保存されていなければ名前順
             });
+
+            // --- 全体ボタンの初期状態を設定 ---
+            // 1つでも表示されている表があれば「すべて隠す」、すべて隠れていれば「すべて表示」
+            const isAnyTableVisible = sortedWithSavedOrder.some(([groupKey]) => {
+                const hiddenState = getHiddenTablesState();
+                // hiddenStateにキーがない、または値がfalseの場合に表示されていると判断
+                return !hiddenState[groupKey];
+            });
+
+            if (sortedWithSavedOrder.length > 0) {
+                toggleAllTablesButton.style.display = 'inline-flex';
+                toggleAllTablesButton.textContent = isAnyTableVisible ? 'すべての表を隠す' : 'すべての表を表示';
+            } else {
+                toggleAllTablesButton.style.display = 'none';
+            }
+            // 表の表示状態を読み込む
+            const hiddenTablesState = getHiddenTablesState();
 
             sortedWithSavedOrder.forEach(([groupKey, groupData]) => {
                 // --- 特定のサロンをグラフ・表から除外するフィルタリング ---
@@ -2190,6 +2248,10 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
                     const tableContainer = document.createElement('div');
                     tableContainer.className = 'sticky-table-container'; // クラスを適用
                     tableContainer.style.marginTop = '20px';
+
+                    // --- 保存された表示状態を適用 ---
+                    const isHidden = hiddenTablesState[groupKey] || false;
+                    if (isHidden) tableContainer.style.display = 'none';
 
                     const table = document.createElement('table');
                     table.className = 'sticky-table'; // クラスを適用
