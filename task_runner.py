@@ -12,7 +12,6 @@ from hpb_scraper import check_hotpepper_ranking
 from feature_page_scraper import check_feature_page_ranking
 from meo_scraper import check_meo_ranking
 from seo_scraper import check_seo_ranking
-
 def load_json_file(filename):
     if not os.path.exists(filename):
         return []
@@ -181,37 +180,6 @@ def _run_meo_tasks(driver, tasks_grouped, history, today, stream_progress, job_c
             time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX))
     return job_counter
 
-def _run_seo_tasks(driver, tasks, history, today, stream_progress, job_counter, total_job_count):
-    """SEOタスクを実行する"""
-    for task in tasks:
-        job_counter += 1
-        try:
-            task_id = task['id']
-            task_name = f"[{task.get('url')}] {task.get('keyword')}"
-
-            if stream_progress: yield sse_format({"progress": {"current": job_counter, "total": total_job_count, "task": task}})
-            else: current_app.logger.info(f"SEOタスク '{task_id}' の計測を開始...")
-
-            result = {}
-            for sse_message in check_seo_ranking(driver, task['url'], task['keyword'], task.get('searchLocation')):
-                data = json.loads(sse_message.split('data: ')[1])
-                if stream_progress and 'status' in data: yield sse_format({"status": data['status'], "task_name": task_name})
-                if 'final_result' in data: result = data['final_result']
-
-            rank_to_save = result.get('results', [{}])[0].get('rank', result.get('rank', '圏外'))
-            update_history(history, task, today, rank_to_save, result.get('screenshot_path'))
-            current_app.logger.info(f"SEOタスク '{task_id}' の結果: {rank_to_save}")
-
-            if stream_progress:
-                yield sse_format({"result": {"rank": rank_to_save, "task_name": task_name, "task_id": task_id}})
-                time.sleep(1)
-            else:
-                time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX))
-        except Exception as e:
-            current_app.logger.exception(f"SEOタスク '{task.get('id', '不明')}' の処理中にエラーが発生しました。")
-            update_history(history, task, today, "エラー", None)
-    return job_counter
-
 def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
     """
     指定されたタスク、またはすべてのタスクを実行し、結果を履歴ファイルに保存する
@@ -238,13 +206,11 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
     history_normal = load_json_file(config.HISTORY_FILES['normal'])
     history_special = load_json_file(config.HISTORY_FILES['special'])
     history_meo = load_json_file(config.HISTORY_FILES['google'])
-    history_seo = load_json_file(config.HISTORY_FILES['seo'])
     today = datetime.date.today().strftime('%Y/%m/%d')
 
     normal_tasks = []
     special_tasks_grouped_by_url = {}
     meo_tasks_grouped = {} # MEOタスクをグループ化するための辞書
-    seo_tasks = []
     for task in tasks_to_run:
         task_type = task.get('type', 'normal')
         if task_type == 'special':
@@ -257,12 +223,10 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
             if group_key not in meo_tasks_grouped:
                 meo_tasks_grouped[group_key] = []
             meo_tasks_grouped[group_key].append(task)
-        elif task_type == 'seo':
-            seo_tasks.append(task)
         else:
             normal_tasks.append(task)
 
-    total_job_count = len(normal_tasks) + len(special_tasks_grouped_by_url) + len(meo_tasks_grouped) + len(seo_tasks)
+    total_job_count = len(normal_tasks) + len(special_tasks_grouped_by_url) + len(meo_tasks_grouped)
     job_counter = 0
 
     try:
@@ -280,11 +244,6 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
                 # MEOタスク
                 yield from _run_meo_tasks(driver, meo_tasks_grouped, history_meo, today, stream_progress, job_counter, total_job_count)
                 job_counter += len(meo_tasks_grouped)
-    
-        # --- SEOタスクの処理 ---
-        if seo_tasks:
-            with get_webdriver(is_seo=True) as driver:
-                yield from _run_seo_tasks(driver, seo_tasks, history_seo, today, stream_progress, job_counter, total_job_count)
 
     except Exception as e:
         current_app.logger.exception("自動計測ジョブ全体で予期せぬエラーが発生しました。")
@@ -297,14 +256,12 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
         history_normal.sort(key=lambda x: task_id_order.get(x['id'], float('inf')))
         history_special.sort(key=lambda x: task_id_order.get(x['id'], float('inf')))
         history_meo.sort(key=lambda x: task_id_order.get(x['id'], float('inf')))
-        history_seo.sort(key=lambda x: task_id_order.get(x['id'], float('inf')))
         
         current_app.logger.info("履歴データをタスク定義ファイルの順序に並び替えて保存します。")
 
         save_json_file(config.HISTORY_FILES['normal'], history_normal)
         save_json_file(config.HISTORY_FILES['special'], history_special)
         save_json_file(config.HISTORY_FILES['google'], history_meo)
-        save_json_file(config.HISTORY_FILES['seo'], history_seo)
         save_json_file(config.TASKS_FILE, all_tasks)
         
         if stream_progress:

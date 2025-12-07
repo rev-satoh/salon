@@ -23,24 +23,31 @@ def check_hotpepper_ranking(driver, keyword, salon_name, area_codes):
     # ユーザー提供のURL形式をベースに変更
     base_url = 'https://beauty.hotpepper.jp/CSP/kr/salonSearch/search/'
     
-    # 動的にReferer（アクセス元ページ）を生成
+    # --- 修正: Referer（アクセス元ページ）の生成ロジックを改善 ---
     service_area_cd = area_codes.get('serviceAreaCd')
     middle_area_cd = area_codes.get('middleAreaCd')
+    small_area_cd = area_codes.get('smallAreaCd')
     
-    # デフォルトのRefererはトップページ
     referer_url = 'https://beauty.hotpepper.jp/kr/'
-    if service_area_cd and middle_area_cd:
-        # 中エリアまで指定されている場合、そのエリアページをRefererにする
+    if service_area_cd and middle_area_cd and small_area_cd:
+        # 小エリアまで指定されている場合
+        referer_url = f'https://beauty.hotpepper.jp/kr/svc{service_area_cd}/mac{middle_area_cd}/sac{small_area_cd}/'
+    elif service_area_cd and middle_area_cd:
+        # 中エリアまで指定されている場合
         referer_url = f'https://beauty.hotpepper.jp/kr/svc{service_area_cd}/mac{middle_area_cd}/'
     elif service_area_cd:
         # 大エリアのみの場合
         referer_url = f'https://beauty.hotpepper.jp/kr/svc{service_area_cd}/'
 
+    # --- 修正: area_codesから値が空のキーを削除 ---
+    # 'smallAreaCd': '' のような空のパラメータが含まれていると検索が失敗するため
+    valid_area_codes = {k: v for k, v in area_codes.items() if v}
+
     params = {
         'freeword': keyword,
         'searchT': '検索',
         'genreAlias': 'nail', # ネイル・まつげのジャンルコード
-        **area_codes # serviceAreaCd, middleAreaCd, smallAreaCd を展開して追加
+        **valid_area_codes # 値が存在するエリアコードのみを展開して追加
     }
 
     found_salons = [] # 発見したすべてのサロンを格納するリスト
@@ -60,28 +67,23 @@ def check_hotpepper_ranking(driver, keyword, salon_name, area_codes):
         try:
             current_app.logger.info(f"セッション初期化のためRefererページ ({referer_url}) にアクセスします。")
             driver.get(referer_url)
-            # ページの主要な要素が表示されるまで待機
-            WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.ID, "mainContents"))
-            )
+            time.sleep(1) # 以前の待機処理に戻します
         except Exception as e:
             current_app.logger.warning(f"Refererページへのアクセスに失敗しました: {e}")
 
         # ページを1から順番にチェック（最大5ページ=100位まで）
         for page in range(1, config.HPB_MAX_PAGES + 1):
             # ページ番号をパラメータに追加
-            params['pn'] = page
-            # --- URL生成ロジックの修正 ---
+            params['pn'] = page # この行は変更なし
+
+            # --- 修正: 削除されていたURL生成ロジックを元に戻す ---
             query_string = urllib.parse.urlencode(params)
             url = f"{base_url}?{query_string}"
 
             yield sse_format({"status": f"{page}ページ目を検索しています..."})
             try:
                 driver.get(url)
-                # 検索結果のリストが表示されるまで待機
-                WebDriverWait(driver, 10).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, "ul.slnCassetteList"))
-                )
+                time.sleep(1.5) # 以前の待機処理に戻し、少し時間を延長して安定性を確保します
             except TimeoutException:
                 current_app.logger.warning(f"ページ {page} ({url}) の読み込みがタイムアウトしました。処理を中断します。")
                 break # ループを抜けて、それまでに見つかった結果を返す
