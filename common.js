@@ -65,8 +65,12 @@ function setActiveNavigation() {
 
 // DOMの読み込みが完了したら共通部品をロード
 document.addEventListener('DOMContentLoaded', async () => {
-    // headerは各HTMLに直接記述するため、JSでの読み込みは不要に。
-    // ナビゲーションのアクティブ状態設定は、DOM読み込み完了後すぐに実行する。
+    // headerのプレースホルダーが存在する場合のみ読み込む
+    if (document.getElementById('header-placeholder')) {
+        await loadHTML('header.html', 'header-placeholder');
+    }
+
+    // ナビゲーションのアクティブ状態設定は、ヘッダーが読み込まれた後に実行する。
     setActiveNavigation();
 
     // footerのプレースホルダーが存在する場合のみ読み込む

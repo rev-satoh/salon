@@ -4,6 +4,9 @@ import os
 import re
 import urllib.parse
 from bs4 import BeautifulSoup
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from PIL import Image
 from flask import current_app
@@ -57,7 +60,10 @@ def check_hotpepper_ranking(driver, keyword, salon_name, area_codes):
         try:
             current_app.logger.info(f"セッション初期化のためRefererページ ({referer_url}) にアクセスします。")
             driver.get(referer_url)
-            time.sleep(1) # 少し待機
+            # ページの主要な要素が表示されるまで待機
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.ID, "mainContents"))
+            )
         except Exception as e:
             current_app.logger.warning(f"Refererページへのアクセスに失敗しました: {e}")
 
@@ -72,7 +78,10 @@ def check_hotpepper_ranking(driver, keyword, salon_name, area_codes):
             yield sse_format({"status": f"{page}ページ目を検索しています..."})
             try:
                 driver.get(url)
-                time.sleep(1) # ページ描画のための待機
+                # 検索結果のリストが表示されるまで待機
+                WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, "ul.slnCassetteList"))
+                )
             except TimeoutException:
                 current_app.logger.warning(f"ページ {page} ({url}) の読み込みがタイムアウトしました。処理を中断します。")
                 break # ループを抜けて、それまでに見つかった結果を返す

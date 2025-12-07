@@ -69,7 +69,7 @@ def _run_normal_tasks(driver, tasks, history, today, stream_progress, job_counte
                 if 'final_result' in data:
                     result = data['final_result']
         except Exception as e:
-            current_app.logger.error(f"HPB通常タスク '{task_id}' の実行中にエラー: {e}")
+            current_app.logger.exception(f"HPB通常タスク '{task_id}' の実行中にエラーが発生しました。")
             result = {"rank": "エラー"}
 
         rank_to_save = result.get('results', [{}])[0].get('rank', result.get('rank', '圏外'))
@@ -105,7 +105,7 @@ def _run_special_tasks(driver, tasks_grouped, history, all_tasks, today, stream_
                 if 'final_result' in data:
                     result = data['final_result']
         except Exception as e:
-            current_app.logger.error(f"HPB特集タスク '{url}' の実行中にエラー: {e}")
+            current_app.logger.exception(f"HPB特集タスク '{url}' の実行中にエラーが発生しました。")
             result = {}
 
         for task in tasks_in_group:
@@ -153,7 +153,7 @@ def _run_meo_tasks(driver, tasks_grouped, history, today, stream_progress, job_c
                 if 'final_result' in data:
                     result = data['final_result']
         except Exception as e:
-            current_app.logger.error(f"MEOタスク '{task_name}' の実行中にエラー: {e}")
+            current_app.logger.exception(f"MEOタスク '{task_name}' の実行中にエラーが発生しました。")
             result = {}
 
         for task in tasks_in_group:
@@ -174,7 +174,7 @@ def _run_meo_tasks(driver, tasks_grouped, history, today, stream_progress, job_c
                     yield sse_format({"result": {"rank": rank_to_save, "total_count": result.get('total_count'), "task_name": individual_task_name, "task_id": task_id}})
                     time.sleep(1)
             except Exception as e:
-                current_app.logger.error(f"MEOタスク '{task.get('id', '不明')}' の結果処理中にエラー: {e}")
+                current_app.logger.exception(f"MEOタスク '{task.get('id', '不明')}' の結果処理中にエラーが発生しました。")
                 update_history(history, task, today, "エラー", None)
 
         if not stream_progress:
@@ -208,7 +208,7 @@ def _run_seo_tasks(driver, tasks, history, today, stream_progress, job_counter, 
             else:
                 time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX))
         except Exception as e:
-            current_app.logger.error(f"SEOタスク '{task.get('id', '不明')}' の処理中にエラーが発生しました: {e}")
+            current_app.logger.exception(f"SEOタスク '{task.get('id', '不明')}' の処理中にエラーが発生しました。")
             update_history(history, task, today, "エラー", None)
     return job_counter
 
@@ -287,7 +287,7 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
                 yield from _run_seo_tasks(driver, seo_tasks, history_seo, today, stream_progress, job_counter, total_job_count)
 
     except Exception as e:
-        current_app.logger.error(f"自動計測ジョブ全体でエラーが発生しました: {e}")
+        current_app.logger.exception("自動計測ジョブ全体で予期せぬエラーが発生しました。")
         if stream_progress:
             yield sse_format({"error": f"計測ジョブ全体で予期せぬエラーが発生しました: {e}"})
     finally:

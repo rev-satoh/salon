@@ -1515,21 +1515,32 @@ Googleマップの検索結果は、検索場所や履歴によって変動し�
 
         const deleteButton = document.createElement('button');
         deleteButton.textContent = '削除';
-        deleteButton.className = 'button-secondary';
+        // クラス名を追加して、イベント委譲で捕捉しやすくする
+        deleteButton.className = 'button-secondary delete-task-button';
+        deleteButton.dataset.taskId = task.id; // data属性にIDを持たせる
+        deleteButton.dataset.taskText = taskText.textContent; // 確認メッセージ用にテキストも持たせる
         deleteButton.style.padding = '4px 8px';
         deleteButton.style.fontSize = '12px';
         deleteButton.style.flexShrink = '0';
-        deleteButton.onclick = () => {
-            if (confirm(`「${taskText.textContent}」を削除しますか？`)) {
-                autoTasks = autoTasks.filter(t => t.id !== task.id);
-                saveAutoTasks();
-                renderAutoTasks();
-                fetchAndDisplayAutoHistory();
-            }
-        };
         li.appendChild(deleteButton);
         parentElement.appendChild(li);
     };
+
+    // --- イベント委譲によるタスク削除 ---
+    autoTaskList.addEventListener('click', (event) => {
+        const deleteButton = event.target.closest('.delete-task-button');
+        if (!deleteButton) return;
+
+        const taskId = deleteButton.dataset.taskId;
+        const taskText = deleteButton.dataset.taskText;
+
+        if (confirm(`「${taskText}」を削除しますか？`)) {
+            autoTasks = autoTasks.filter(t => t.id !== taskId);
+            saveAutoTasks();
+            renderAutoTasks();
+            fetchAndDisplayAutoHistory();
+        }
+    });
 
     addAutoTaskButton.addEventListener('click', () => {
         const activeSearchType = searchTypeToggle.querySelector('.toggle-button.active').dataset.type;
