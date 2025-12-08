@@ -1,0 +1,38 @@
+/**
+ * DOM要素の取得を管理します。
+ */
+export const largeAreaSelect = document.getElementById('largeAreaSelect');
+export const middleAreaGroup = document.getElementById('middleAreaGroup');
+export const middleAreaSelect = document.getElementById('middleAreaSelect');
+export const smallAreaGroup = document.getElementById('smallAreaGroup');
+export const smallAreaSelect = document.getElementById('smallAreaSelect');
+export const keywordInput = document.getElementById('keywordInput');
+export const salonNameInput = document.getElementById('salonNameInput');
+export const checkRankButton = document.getElementById('checkRankButton');
+export const resultArea = document.getElementById('resultArea');
+export const salonNameFormGroup = document.querySelector('label[for="salonNameInput"]').parentElement;
+export const addAutoTaskButton = document.getElementById('addAutoTaskButton');
+export const autoTaskList = document.getElementById('autoTaskList');
+export const autoHistoryContainer = document.getElementById('autoHistoryContainer');
+export const noAutoHistoryMessage = document.getElementById('noAutoHistoryMessage');
+export const manualTriggerButton = document.getElementById('manualTriggerButton');
+export const selectAllContainer = document.getElementById('selectAllContainer');
+export const selectAllCheckbox = document.getElementById('selectAllTasks');
+export const scheduleHourSelect = document.getElementById('scheduleHourSelect');
+export const saveScheduleButton = document.getElementById('saveScheduleButton');
+export const scheduleStatus = document.getElementById('scheduleStatus');
+export const autoTaskListToggle = document.getElementById('autoTaskListToggle');
+export const autoTaskListContent = document.getElementById('autoTaskListContent');
+export const taskListToggleIcon = document.getElementById('taskListToggleIcon');
+export const normalSearchInputs = document.getElementById('normalSearchInputs');
+export const specialSearchInputs = document.getElementById('specialSearchInputs');
+export const googleMapSearchInputs = document.getElementById('googleMapSearchInputs');
+export const searchTypeToggle = document.getElementById('searchTypeToggle');
+export const meoCopySection = document.getElementById('meoTaskCopySection');
+export const hpbNormalTaskCopySection = document.getElementById('hpbNormalTaskCopySection');
+export const hpbSpecialTaskCopySection = document.getElementById('hpbSpecialTaskCopySection');
+export const printButton = document.getElementById('printButton');
+export const toggleAllTablesButton = document.getElementById('toggleAllTablesButton');
+export const modeHelpButton = document.getElementById('modeHelpButton');
+export const scrollToManualCheckButton = document.getElementById('scrollToManualCheckButton');
+export const featurePageUrlInput = document.getElementById('featurePageUrlInput');
