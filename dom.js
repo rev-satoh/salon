@@ -36,3 +36,4 @@ export const toggleAllTablesButton = document.getElementById('toggleAllTablesBut
 export const modeHelpButton = document.getElementById('modeHelpButton');
 export const scrollToManualCheckButton = document.getElementById('scrollToManualCheckButton');
 export const featurePageUrlInput = document.getElementById('featurePageUrlInput');
+export const manualCheckSection = document.getElementById('manualCheckSection');

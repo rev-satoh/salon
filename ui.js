@@ -145,6 +145,139 @@ function setupEventListeners(state) {
     setupCopyFunctions(state);
 }
 
+// --- 「選択したタスクを実行」ボタンのロジック ---
+dom.manualTriggerButton.addEventListener('click', async () => {
+    const selectedCheckboxes = dom.autoTaskList.querySelectorAll('.auto-task-checkbox:checked');
+    const selectedTaskIds = new Set(Array.from(selectedCheckboxes).map(cb => cb.value));
+
+    if (selectedTaskIds.size === 0) {
+        alert('実行するタスクを少なくとも1つ選択してください。');
+        return;
+    }
+
+    if (!confirm(`選択した ${selectedTaskIds.size} 件のタスクを今すぐ実行しますか？`)) {
+        return;
+    }
+
+    setMeasuringState(true, { isMeasuring: true }); // 計測状態を開始に設定
+    dom.manualTriggerButton.textContent = '実行中...';
+
+    dom.resultArea.innerHTML = ''; // 結果エリアをクリア
+    const overallStatusContainer = document.createElement('div');
+    overallStatusContainer.id = 'overallStatus';
+    overallStatusContainer.style.cssText = 'padding: 10px; margin-bottom: 15px; font-weight: 500;';
+    dom.resultArea.appendChild(overallStatusContainer);
+    overallStatusContainer.textContent = `選択された ${selectedTaskIds.size} 件のタスクを実行します...`;
+
+    const startTime = performance.now();
+    const timerInterval = setInterval(() => {
+        const elapsedSeconds = Math.floor((performance.now() - startTime) / 1000);
+        const minutes = Math.floor(elapsedSeconds / 60);
+        const seconds = elapsedSeconds % 60;
+        const durationString = minutes > 0 ? `${minutes}分${seconds}秒` : `${seconds}秒`;
+        const baseText = overallStatusContainer.textContent.replace(/\s*\([^)]*\)$/, '');
+        if (baseText && !baseText.includes('完了')) {
+            overallStatusContainer.textContent = `${baseText} (経過時間: ${durationString})`;
+        }
+    }, 1000);
+
+    try {
+        await processStream(Array.from(selectedTaskIds));
+        const durationString = getDurationString(startTime);
+        overallStatusContainer.textContent = `すべての計測が完了しました。（${selectedTaskIds.size}件 / 所要時間: ${durationString}）`;
+    } catch (error) {
+        console.error('手動実行中にエラーが発生しました:', error);
+        const durationString = getDurationString(startTime);
+        overallStatusContainer.textContent = `計測中にエラーが発生しました。（所要時間: ${durationString}）詳細はコンソールを確認してください。`;
+    } finally {
+        clearInterval(timerInterval);
+        setMeasuringState(false, { isMeasuring: false });
+        dom.manualTriggerButton.textContent = '選択したタスクを実行';
+        fetchAndDisplayAutoHistory();
+    }
+});
+
+function getDurationString(startTime) {
+    const elapsedSeconds = Math.floor((performance.now() - startTime) / 1000);
+    const minutes = Math.floor(elapsedSeconds / 60);
+    const seconds = elapsedSeconds % 60;
+    return minutes > 0 ? `${minutes}分${seconds}秒` : `${seconds}秒`;
+}
+
+async function processStream(taskIds) {
+    if (taskIds.length === 0) return;
+
+    const response = await fetch('/api/run-tasks-manually', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ task_ids: taskIds })
+    });
+
+    if (!response.body) throw new Error('Response body is missing');
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split('\n\n');
+
+        for (const line of lines) {
+            if (line.startsWith('data: ')) {
+                const jsonData = line.substring(6);
+                if (!jsonData) continue;
+
+                const data = JSON.parse(jsonData);
+                handleStreamData(data);
+            }
+        }
+    }
+}
+
+function handleStreamData(data) {
+    if (data.error) {
+        const errorContainer = document.createElement('div');
+        errorContainer.innerHTML = `<p style="color: red;">エラー: ${data.error}</p>`;
+        dom.resultArea.appendChild(errorContainer);
+        throw new Error(data.error);
+    }
+
+    if (data.progress) {
+        const { current, total, task } = data.progress;
+        const taskName = task.featurePageName || task.featurePageUrl || `[${task.areaName}] ${task.serviceKeyword}` || `[${task.searchLocation}] ${task.keyword}`;
+        document.getElementById('overallStatus').textContent = `${current} / ${total} 件目: 「${taskName}」を計測中... `;
+        
+        const taskContainer = document.createElement('div');
+        taskContainer.id = `task-container-${task.id}`;
+        taskContainer.style.cssText = 'border-bottom: 1px solid #e5e5e7; padding-bottom: 15px; margin-bottom: 15px;';
+        taskContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${taskName}」</h4><p>計測を開始します...</p>`;
+        dom.resultArea.appendChild(taskContainer);
+    }
+
+    if (data.status) {
+        const lastContainer = dom.resultArea.querySelector('div:last-of-type');
+        if (lastContainer) {
+            lastContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${data.task_name}」</h4><p>${data.status}</p>`;
+        }
+    }
+
+    if (data.result) {
+        const { rank, total_count, task_name, task_id } = data.result;
+        let taskContainer = document.getElementById(`task-container-${task_id}`);
+        if (!taskContainer) {
+            taskContainer = document.createElement('div');
+            taskContainer.id = `task-container-${task_id}`;
+            dom.resultArea.appendChild(taskContainer);
+        }
+        const totalCountHtml = total_count !== undefined ? `<p style="font-size: 14px; color: #6c6c70;">検索結果総数: <strong>${total_count}</strong> 件</p>` : '';
+        const resultMessageHtml = `<p style="margin: 0; font-size: 18px; font-weight: bold;"><span style="color: #007aff; font-size: 1.3em;">${rank}</span> 位</p>`;
+        taskContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${task_name}」</h4>${totalCountHtml}${resultMessageHtml}`;
+    }
+}
+
 /**
  * 検索タイプに応じてUIの表示を更新します。
  * @param {string} activeType - 'normal', 'special', 'google'
