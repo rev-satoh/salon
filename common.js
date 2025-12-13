@@ -78,3 +78,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         await loadHTML('footer.html', 'footer-placeholder');
     }
 });
+
+/**
+ * 指定されたY座標までスムーズにスクロールします。
+ * @param {number} top - スクロール先のY座標。
+ */
+function scrollbtn(top) {
+    window.scrollTo({
+        top: top,
+        behavior: 'smooth'
+    });
+}
