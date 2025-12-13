@@ -22,12 +22,56 @@ export async function fetchAutoTasks(state) {
  */
 export async function fetchAndDisplayAutoHistory() {
     try {
-        const historyData = await fetchHistoryAPI();
+        let historyData = await fetchHistoryAPI();
         const autoHistoryGraphs = document.getElementById('autoHistoryGraphs');
 
         if (!historyData || historyData.length === 0) {
             dom.autoHistoryContainer.style.display = 'none';
             dom.noAutoHistoryMessage.style.display = 'block';
+            if (autoHistoryGraphs) autoHistoryGraphs.innerHTML = '';
+            return;
+        }
+
+        // データ統合: 古いサロン名 'ケイトステージラッシュ' を新しい 'KATEstageLASH' にマッピング
+        historyData = historyData.map(item => {
+            const task = item.task || {};
+            // 「箱崎・千早・香椎周辺」エリアと「福岡」エリアのサロン名を統一する
+            // HPB特集の特定のページも同様にサロン名を統一する
+            if (
+                (task.areaName === '箱崎・千早・香椎周辺' && (task.salonName === 'ケイトステージラッシュ' || task.salonName === 'KATE stage LASH')) ||
+                (task.areaName === '福岡' && task.salonName === 'ケイトステージラッシュ') ||
+                (task.type === 'special' && (task.featurePageName?.startsWith('福岡市東区で') || task.featurePageName?.startsWith('香椎駅で')) && (task.salonName === 'ケイトステージラッシュ' || task.salonName === 'KATE stage LASH'))
+            )
+            {
+                // 元のデータを変更しないように新しいオブジェクトを作成
+                const newItem = JSON.parse(JSON.stringify(item));
+                newItem.task.salonName = 'KATEstageLASH';
+                return newItem;
+            }
+            return item;
+        });
+
+        // ログデータの統合
+        const mergedHistory = {};
+        historyData.forEach(item => {
+            // 各アイテムのユニークなキーを生成（タスクIDから古いサロン名部分を除外）
+            const task = item.task || {};
+            const key = `${task.type || 'normal'}-${task.areaName || task.searchLocation || task.featurePageUrl}-${task.salonName}-${task.serviceKeyword || task.keyword || ''}`;
+
+            if (!mergedHistory[key]) {
+                // 新しいキーであれば、そのまま格納
+                mergedHistory[key] = JSON.parse(JSON.stringify(item));
+            } else {
+                // 既存のキーであれば、ログデータを結合
+                mergedHistory[key].log = mergedHistory[key].log.concat(item.log);
+                // ログを日付でソートして重複を削除（念のため）
+                const uniqueLogs = Array.from(new Map(mergedHistory[key].log.map(log => [log.date, log])).values());
+                mergedHistory[key].log = uniqueLogs.sort((a, b) => new Date(a.date) - new Date(b.date));
+            }
+        });
+        historyData = Object.values(mergedHistory);
+
+        if (!historyData || historyData.length === 0) {
             if (autoHistoryGraphs) autoHistoryGraphs.innerHTML = '';
             return;
         }
