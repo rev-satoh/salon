@@ -29,6 +29,7 @@ from task_runner import run_scheduled_check, update_history
 from driver_manager import get_webdriver
 from seo_scraper import check_seo_ranking # SEOスクレイパーをインポート
 from excel_generator import create_excel_report # Excel生成関数をインポート
+from salon_board_automator import post_blog_to_store # Step2で作成するファイルをインポート
 import config # 設定ファイルをインポート
 
 # app.pyと同じ階層にある静的ファイル(css, js, html)を読み込めるように設定
@@ -346,6 +347,41 @@ def download_excel():
     except Exception as e:
         app.logger.error(f"Excelファイル生成中にエラー: {e}\n{traceback.format_exc()}")
         return jsonify({"error": f"Excelファイルの生成に失敗しました: {e}"}), 500
+
+@app.route('/api/post-blog', methods=['POST'])
+def post_blog_api():
+    """
+    フロントエンドからブログ投稿リクエストを受け取り、自動化処理を呼び出すAPI。
+    """
+    data = request.get_json()
+    if not data:
+        return jsonify({"status": "error", "message": "リクエストデータがありません。"}), 400
+
+    store_ids = data.get('store_ids')
+    title = data.get('title')
+    content = data.get('content')
+
+    if not all([store_ids, title, content]):
+        return jsonify({"status": "error", "message": "必須項目（店舗ID, タイトル, 本文）が不足しています。"}), 400
+
+    # 複数店舗対応を想定し、ループで処理する
+    # 今回はまず1店舗（福山駅前店）で実装を進める
+    results = []
+    for store_id in store_ids:
+        try:
+            # Step2で作成する自動化ロジックを呼び出す
+            result = post_blog_to_store(store_id, title, content)
+            results.append(result)
+        except Exception as e:
+            app.logger.error(f"ブログ投稿処理中にエラー (store_id: {store_id}): {e}\n{traceback.format_exc()}")
+            results.append({"store_id": store_id, "status": "error", "message": f"サーバー側で予期せぬエラーが発生しました: {e}"})
+
+    # 1件でも成功があれば全体としては成功として返す（詳細はresults内で確認）
+    has_success = any(r.get('status') == 'success' for r in results)
+    if has_success:
+        return jsonify({"status": "completed", "results": results}), 200
+    else:
+        return jsonify({"status": "failed", "results": results}), 500
 
 # --- アプリケーションの起動とスケジューラの設定 ---
 scheduler = BackgroundScheduler(daemon=True)

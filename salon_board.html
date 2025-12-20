@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>サロン業務システム - サロンボード連携</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="common.js" defer></script>
+    <style>
+        .store-checkbox-group {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <main>
+        <div class="container-fluid">
+            <h2 class="mb-4" style="font-weight: 600;">サロンボード連携</h2>
+            
+            <!-- タブナビゲーション -->
+            <ul class="nav nav-tabs mb-4" id="salonBoardTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="blog-tab" data-bs-toggle="tab" data-bs-target="#blog" type="button" role="tab">ブログ一括投稿</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="menu-tab" data-bs-toggle="tab" data-bs-target="#menu" type="button" role="tab">メニュー一括編集</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab">連携アカウント設定</button>
+                </li>
+            </ul>
+
+            <!-- タブコンテンツ -->
+            <div class="tab-content" id="salonBoardTabsContent">
+                
+                <!-- ブログ投稿タブ -->
+                <div class="tab-pane fade show active" id="blog" role="tabpanel">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="card mb-3 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-3">記事作成</h5>
+                                    <div class="mb-3">
+                                        <label for="blogTitle" class="form-label">記事タイトル</label>
+                                        <input type="text" class="form-control" id="blogTitle" placeholder="例：今月のおすすめクーポン！">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="blogContent" class="form-label">記事本文</label>
+                                        <textarea class="form-control" id="blogContent" rows="12" placeholder="ブログの内容をここに入力してください..."></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="blogImage" class="form-label">画像アップロード (任意)</label>
+                                        <input class="form-control" type="file" id="blogImage">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card mb-3 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-3">対象店舗を選択</h5>
+                                    <div class="store-checkbox-group mb-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="storeAll" onchange="toggleAllStores(this)">
+                                            <label class="form-check-label fw-bold" for="storeAll">全店舗</label>
+                                        </div>
+                                        <hr class="my-2">
+                                        <!-- 店舗リスト -->
+                                        <div class="form-check"><input class="form-check-input store-check" type="checkbox" id="s1" value="fukuyama_ekimae"><label class="form-check-label" for="s1">福山駅前店</label></div>
+                                        <div class="form-check"><input class="form-check-input store-check" type="checkbox" id="s2" value="hiroshima_hatchobori"><label class="form-check-label" for="s2">広島八丁堀店</label></div>
+                                        <div class="form-check"><input class="form-check-input store-check" type="checkbox" id="s3" value="gifu_ekimae"><label class="form-check-label" for="s3">岐阜駅前店</label></div>
+                                        <div class="form-check"><input class="form-check-input store-check" type="checkbox" id="s4" value="ikebukuro"><label class="form-check-label" for="s4">池袋店</label></div>
+                                        <div class="form-check"><input class="form-check-input store-check" type="checkbox" id="s5" value="kashii"><label class="form-check-label" for="s5">香椎店</label></div>
+                                        <div class="form-check"><input class="form-check-input store-check" type="checkbox" id="s6" value="lorraine_sengawa"><label class="form-check-label" for="s6">ロレインブロウ仙川店</label></div>
+                                        <div class="form-check"><input class="form-check-input store-check" type="checkbox" id="s7" value="elua_kamiyacho"><label class="form-check-label" for="s7">elua紙屋町店</label></div>
+                                        <div class="form-check"><input class="form-check-input store-check" type="checkbox" id="s8" value="diaro"><label class="form-check-label" for="s8">ディアロ</label></div>
+                                    </div>
+                                    <button id="submitBlogButton" class="btn btn-primary w-100 py-2" onclick="submitBlog()"><span class="spinner"></span><span>投稿を実行する</span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- メニュー編集タブ -->
+                <div class="tab-pane fade" id="menu" role="tabpanel"><div class="card"><div class="card-body">メニュー編集機能は開発中です。</div></div></div>
+                <!-- 設定タブ -->
+                <div class="tab-pane fade" id="settings" role="tabpanel"><div class="card"><div class="card-body">設定機能は開発中です。</div></div></div>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleAllStores(e){
+            document.querySelectorAll(".store-check").forEach(c=>c.checked=e.checked)
+        }
+
+        async function submitBlog(){
+            const submitButton = document.getElementById('submitBlogButton');
+            const title = document.getElementById('blogTitle').value;
+            const content = document.getElementById('blogContent').value;
+            
+            // チェックされた店舗のID(value)を取得
+            const checkedBoxes = document.querySelectorAll('.store-check:checked');
+            const storeIds = Array.from(checkedBoxes).map(cb => cb.value).filter(val => val && val.trim() !== '');
+
+            if (!title || !content) {
+                alert("タイトルと本文を入力してください。");
+                return;
+            }
+            if (storeIds.length === 0) {
+                alert("対象店舗を選択してください。");
+                return;
+            }
+
+            if(!confirm(`${storeIds.length}店舗にブログを投稿しますか？`)) return;
+
+            // ボタンをローディング状態にする
+            submitButton.disabled = true;
+            submitButton.classList.add('loading');
+
+            try {
+                const response = await fetch('/api/post-blog', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ store_ids: storeIds, title: title, content: content })
+                });
+
+                const result = await response.json();
+                
+                // 結果を整形して表示
+                let resultMessage = `サーバーからの応答:\nステータス: ${result.status}\n\n`;
+                if (result.results && result.results.length > 0) {
+                    result.results.forEach(res => {
+                        resultMessage += `店舗ID: ${res.store_id}\n結果: ${res.status}\nメッセージ: ${res.message}\n\n`;
+                    });
+                } else if (result.message) {
+                    resultMessage += `メッセージ: ${result.message}`;
+                }
+
+                if (response.ok) {
+                    alert("ブログ投稿処理が完了しました。\n\n" + resultMessage);
+                } else {
+                    alert("ブログ投稿処理でエラーが発生しました。\n\n" + resultMessage);
+                }
+            } catch (e) {
+                alert("サーバーとの通信に失敗しました。コンソールを確認してください。\n" + e);
+            } finally {
+                // ボタンの状態を元に戻す
+                submitButton.disabled = false;
+                submitButton.classList.remove('loading');
+            }
+        }
+    </script>
+</body>
+</html>

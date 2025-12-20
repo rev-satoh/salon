@@ -35,19 +35,29 @@ export async function fetchAndDisplayAutoHistory() {
         // データ統合: 古いサロン名 'ケイトステージラッシュ' を新しい 'KATEstageLASH' にマッピング
         historyData = historyData.map(item => {
             const task = item.task || {};
-            // 「箱崎・千早・香椎周辺」エリアと「福岡」エリアのサロン名を統一する
-            // HPB特集の特定のページも同様にサロン名を統一する
+            const newItem = JSON.parse(JSON.stringify(item));
+
+            // 福岡・香椎エリアのデータ統合
             if (
                 (task.areaName === '箱崎・千早・香椎周辺' && (task.salonName === 'ケイトステージラッシュ' || task.salonName === 'KATE stage LASH')) ||
                 (task.areaName === '福岡' && task.salonName === 'ケイトステージラッシュ') ||
                 (task.type === 'special' && (task.featurePageName?.startsWith('福岡市東区で') || task.featurePageName?.startsWith('香椎駅で')) && (task.salonName === 'ケイトステージラッシュ' || task.salonName === 'KATE stage LASH'))
             )
             {
-                // 元のデータを変更しないように新しいオブジェクトを作成
-                const newItem = JSON.parse(JSON.stringify(item));
                 newItem.task.salonName = 'KATEstageLASH';
                 return newItem;
             }
+
+            // 池袋エリアのデータ統合
+            if (
+                (task.areaName === '西口・北口・目白' && (task.salonName === 'ケイトステージラッシュ' || task.salonName === 'KATE stage LASH')) ||
+                (task.type === 'special' && task.featurePageName?.startsWith('池袋駅で') && (task.salonName === 'ケイトステージラッシュ' || task.salonName === 'KATE stage LASH'))
+            )
+            {
+                newItem.task.salonName = 'KATE stage LASH';
+                return newItem;
+            }
+
             return item;
         });
 
@@ -354,9 +364,10 @@ function createHistoryTable(groupData, labels, activeSearchType, isHidden) {
 }
 
 function getNumericRank(rank) {
-    if (rank === null || rank === '-') return Infinity;
-    if (rank === '圏外' || typeof rank !== 'number') return 101;
-    return rank;
+    if (rank === null || rank === '-') return Infinity; // Handle non-rank values
+    const numRank = Number(rank); // Convert to number
+    if (rank === '圏外' || !isFinite(numRank)) return 101; // Check if it's a valid number
+    return numRank;
 }
 
 function getRankChangeStyle(diff) {
@@ -368,14 +379,17 @@ function getRankChangeStyle(diff) {
 }
 
 function convertRankToY(rank) {
-    if (typeof rank !== 'number') return rank === '圏外' ? 1.5 : NaN;
+    const rankNum = Number(rank);
+    if (!isFinite(rankNum)) {
+        return rank === '圏外' ? 1.5 : NaN;
+    }
     const points = [{ rank: 1, y: 6 }, { rank: 5, y: 5 }, { rank: 20, y: 4 }, { rank: 50, y: 3 }, { rank: 100, y: 2 }];
     for (let i = 0; i < points.length - 1; i++) {
-        if (rank >= points[i].rank && rank <= points[i + 1].rank) {
-            return points[i].y - ((rank - points[i].rank) / (points[i + 1].rank - points[i].rank || 1)) * (points[i].y - points[i + 1].y);
+        if (rankNum >= points[i].rank && rankNum <= points[i + 1].rank) {
+            return points[i].y - ((rankNum - points[i].rank) / (points[i + 1].rank - points[i].rank || 1)) * (points[i].y - points[i + 1].y);
         }
     }
-    return (rank < 1) ? 6 : 1.5;
+    return (rankNum < 1) ? 6 : 1.5;
 }
 
 async function exportToExcel(button, groupKey, groupData, activeSearchType) {
