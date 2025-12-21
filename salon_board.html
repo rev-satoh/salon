@@ -49,6 +49,17 @@
                                 <div class="card-body">
                                     <h5 class="card-title mb-3">記事作成</h5>
                                     <div class="mb-3">
+                                        <label for="blogCategory" class="form-label">カテゴリ</label>
+                                        <select class="form-select" id="blogCategory">
+                                            <option value="">選択してください</option>
+                                            <option value="プライベート">プライベート</option>
+                                            <option value="サロンのNEWS">サロンのNEWS</option>
+                                            <option value="おすすめメニュー">おすすめメニュー</option>
+                                            <option value="おすすめデザイン">おすすめデザイン</option>
+                                            <option value="ビューティー">ビューティー</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
                                         <label for="blogTitle" class="form-label">記事タイトル</label>
                                         <input type="text" class="form-control" id="blogTitle" placeholder="例：今月のおすすめクーポン！">
                                     </div>
@@ -74,14 +85,7 @@
                                         </div>
                                         <hr class="my-2">
                                         <!-- 店舗リスト -->
-                                        <div class="form-check"><input class="form-check-input store-check" type="checkbox" id="s1" value="fukuyama_ekimae"><label class="form-check-label" for="s1">福山駅前店</label></div>
-                                        <div class="form-check"><input class="form-check-input store-check" type="checkbox" id="s2" value="hiroshima_hatchobori"><label class="form-check-label" for="s2">広島八丁堀店</label></div>
-                                        <div class="form-check"><input class="form-check-input store-check" type="checkbox" id="s3" value="gifu_ekimae"><label class="form-check-label" for="s3">岐阜駅前店</label></div>
-                                        <div class="form-check"><input class="form-check-input store-check" type="checkbox" id="s4" value="ikebukuro"><label class="form-check-label" for="s4">池袋店</label></div>
-                                        <div class="form-check"><input class="form-check-input store-check" type="checkbox" id="s5" value="kashii"><label class="form-check-label" for="s5">香椎店</label></div>
-                                        <div class="form-check"><input class="form-check-input store-check" type="checkbox" id="s6" value="lorraine_sengawa"><label class="form-check-label" for="s6">ロレインブロウ仙川店</label></div>
-                                        <div class="form-check"><input class="form-check-input store-check" type="checkbox" id="s7" value="elua_kamiyacho"><label class="form-check-label" for="s7">elua紙屋町店</label></div>
-                                        <div class="form-check"><input class="form-check-input store-check" type="checkbox" id="s8" value="diaro"><label class="form-check-label" for="s8">ディアロ</label></div>
+                                        <div id="blogStoreList"></div>
                                     </div>
                                     <button id="submitBlogButton" class="btn btn-primary w-100 py-2" onclick="submitBlog()"><span class="spinner"></span><span>投稿を実行する</span></button>
                                 </div>
@@ -92,16 +96,255 @@
 
                 <!-- メニュー編集タブ -->
                 <div class="tab-pane fade" id="menu" role="tabpanel"><div class="card"><div class="card-body">メニュー編集機能は開発中です。</div></div></div>
+                
                 <!-- 設定タブ -->
-                <div class="tab-pane fade" id="settings" role="tabpanel"><div class="card"><div class="card-body">設定機能は開発中です。</div></div></div>
+                <div class="tab-pane fade" id="settings" role="tabpanel">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="card-title m-0">連携店舗一覧</h5>
+                                <button class="btn btn-success btn-sm" onclick="openStoreModal()">＋ 店舗を追加</button>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>店舗名</th>
+                                            <th>ID (システム用)</th>
+                                            <th>サロンボードID</th>
+                                            <th>スタッフ名</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="storeSettingsTableBody">
+                                        <!-- JSで生成 -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
+
+    <!-- 店舗追加・編集モーダル -->
+    <div class="modal fade" id="storeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="storeModalLabel">店舗設定</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="storeForm">
+                        <input type="hidden" id="editIndex">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="storeName" class="form-label">店舗名 <span class="badge bg-danger">必須</span></label>
+                                <input type="text" class="form-control" id="storeName" placeholder="例：渋谷店" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="storeId" class="form-label">ID (システム用・英数字) <span class="badge bg-danger">必須</span></label>
+                                <input type="text" class="form-control" id="storeId" placeholder="例：shibuya" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="sbId" class="form-label">サロンボードID <span class="badge bg-danger">必須</span></label>
+                                <input type="text" class="form-control" id="sbId" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="sbPassword" class="form-label">サロンボードパスワード <span class="badge bg-danger">必須</span></label>
+                                <input type="password" class="form-control" id="sbPassword" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="staffName" class="form-label">投稿スタッフ名</label>
+                                <input type="text" class="form-control" id="staffName" placeholder="サロンボード上の表示名と完全一致させてください">
+                                <div class="form-text">指定しない場合はデフォルトのスタッフが選択されます。</div>
+                            </div>
+                            <div class="col-12">
+                                <label for="templateText" class="form-label">定型文 (ブログ本文の末尾に追加されます)</label>
+                                <textarea class="form-control" id="templateText" rows="4" placeholder="署名や共通の案内などを入力してください"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                    <button type="button" class="btn btn-primary" onclick="saveStore()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div id="footer-placeholder"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        let storeSettings = { stores: [] };
+        const storeModal = new bootstrap.Modal(document.getElementById('storeModal'));
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStoreSettings();
+        });
+
+        async function loadStoreSettings() {
+            try {
+                const response = await fetch('/api/salon-board/settings');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (Array.isArray(data)) {
+                        storeSettings = { stores: data };
+                    } else {
+                        storeSettings = data;
+                    }
+                    if (!storeSettings.stores) storeSettings.stores = [];
+                    renderStoreTable();
+                    renderBlogStoreList();
+                }
+            } catch (e) {
+                console.error("設定の読み込みに失敗しました", e);
+            }
+        }
+
+        function renderStoreTable() {
+            const tbody = document.getElementById('storeSettingsTableBody');
+            tbody.innerHTML = '';
+            storeSettings.stores.forEach((store, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${store.name}</td>
+                    <td>${store.id}</td>
+                    <td>${store.sb_id}</td>
+                    <td>${store.staff_name || '-'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="openStoreModal(${index})">編集</button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteStore(${index})">削除</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderBlogStoreList() {
+            const container = document.getElementById('blogStoreList');
+            container.innerHTML = '';
+            if (storeSettings.stores.length === 0) {
+                container.innerHTML = '<div class="text-muted small p-2">店舗が設定されていません。「連携アカウント設定」タブから店舗を追加してください。</div>';
+                return;
+            }
+            storeSettings.stores.forEach(store => {
+                const div = document.createElement('div');
+                div.className = 'form-check';
+                div.innerHTML = `
+                    <input class="form-check-input store-check" type="checkbox" id="blog_store_${store.id}" value="${store.id}">
+                    <label class="form-check-label" for="blog_store_${store.id}">${store.name}</label>
+                `;
+                container.appendChild(div);
+            });
+
+            // localStorageから前回の選択状態を復元
+            try {
+                const lastSelected = JSON.parse(localStorage.getItem('lastSelectedBlogStores') || '[]');
+                if (lastSelected.length > 0) {
+                    lastSelected.forEach(storeId => {
+                        const checkbox = document.getElementById(`blog_store_${storeId}`);
+                        if (checkbox) checkbox.checked = true;
+                    });
+                }
+            } catch (e) {
+                console.error("Failed to restore store selection:", e);
+            }
+        }
+
+        function openStoreModal(index = null) {
+            document.getElementById('storeForm').reset();
+            document.getElementById('editIndex').value = index !== null ? index : '';
+            
+            if (index !== null) {
+                const store = storeSettings.stores[index];
+                document.getElementById('storeName').value = store.name;
+                document.getElementById('storeId').value = store.id;
+                document.getElementById('sbId').value = store.sb_id;
+                document.getElementById('sbPassword').value = store.sb_password;
+                document.getElementById('staffName').value = store.staff_name || '';
+                document.getElementById('templateText').value = store.template_text || '';
+                document.getElementById('storeModalLabel').innerText = '店舗編集';
+            } else {
+                document.getElementById('storeModalLabel').innerText = '店舗追加';
+            }
+            storeModal.show();
+        }
+
+        async function saveStore() {
+            const name = document.getElementById('storeName').value;
+            const id = document.getElementById('storeId').value;
+            const sbId = document.getElementById('sbId').value;
+            const sbPassword = document.getElementById('sbPassword').value;
+            
+            if (!name || !id || !sbId || !sbPassword) {
+                alert('必須項目を入力してください');
+                return;
+            }
+
+            const storeData = {
+                name: name,
+                id: id,
+                sb_id: sbId,
+                sb_password: sbPassword,
+                staff_name: document.getElementById('staffName').value,
+                template_text: document.getElementById('templateText').value
+            };
+
+            const index = document.getElementById('editIndex').value;
+            if (index !== '') {
+                storeSettings.stores[index] = storeData;
+            } else {
+                // ID重複チェック
+                if (storeSettings.stores.some(s => s.id === id)) {
+                    alert('このIDは既に使用されています。別のIDを指定してください。');
+                    return;
+                }
+                storeSettings.stores.push(storeData);
+            }
+
+            try {
+                const response = await fetch('/api/salon-board/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(storeSettings)
+                });
+                
+                if (response.ok) {
+                    storeModal.hide();
+                    renderStoreTable();
+                    renderBlogStoreList();
+                    alert('設定を保存しました');
+                } else {
+                    alert('保存に失敗しました');
+                }
+            } catch (e) {
+                alert('エラーが発生しました: ' + e);
+            }
+        }
+
+        async function deleteStore(index) {
+            if (!confirm('この店舗設定を削除してもよろしいですか？')) return;
+            
+            storeSettings.stores.splice(index, 1);
+            
+            try {
+                await fetch('/api/salon-board/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(storeSettings)
+                });
+                renderStoreTable();
+                renderBlogStoreList();
+            } catch (e) {
+                alert('削除に失敗しました: ' + e);
+            }
+        }
+
         function toggleAllStores(e){
             document.querySelectorAll(".store-check").forEach(c=>c.checked=e.checked)
         }
@@ -110,13 +353,18 @@
             const submitButton = document.getElementById('submitBlogButton');
             const title = document.getElementById('blogTitle').value;
             const content = document.getElementById('blogContent').value;
+            const category = document.getElementById('blogCategory').value;
+            const imageInput = document.getElementById('blogImage');
             
             // チェックされた店舗のID(value)を取得
             const checkedBoxes = document.querySelectorAll('.store-check:checked');
             const storeIds = Array.from(checkedBoxes).map(cb => cb.value).filter(val => val && val.trim() !== '');
 
-            if (!title || !content) {
-                alert("タイトルと本文を入力してください。");
+            // 選択された店舗IDをlocalStorageに保存
+            localStorage.setItem('lastSelectedBlogStores', JSON.stringify(storeIds));
+
+            if (!title || !content || !category) {
+                alert("タイトル、本文、カテゴリを入力してください。");
                 return;
             }
             if (storeIds.length === 0) {
@@ -130,11 +378,20 @@
             submitButton.disabled = true;
             submitButton.classList.add('loading');
 
+            // FormDataオブジェクトを作成してデータを追加
+            const formData = new FormData();
+            formData.append('store_ids', JSON.stringify(storeIds));
+            formData.append('title', title);
+            formData.append('content', content);
+            formData.append('category', category);
+            if (imageInput.files.length > 0) {
+                formData.append('image', imageInput.files[0]);
+            }
+
             try {
                 const response = await fetch('/api/post-blog', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ store_ids: storeIds, title: title, content: content })
+                    body: formData // JSON.stringifyせず、FormDataをそのまま渡す
                 });
 
                 const result = await response.json();

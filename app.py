@@ -10,6 +10,7 @@ import os
 import json
 import datetime
 import traceback # エラー詳細ログのためにインポート
+import tempfile # 一時ファイル作成用
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -45,6 +46,7 @@ CORS(app, resources={r"/api/*": {"origins": "*"}, r"/*": {"origins": "*"}})
 if not config.GOOGLE_API_KEY:
     app.logger.warning("GOOGLE_API_KEYが.envファイルに設定されていません。MEO計測機能は利用できません。")
 
+SALON_BOARD_SETTINGS_FILE = 'salon_board_settings.json'
 # --- グローバル変数と設定 ---
 
 # --- 計測ジョブの同時実行を防ぐためのロック ---
@@ -225,6 +227,15 @@ def handle_auto_tasks():
         save_json_file(config.TASKS_FILE, tasks)
         return jsonify({"message": "設定を保存しました"}), 200
 
+@app.route('/api/salon-board/settings', methods=['GET', 'POST'])
+def handle_salon_board_settings():
+    if request.method == 'GET':
+        return jsonify(load_json_file(SALON_BOARD_SETTINGS_FILE))
+    elif request.method == 'POST':
+        data = request.get_json()
+        save_json_file(SALON_BOARD_SETTINGS_FILE, data)
+        return jsonify({"message": "設定を保存しました"}), 200
+
 @app.route('/api/save-auto-history-entry', methods=['POST'])
 def save_auto_history_entry():
     """手動実行された自動計測タスクの結果を1件保存する"""
@@ -353,28 +364,51 @@ def post_blog_api():
     """
     フロントエンドからブログ投稿リクエストを受け取り、自動化処理を呼び出すAPI。
     """
-    data = request.get_json()
-    if not data:
-        return jsonify({"status": "error", "message": "リクエストデータがありません。"}), 400
+    # フォームデータとファイルを受け取る
+    store_ids_json = request.form.get('store_ids')
+    title = request.form.get('title')
+    content = request.form.get('content')
+    category = request.form.get('category')
+    image_file = request.files.get('image')
 
-    store_ids = data.get('store_ids')
-    title = data.get('title')
-    content = data.get('content')
+    if not store_ids_json:
+         return jsonify({"status": "error", "message": "店舗IDが指定されていません。"}), 400
+    
+    try:
+        store_ids = json.loads(store_ids_json)
+    except json.JSONDecodeError:
+        return jsonify({"status": "error", "message": "店舗IDの形式が不正です。"}), 400
 
-    if not all([store_ids, title, content]):
-        return jsonify({"status": "error", "message": "必須項目（店舗ID, タイトル, 本文）が不足しています。"}), 400
+    if not all([store_ids, title, content, category]):
+        return jsonify({"status": "error", "message": "必須項目（店舗ID, タイトル, 本文, カテゴリ）が不足しています。"}), 400
+
+    # 画像ファイルがある場合、一時ファイルとして保存
+    temp_image_path = None
+    if image_file:
+        # 拡張子を取得
+        _, ext = os.path.splitext(image_file.filename)
+        # 一時ファイルを作成 (delete=Falseにして、後で手動で削除する)
+        with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as temp_f:
+            image_file.save(temp_f)
+            temp_image_path = temp_f.name
 
     # 複数店舗対応を想定し、ループで処理する
-    # 今回はまず1店舗（福山駅前店）で実装を進める
     results = []
     for store_id in store_ids:
         try:
             # Step2で作成する自動化ロジックを呼び出す
-            result = post_blog_to_store(store_id, title, content)
+            result = post_blog_to_store(store_id, title, content, category, image_path=temp_image_path)
             results.append(result)
         except Exception as e:
             app.logger.error(f"ブログ投稿処理中にエラー (store_id: {store_id}): {e}\n{traceback.format_exc()}")
             results.append({"store_id": store_id, "status": "error", "message": f"サーバー側で予期せぬエラーが発生しました: {e}"})
+
+    # 一時ファイルの削除
+    if temp_image_path and os.path.exists(temp_image_path):
+        try:
+            os.remove(temp_image_path)
+        except Exception as e:
+            app.logger.warning(f"一時ファイルの削除に失敗しました: {e}")
 
     # 1件でも成功があれば全体としては成功として返す（詳細はresults内で確認）
     has_success = any(r.get('status') == 'success' for r in results)

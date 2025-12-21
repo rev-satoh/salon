@@ -1,25 +1,31 @@
 import time
 import traceback
+import re
+import os
+import datetime
+import json
 from flask import current_app
 from playwright.sync_api import sync_playwright, TimeoutError
 
-# --- 店舗情報管理 ---
-#【重要】
-# 本番環境では、ID/パスワードをコードに直接記述せず、
-# 環境変数や暗号化された設定ファイルなど、安全な方法で管理してください。
-STORE_CREDENTIALS = {
-    "fukuyama_ekimae": {
-        "id": "CE34001",      # 福山駅前店のサロンボードIDに書き換えてください
-        "password": "YOUR_FUKUYAMA_PASSWORD" # 福山駅前店のパスワードに書き換えてください
-    },
-    # 他の店舗も同様に追加できます
-    # "hiroshima_hatchobori": {
-    #     "id": "YOUR_HIROSHIMA_ID",
-    #     "password": "YOUR_HIROSHIMA_PASSWORD"
-    # },
+CATEGORY_MAPPING = {
+    "プライベート": "KL01",
+    "サロンのNEWS": "KL02",
+    "おすすめメニュー": "KL03",
+    "おすすめデザイン": "KL04",
+    "ビューティー": "KL05",
 }
 
-def post_blog_to_store(store_id: str, title: str, content: str) -> dict:
+def load_salon_board_settings():
+    try:
+        with open('salon_board_settings.json', 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            if isinstance(data, list):
+                return {"stores": data}
+            return data
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {"stores": []}
+
+def post_blog_to_store(store_id: str, title: str, content: str, category: str, image_path: str = None) -> dict:
     """
     指定された店舗IDでサロンボードにログインし、ブログを投稿する。
 
@@ -27,88 +33,274 @@ def post_blog_to_store(store_id: str, title: str, content: str) -> dict:
         store_id (str): 店舗を識別するID (例: "fukuyama_ekimae")
         title (str): ブログのタイトル
         content (str): ブログの本文
+        category (str): ブログのカテゴリ (例: "プライベート", "サロンのNEWS")
+        image_path (str, optional): アップロードする画像のパス
 
     Returns:
         dict: 処理結果 (status, messageなど)
     """
-    # 1. 認証情報の取得
-    credentials = STORE_CREDENTIALS.get(store_id)
-    if not credentials:
-        return {"store_id": store_id, "status": "error", "message": "店舗IDに対応する認証情報が見つかりません。"}
+    # 1. 設定ファイルから店舗情報を取得
+    settings = load_salon_board_settings()
+    store_config = next((s for s in settings.get("stores", []) if s["id"] == store_id), None)
+    
+    if not store_config:
+        return {"store_id": store_id, "status": "error", "message": "店舗設定が見つかりません。"}
 
-    # 2. Playwrightの実行
-    # with sync_playwright() as p: # 本番環境はこちら
-    #     browser = p.chromium.launch(headless=True) # 本番環境はTrue
+    # 定型文がある場合、本文の末尾に追加
+    if store_config.get("template_text"):
+        content += "\n\n" + store_config["template_text"]
+
+    credentials = {
+        "id": store_config.get("sb_id"),
+        "password": store_config.get("sb_password"),
+        "staff_name": store_config.get("staff_name")
+    }
+    
+    p = None
+    browser = None
     try:
-        with sync_playwright() as p:
-            # headless=Falseにすると、デバッグ時にブラウザの動きを視覚的に確認できます
-            browser = p.chromium.launch(headless=True, args=['--no-sandbox', '--disable-setuid-sandbox'])
-            page = browser.new_page()
+        p = sync_playwright().start()
+        # headless=Falseにすると、デバッグ時にブラウザの動きを視覚的に確認できます
+        # slow_mo=500 (0.5秒) に設定して、入力の様子を確認しやすくします
+        browser = p.chromium.launch(
+            headless=False, # 動作確認のためブラウザを表示。本番運用ではTrueに変更推奨
+            # slow_mo=500, # サーバーのタイムアウトを避けるため、遅延を削除
+            args=['--no-sandbox', '--disable-setuid-sandbox']
+        )
+        page = browser.new_page()
 
-            # --- ログイン処理 ---
-            current_app.logger.info(f"[{store_id}] サロンボードへのログインを開始します。")
-            page.goto("https://salonboard.com/login/")
-            
-            #【注意】セレクタは実際のサイトに合わせて調整が必要な場合があります
-            page.fill('input[name="id"]', credentials["id"])
-            page.fill('input[name="password"]', credentials["password"])
-            page.click('button[type="submit"]')
+        # --- ログイン処理 ---
+        current_app.logger.info(f"[{store_id}] サロンボードへのログインを開始します。")
+        page.goto("https://salonboard.com/login/")
+        
+        # ログインボタンが表示されるのを待つことで、ページが操作可能になったことを確認します
+        # 共有いただいたHTMLに基づき、セレクタを 'a:has-text("ログイン")' に修正
+        current_app.logger.info(f"[{store_id}] ログインフォームの表示を待っています...")
+        page.wait_for_selector('a:has-text("ログイン")', timeout=15000)
+        current_app.logger.info(f"[{store_id}] フォームを認識しました。入力を開始します。")
+        
+        # 共有いただいたHTMLに基づき、入力欄の特定方法を修正します。
+        # ID入力欄は name="userId" で特定
+        page.locator('input[name="userId"]').fill(credentials["id"])
+        current_app.logger.info(f"[{store_id}] IDを入力しました。")
 
-            # ログイン成功の確認 (トップページのURLに遷移するのを待つ)
-            page.wait_for_url("https://salonboard.com/main/top/", timeout=15000)
+        # パスワード入力欄は name="password" で特定
+        page.locator('input[name="password"]').fill(credentials["password"])
+        current_app.logger.info(f"[{store_id}] パスワードを入力しました。")
+
+        # ログインボタンは「ログイン」というテキストを持つリンク(aタグ)なので、get_by_roleで特定
+        # strict modeエラーを回避するため、.first をつけて最初に見つかった要素をクリックする
+        page.get_by_role('link', name='ログイン').first.click()
+        current_app.logger.info(f"[{store_id}] ログインボタンをクリックしました。")
+
+        # ログイン成功 or 失敗の判別
+        # ご指摘の通り、ログイン失敗時の具体的なエラーメッセージを取得するように修正します。
+        try:
+            # まずはログイン成功（トップページへの遷移）を待ちます
+            # 読み込みに時間がかかる場合があるため、タイムアウトを60秒に延長します
+            # URLが /KLP/top/ や /main/top/ など変わる可能性があるため、正規表現で待機します
+            page.wait_for_url(re.compile(r"/KLP/top/"), timeout=60000)
             current_app.logger.info(f"[{store_id}] ログインに成功しました。")
-
-            # --- ブログ投稿ページへ移動 ---
-            current_app.logger.info(f"[{store_id}] ブログ登録ページへ移動します。")
-            # 直接URLを指定する方が、UIの変更に強く安定します
-            page.goto("https://salonboard.com/blog/blog_entry/")
-
-            # --- ブログ内容の入力 ---
-            current_app.logger.info(f"[{store_id}] ブログのタイトルと本文を入力します。")
-            #【注意】セレクタは実際のサイトに合わせて調整が必要な場合があります
-            page.wait_for_selector('input[name="blogTitle"]', timeout=10000)
-            page.fill('input[name="blogTitle"]', title)
-
-            # 本文入力エリアはiframe内にあるため、frameを取得してから操作する
-            # 'wysiwygTextarea_ifr' は実際のiframeのIDやname属性に置き換えてください
-            frame = page.frame_locator('iframe[id$="_ifr"]') # IDが "_ifr" で終わるiframeを探す
-            # iframe内のbody要素に本文を入力
-            frame.locator('body#tinymce').fill(content)
-
-            # --- 確認画面へ進み、投稿を実行 ---
-            current_app.logger.info(f"[{store_id}] 確認画面へ進み、投稿を実行します。")
-            #【注意】セレクタは実際のサイトに合わせて調整が必要な場合があります
-            page.click('input#confirm') # 確認画面へ
             
-            page.wait_for_url("https://salonboard.com/blog/blog_confirm/", timeout=10000)
-            
-            page.click('input#entry') # 登録実行
+            # トップページの読み込みが落ち着くまで待機（最大10秒）
+            try:
+                page.wait_for_load_state('networkidle', timeout=10000)
+            except TimeoutError:
+                current_app.logger.warning(f"[{store_id}] トップページの読み込み完了待機がタイムアウトしましたが、処理を続行します。")
 
-            # 投稿完了画面への遷移を待つ
-            page.wait_for_url("https://salonboard.com/blog/blog_complete/", timeout=15000)
+            # --- お知らせポップアップなどがあれば閉じる処理を追加 ---
+            # ログイン直後に表示される可能性のあるポップアップを5秒以内に閉じる試み
+            try:
+                current_app.logger.info(f"[{store_id}] お知らせポップアップの確認を試みます...")
+                # 一般的な「閉じる」ボタンやリンクを探す。セレクタは実際のサイトに合わせて調整が必要。
+                close_button = page.locator('button:has-text("閉じる"), a:has-text("閉じる"), input[type="button"][value="閉じる"]').first
+                close_button.click(timeout=5000)
+                current_app.logger.info(f"[{store_id}] お知らせポップアップを閉じました。")
+            except TimeoutError:
+                # 5秒以内にポップアップが見つからなければ、存在しないと判断して処理を続行
+                current_app.logger.info(f"[{store_id}] お知らせポップアップは見つかりませんでした。処理を続行します。")
+
+        except TimeoutError:
+            # タイムアウトした場合、ログイン失敗と判断し、画面上のエラーメッセージを探す
+            current_app.logger.warning(f"[{store_id}] ログイン後のページ遷移がタイムアウトしました。エラーメッセージの有無を確認します。")
+            try:
+                # ユーザーから提供されたエラーメッセージ「IDもしくはパスワードの入力が正しくありません。」を直接テキストで探します。
+                # これにより、HTML構造の変更に強い、より確実なエラー検出が可能になります。
+                error_locator = page.locator('text="IDもしくはパスワードの入力が正しくありません。"')
+                
+                # エラーメッセージが表示されるまで最大5秒待機します。
+                error_locator.wait_for(timeout=5000)
+                
+                error_text = error_locator.inner_text()
+                error_message = f"ログインに失敗しました: {error_text.strip()}"
+                current_app.logger.error(f"[{store_id}] {error_message}")
+                return {"store_id": store_id, "status": "error", "message": error_message}
+            except Exception: # TimeoutErrorやその他のエラーをキャッチ
+                # 上記の特定のエラーメッセージが見つからなかった場合のフォールバック
+                error_message = "ログインに失敗しました。ID/パスワードが正しいか、または予期せぬ画面が表示されていないか確認してください。"
+                current_app.logger.error(f"[{store_id}] {error_message} (具体的なエラーメッセージは取得できませんでした)", exc_info=True)
+                return {"store_id": store_id, "status": "error", "message": error_message}
+
+        # --- ブログ編集入力画面へ直接移動 ---
+        blog_edit_url = "https://salonboard.com/KLP/blog/blog/"
+        current_app.logger.info(f"[{store_id}] ブログ編集入力画面 ({blog_edit_url}) へ直接移動します。")
+        page.goto(blog_edit_url)
+        
+        # ブログ編集ページ（blog/ または blog_entry/）への遷移を待機
+        page.wait_for_url(re.compile(r"/KLP/blog/blog(_entry)?/"), timeout=20000)
+        current_app.logger.info(f"[{store_id}] ブログ編集ページに遷移しました。")
+
+        # --- ブログ内容の入力 ---
+        current_app.logger.info(f"[{store_id}] ブログの内容を入力します。")
+
+        # カテゴリの選択
+        current_app.logger.info(f"[{store_id}] カテゴリ「{category}」を選択します。")
+        # サロンボードのカテゴリ選択要素のname属性と、各カテゴリのvalue属性は、実際のサイトのHTMLに合わせて調整してください。
+        # ここでは仮にname="blogCategoryCd"とし、値はCATEGORY_MAPPINGで定義します。
+        salon_board_category_value = CATEGORY_MAPPING.get(category, category)
+        try:
+            # カテゴリ選択のセレクタを実際のHTMLに合わせて 'select[name="blogCategoryCd"]' に修正
+            page.wait_for_selector('select[name="blogCategoryCd"]', timeout=15000)
+            page.select_option('select[name="blogCategoryCd"]', value=salon_board_category_value)
+            current_app.logger.info(f"[{store_id}] カテゴリ「{category}」を選択しました。")
+        except TimeoutError:
+            current_app.logger.warning(f"[{store_id}] カテゴリ選択要素が見つからないか、選択に失敗しました。")
+        except Exception as e:
+            current_app.logger.warning(f"[{store_id}] カテゴリ選択中に予期せぬエラー: {e}")
+        
+        # 投稿者の選択
+        if "staff_name" in credentials and credentials["staff_name"]:
+            target_staff = credentials["staff_name"]
+            current_app.logger.info(f"[{store_id}] 投稿者「{target_staff}」を選択します。")
+            try:
+                # 投稿者選択のプルダウン (一般的に name="staffId")
+                page.wait_for_selector('select[name="staffId"]', timeout=5000)
+                page.select_option('select[name="staffId"]', label=target_staff)
+                current_app.logger.info(f"[{store_id}] 投稿者を選択しました。")
+            except Exception as e:
+                current_app.logger.warning(f"[{store_id}] 投稿者の選択に失敗しました（デフォルトまたは選択なしで続行します）: {e}")
+
+        # タイトル入力欄が表示されるのを待ってから入力
+        title_locator = page.locator('input[name="title"]')
+        title_locator.wait_for(state='visible', timeout=15000)
+        current_app.logger.info(f"[{store_id}] タイトル入力欄を認識。入力します。")
+        title_locator.fill(title)
+        current_app.logger.info(f"[{store_id}] タイトル「{title}」を入力しました。")
+
+        # ユーザーの要望に基づき、画像を先に挿入し、その後に本文を入力するフローに変更
+        content_locator = page.locator('.nicEdit-main')
+        content_locator.wait_for(state='visible', timeout=15000)
+        
+        # 本文入力の前に、まずエリアをクリアする
+        current_app.logger.info(f"[{store_id}] 本文入力エリアをクリアします。")
+        content_locator.fill("") 
+
+        # 画像アップロード (本文入力より先に実行)
+        if image_path and os.path.exists(image_path):
+            try:
+                current_app.logger.info(f"[{store_id}] 画像アップロード処理を開始します: {image_path}")
+                
+                # 1. 「画像アップロード」ボタンをクリックしてモーダルを開く
+                page.click('#upload')
+                current_app.logger.info(f"[{store_id}] 画像アップロードボタンをクリックしました。")
+
+                # 2. モーダルが表示されるのを待つ
+                page.wait_for_selector('.jscImageUploaderModal', state='visible', timeout=10000)
+
+                # 3. ファイル入力要素にファイルをセットする (id="sendFile")
+                page.locator('#sendFile').set_input_files(image_path)
+                current_app.logger.info(f"[{store_id}] ファイルをセットしました。")
+
+                # 4. 「登録する」ボタンをクリックする
+                page.click('.jscImageUploaderModalSubmitButton')
+                current_app.logger.info(f"[{store_id}] 登録ボタンをクリックしました。")
+
+                # 5. モーダルが閉じるのを待つ（アップロード完了待ち）
+                page.wait_for_selector('.jscImageUploaderModal', state='hidden', timeout=20000)
+                current_app.logger.info(f"[{store_id}] 画像アップロード処理が完了しました。")
+                
+                time.sleep(1) # 念のため少し待機
+            except Exception as e:
+                current_app.logger.warning(f"[{store_id}] 画像アップロードに失敗しましたが、続行します: {e}")
+                # エラー発生時、モーダルが開いたままなら閉じる試みをする
+                try:
+                    if page.locator('.jscImageUploaderModal').is_visible():
+                        page.locator('.jscImageUploaderModalCloseButton').first.click()
+                except:
+                    pass
+
+        # 本文を入力
+        current_app.logger.info(f"[{store_id}] 本文を入力します。")
+        # 画像が挿入された後、本文エリアに追記する
+        content_locator.press_sequentially(content, delay=50) 
+        current_app.logger.info(f"[{store_id}] 本文を入力しました。")
+
+        # --- 確認画面へ進み、投稿を実行 ---
+        current_app.logger.info(f"[{store_id}] 確認画面へ進み、投稿を実行します。")
+        #【注意】セレクタは実際のサイトに合わせて調整が必要な場合があります
+
+        # 「確認する」ボタンクリック後に表示されることがある確認ダイアログを自動で承諾
+        page.on("dialog", lambda dialog: dialog.accept())
+
+        # STEP 1: 「確認する」ボタンをクリック
+        current_app.logger.info(f"[{store_id}] 「確認する」ボタンをクリックします。")
+        page.click('#confirm')
+
+        # STEP 2: 「登録・反映する」ボタンが表示されるのを待ってからクリックし、完了ページへの遷移を待ちます
+        try:
+            # 「登録・反映する」ボタン(a#reflect)が表示されるのを待つ
+            current_app.logger.info(f"[{store_id}] 「登録・反映する」ボタンが表示されるのを待ちます。")
+            entry_button_locator = page.locator('a#reflect')
+            entry_button_locator.wait_for(state='visible', timeout=15000)
+
+            current_app.logger.info(f"[{store_id}] 「登録・反映する」ボタンをクリックし、完了ページへの遷移を待ちます。")
+            # 「登録・反映する」ボタンのクリックと、完了ページへの遷移を同時に待つ
+            with page.expect_navigation(url=re.compile(r"/KLP/blog/blog/complete/?$"), timeout=30000):
+                entry_button_locator.click()
+
             current_app.logger.info(f"[{store_id}] ブログ投稿が完了しました。")
 
-            browser.close()
-            return {"store_id": store_id, "status": "success", "message": "ブログを投稿しました。"}
+        except TimeoutError as e:
+            # タイムアウト時のエラーハンドリングを調整
+            error_message = f"投稿処理がタイムアウトしました。画面上のエラーメッセージを確認してください。"
+            screenshot_path = ""
+            try:
+                screenshot_dir = "screenshots"
+                os.makedirs(screenshot_dir, exist_ok=True)
+                screenshot_path = os.path.join(screenshot_dir, f"error_post_timeout_{store_id}_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.png")
+                page.screenshot(path=screenshot_path)
+                current_app.logger.error(f"[{store_id}] 投稿処理タイムアウト。スクリーンショットを保存しました: {screenshot_path}")
+            except Exception as ss_e:
+                current_app.logger.error(f"[{store_id}] スクリーンショットの保存に失敗しました: {ss_e}")
+            
+            try:
+                error_elem = page.locator('.error, .alert, .errormsg, .error_list').first
+                if error_elem.is_visible():
+                    error_message += f" 画面上のエラー: {error_elem.inner_text().strip()}"
+            except:
+                pass
+            raise Exception(error_message)
+        
+        # 成功時のみブラウザを閉じる
+        browser.close()
+        p.stop()
+        return {"store_id": store_id, "status": "success", "message": "ブログを投稿しました。"}
 
     except TimeoutError as e:
-        error_message = "タイムアウトエラーが発生しました。"
-        if "main/top" in str(e):
-            error_message = "ログインに失敗しました。IDまたはパスワードを確認してください。"
-        elif "blog_entry" in str(e):
+        # ログイン以外の処理でのタイムアウトエラー
+        error_message = "処理がタイムアウトしました。"
+        if "blog_entry" in str(e):
             error_message = "ブログ登録ページの読み込みに失敗しました。"
         elif "blog_confirm" in str(e):
             error_message = "ブログ確認ページの読み込みに失敗しました。"
         elif "blog_complete" in str(e):
             error_message = "ブログ投稿完了ページの確認に失敗しました。投稿されているか確認してください。"
-        
+
         current_app.logger.error(f"[{store_id}] {error_message}\n{traceback.format_exc()}")
-        if 'browser' in locals() and browser.is_connected():
-            browser.close()
+        # エラー時はブラウザを閉じない
         return {"store_id": store_id, "status": "error", "message": error_message}
 
     except Exception as e:
         current_app.logger.error(f"[{store_id}] 予期せぬエラーが発生しました。\n{traceback.format_exc()}")
-        if 'browser' in locals() and browser.is_connected():
-            browser.close()
+        # エラー時はブラウザを閉じない
         return {"store_id": store_id, "status": "error", "message": f"予期せぬエラーが発生しました: {str(e)}"}
