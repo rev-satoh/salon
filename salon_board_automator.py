@@ -25,7 +25,7 @@ def load_salon_board_settings():
     except (FileNotFoundError, json.JSONDecodeError):
         return {"stores": []}
 
-def post_blog_to_store(store_id: str, title: str, content: str, category: str, image_path: str = None) -> dict:
+def post_blog_to_store(store_id: str, title: str, content: str, category: str, publish_status: str, image_path: str = None) -> dict:
     """
     指定された店舗IDでサロンボードにログインし、ブログを投稿する。
 
@@ -34,6 +34,7 @@ def post_blog_to_store(store_id: str, title: str, content: str, category: str, i
         title (str): ブログのタイトル
         content (str): ブログの本文
         category (str): ブログのカテゴリ (例: "プライベート", "サロンのNEWS")
+        publish_status (str): 'publish' (登録・反映する) または 'draft' (登録・未反映にする)
         image_path (str, optional): アップロードする画像のパス
 
     Returns:
@@ -101,24 +102,6 @@ def post_blog_to_store(store_id: str, title: str, content: str, category: str, i
             # URLが /KLP/top/ や /main/top/ など変わる可能性があるため、正規表現で待機します
             page.wait_for_url(re.compile(r"/KLP/top/"), timeout=60000)
             current_app.logger.info(f"[{store_id}] ログインに成功しました。")
-            
-            # トップページの読み込みが落ち着くまで待機（最大10秒）
-            try:
-                page.wait_for_load_state('networkidle', timeout=10000)
-            except TimeoutError:
-                current_app.logger.warning(f"[{store_id}] トップページの読み込み完了待機がタイムアウトしましたが、処理を続行します。")
-
-            # --- お知らせポップアップなどがあれば閉じる処理を追加 ---
-            # ログイン直後に表示される可能性のあるポップアップを5秒以内に閉じる試み
-            try:
-                current_app.logger.info(f"[{store_id}] お知らせポップアップの確認を試みます...")
-                # 一般的な「閉じる」ボタンやリンクを探す。セレクタは実際のサイトに合わせて調整が必要。
-                close_button = page.locator('button:has-text("閉じる"), a:has-text("閉じる"), input[type="button"][value="閉じる"]').first
-                close_button.click(timeout=5000)
-                current_app.logger.info(f"[{store_id}] お知らせポップアップを閉じました。")
-            except TimeoutError:
-                # 5秒以内にポップアップが見つからなければ、存在しないと判断して処理を続行
-                current_app.logger.info(f"[{store_id}] お知らせポップアップは見つかりませんでした。処理を続行します。")
 
         except TimeoutError:
             # タイムアウトした場合、ログイン失敗と判断し、画面上のエラーメッセージを探す
@@ -231,34 +214,61 @@ def post_blog_to_store(store_id: str, title: str, content: str, category: str, i
 
         # 本文を入力
         current_app.logger.info(f"[{store_id}] 本文を入力します。")
-        # 画像が挿入された後、本文エリアに追記する
-        content_locator.press_sequentially(content, delay=50) 
+        
+        if image_path and os.path.exists(image_path):
+            # 画像がある場合、画像を消さないように追記モードで入力
+            # JavaScriptを使ってカーソルを確実に末尾（画像の後ろ）に移動
+            content_locator.evaluate("""(el) => {
+                el.focus();
+                const range = document.createRange();
+                range.selectNodeContents(el);
+                range.collapse(false);
+                const sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }""")
+            # insert_textで高速に入力（ペーストに近い挙動）
+            page.keyboard.insert_text(content)
+        else:
+            # 画像がない場合は fill で一括入力（最速）
+            content_locator.fill(content)
+            
         current_app.logger.info(f"[{store_id}] 本文を入力しました。")
 
         # --- 確認画面へ進み、投稿を実行 ---
         current_app.logger.info(f"[{store_id}] 確認画面へ進み、投稿を実行します。")
-        #【注意】セレクタは実際のサイトに合わせて調整が必要な場合があります
 
         # 「確認する」ボタンクリック後に表示されることがある確認ダイアログを自動で承諾
         page.on("dialog", lambda dialog: dialog.accept())
 
         # STEP 1: 「確認する」ボタンをクリック
         current_app.logger.info(f"[{store_id}] 「確認する」ボタンをクリックします。")
-        page.click('#confirm')
+        # 確認ボタンのセレクタは '#confirm' または name="confirm" の input の可能性がある
+        page.locator('#confirm, input[name="confirm"]').first.click()
 
-        # STEP 2: 「登録・反映する」ボタンが表示されるのを待ってからクリックし、完了ページへの遷移を待ちます
+        # STEP 2: 「登録・反映する」または「登録・未反映にする」ボタンをクリック
         try:
-            # 「登録・反映する」ボタン(a#reflect)が表示されるのを待つ
-            current_app.logger.info(f"[{store_id}] 「登録・反映する」ボタンが表示されるのを待ちます。")
-            entry_button_locator = page.locator('a#reflect')
+            if publish_status == 'publish':
+                button_text = '登録・反映する'
+                success_message = "ブログを投稿しました。"
+            else:  # 'draft' の場合
+                button_text = '登録・未反映にする'
+                success_message = "ブログを下書き保存しました。"
+
+            # ログから、「登録・未反映」でも完了ページに遷移する場合があることが判明したため、
+            # 完了ページ(/complete/)と一覧ページ(/list/)のどちらに遷移しても成功とみなすように修正します。
+            completion_url_re = r"/KLP/blog/blog/(complete|list)/?$"
+
+            current_app.logger.info(f"[{store_id}] 「{button_text}」ボタンが表示されるのを待ちます。")
+            # IDセレクタ('a#entry')が原因でタイムアウトしていたため、より堅牢なテキスト指定に変更します。
+            entry_button_locator = page.get_by_role("link", name=button_text)
             entry_button_locator.wait_for(state='visible', timeout=15000)
 
-            current_app.logger.info(f"[{store_id}] 「登録・反映する」ボタンをクリックし、完了ページへの遷移を待ちます。")
-            # 「登録・反映する」ボタンのクリックと、完了ページへの遷移を同時に待つ
-            with page.expect_navigation(url=re.compile(r"/KLP/blog/blog/complete/?$"), timeout=30000):
+            current_app.logger.info(f"[{store_id}] 「{button_text}」ボタンをクリックし、完了ページへの遷移を待ちます。")
+            with page.expect_navigation(url=re.compile(completion_url_re), timeout=30000):
                 entry_button_locator.click()
 
-            current_app.logger.info(f"[{store_id}] ブログ投稿が完了しました。")
+            current_app.logger.info(f"[{store_id}] ブログの「{button_text}」が完了しました。")
 
         except TimeoutError as e:
             # タイムアウト時のエラーハンドリングを調整
@@ -284,7 +294,7 @@ def post_blog_to_store(store_id: str, title: str, content: str, category: str, i
         # 成功時のみブラウザを閉じる
         browser.close()
         p.stop()
-        return {"store_id": store_id, "status": "success", "message": "ブログを投稿しました。"}
+        return {"store_id": store_id, "status": "success", "message": success_message}
 
     except TimeoutError as e:
         # ログイン以外の処理でのタイムアウトエラー

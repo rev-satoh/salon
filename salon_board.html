@@ -71,6 +71,19 @@
                                         <label for="blogImage" class="form-label">画像アップロード (任意)</label>
                                         <input class="form-control" type="file" id="blogImage">
                                     </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">公開設定</label>
+                                        <div class="d-flex gap-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="publishStatus" id="statusPublish" value="publish" checked>
+                                                <label class="form-check-label" for="statusPublish">登録・反映する</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="publishStatus" id="statusDraft" value="draft">
+                                                <label class="form-check-label" for="statusDraft">登録・未反映にする</label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -355,6 +368,7 @@
             const content = document.getElementById('blogContent').value;
             const category = document.getElementById('blogCategory').value;
             const imageInput = document.getElementById('blogImage');
+            const publishStatus = document.querySelector('input[name="publishStatus"]:checked').value;
             
             // チェックされた店舗のID(value)を取得
             const checkedBoxes = document.querySelectorAll('.store-check:checked');
@@ -377,47 +391,59 @@
             // ボタンをローディング状態にする
             submitButton.disabled = true;
             submitButton.classList.add('loading');
+            const originalButtonHtml = submitButton.innerHTML;
 
-            // FormDataオブジェクトを作成してデータを追加
-            const formData = new FormData();
-            formData.append('store_ids', JSON.stringify(storeIds));
-            formData.append('title', title);
-            formData.append('content', content);
-            formData.append('category', category);
-            if (imageInput.files.length > 0) {
-                formData.append('image', imageInput.files[0]);
-            }
+            let resultMessage = "";
+            let successCount = 0;
 
-            try {
-                const response = await fetch('/api/post-blog', {
-                    method: 'POST',
-                    body: formData // JSON.stringifyせず、FormDataをそのまま渡す
-                });
-
-                const result = await response.json();
+            // 直列処理（順番に実行）に変更して、Bot検知を回避
+            for (let i = 0; i < storeIds.length; i++) {
+                const storeId = storeIds[i];
                 
-                // 結果を整形して表示
-                let resultMessage = `サーバーからの応答:\nステータス: ${result.status}\n\n`;
-                if (result.results && result.results.length > 0) {
-                    result.results.forEach(res => {
-                        resultMessage += `店舗ID: ${res.store_id}\n結果: ${res.status}\nメッセージ: ${res.message}\n\n`;
-                    });
-                } else if (result.message) {
-                    resultMessage += `メッセージ: ${result.message}`;
+                // 進捗状況をボタンに表示
+                submitButton.innerHTML = `<span class="spinner"></span><span>処理中... (${i + 1}/${storeIds.length})</span>`;
+
+                const formData = new FormData();
+                formData.append('store_ids', JSON.stringify([storeId]));
+                formData.append('title', title);
+                formData.append('content', content);
+                formData.append('category', category);
+                formData.append('publish_status', publishStatus);
+                if (imageInput.files.length > 0) {
+                    formData.append('image', imageInput.files[0]);
                 }
 
-                if (response.ok) {
-                    alert("ブログ投稿処理が完了しました。\n\n" + resultMessage);
-                } else {
-                    alert("ブログ投稿処理でエラーが発生しました。\n\n" + resultMessage);
+                try {
+                    const response = await fetch('/api/post-blog', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        if (result.results && result.results.length > 0) {
+                            result.results.forEach(r => {
+                                resultMessage += `店舗ID: ${r.store_id}\n結果: ${r.status}\nメッセージ: ${r.message}\n\n`;
+                                if(r.status === 'success' || r.status === 'OK') successCount++;
+                            });
+                        } else {
+                            resultMessage += `店舗ID: ${storeId}\n結果: ${result.status}\nメッセージ: ${result.message || ''}\n\n`;
+                            if(result.status === 'success') successCount++;
+                        }
+                    } else {
+                        resultMessage += `店舗ID: ${storeId}\nエラー: ${result.message || response.statusText}\n\n`;
+                    }
+                } catch (e) {
+                    resultMessage += `店舗ID: ${storeId}\n通信エラー: ${e}\n\n`;
                 }
-            } catch (e) {
-                alert("サーバーとの通信に失敗しました。コンソールを確認してください。\n" + e);
-            } finally {
-                // ボタンの状態を元に戻す
-                submitButton.disabled = false;
-                submitButton.classList.remove('loading');
             }
+
+            alert(`処理が完了しました。(成功: ${successCount}/${storeIds.length})\n\n` + resultMessage);
+            
+            // ボタンの状態を元に戻す
+            submitButton.disabled = false;
+            submitButton.classList.remove('loading');
+            submitButton.innerHTML = originalButtonHtml;
         }
     </script>
 </body>

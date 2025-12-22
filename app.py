@@ -369,6 +369,7 @@ def post_blog_api():
     title = request.form.get('title')
     content = request.form.get('content')
     category = request.form.get('category')
+    publish_status = request.form.get('publish_status', 'publish') # 'publish' or 'draft'
     image_file = request.files.get('image')
 
     if not store_ids_json:
@@ -397,7 +398,14 @@ def post_blog_api():
     for store_id in store_ids:
         try:
             # Step2で作成する自動化ロジックを呼び出す
-            result = post_blog_to_store(store_id, title, content, category, image_path=temp_image_path)
+            result = post_blog_to_store(
+                store_id=store_id,
+                title=title,
+                content=content,
+                category=category,
+                publish_status=publish_status,
+                image_path=temp_image_path
+            )
             results.append(result)
         except Exception as e:
             app.logger.error(f"ブログ投稿処理中にエラー (store_id: {store_id}): {e}\n{traceback.format_exc()}")
