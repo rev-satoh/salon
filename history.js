@@ -58,6 +58,17 @@ export async function fetchAndDisplayAutoHistory() {
                 return newItem;
             }
 
+            // 広島市MEOのデータ統合
+            if (
+                task.type === 'google' &&
+                task.searchLocation === '広島市' &&
+                (task.salonName === 'ケイトステージラッシュ' || task.salonName === 'KATE stage LASH')
+            )
+            {
+                newItem.task.salonName = 'ケイトステージラッシュ';
+                return newItem;
+            }
+
             return item;
         });
 

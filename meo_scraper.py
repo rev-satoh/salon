@@ -126,7 +126,7 @@ def check_meo_ranking(driver, keyword, location_name):
             
             result_blocks = soup.select('div[role="feed"] > div > div[jsaction]')
             for item_block in result_blocks:
-                if item_block.find('span', string=re.compile(r'\b広告\b')):
+                if item_block.find('span', string=re.compile(r'広告')):
                     continue
                 
                 name_element = item_block.find('a', {'aria-label': True})

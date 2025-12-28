@@ -141,8 +141,7 @@ def check_hotpepper_ranking(driver, keyword, salon_name, area_codes):
                     if os.path.exists(temp_png_path): # 一時ファイルを削除
                         os.remove(temp_png_path)
 
-                soup_for_count = BeautifulSoup(last_html_content, 'lxml')
-                count_span = soup_for_count.select_one('span.numberOfResult')
+                count_span = soup.select_one('span.numberOfResult')
                 if count_span:
                     try:
                         total_count = int(count_span.get_text(strip=True))
