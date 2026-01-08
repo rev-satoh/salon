@@ -329,7 +329,9 @@ def run_auto_check_now_api():
 
     try:
         app.logger.info("手動での自動計測ジョブを開始します。")
-        run_scheduled_check(task_ids_to_run=task_ids)
+        # run_scheduled_checkはジェネレータなので、ループで回して実行させる
+        for _ in run_scheduled_check(task_ids_to_run=task_ids):
+            pass
         return jsonify({"message": f"{len(task_ids)}件のタスクを実行しました。ページをリロードして結果を確認してください。"}), 200
     finally:
         measurement_lock.release()
@@ -383,47 +385,53 @@ def post_blog_api():
     if not all([store_ids, title, content, category]):
         return jsonify({"status": "error", "message": "必須項目（店舗ID, タイトル, 本文, カテゴリ）が不足しています。"}), 400
 
+    # 順位チェック実行中の警告ログ
+    if measurement_lock.locked():
+        app.logger.warning("現在、順位チェック等の計測タスクが実行中です。PCの負荷が高まり、ブログ投稿処理が遅延またはタイムアウトする可能性があります。")
+
     # 画像ファイルがある場合、一時ファイルとして保存
     temp_image_path = None
-    if image_file:
-        # 拡張子を取得
-        _, ext = os.path.splitext(image_file.filename)
-        # 一時ファイルを作成 (delete=Falseにして、後で手動で削除する)
-        with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as temp_f:
-            image_file.save(temp_f)
-            temp_image_path = temp_f.name
+    try:
+        if image_file:
+            # 拡張子を取得
+            _, ext = os.path.splitext(image_file.filename)
+            # 一時ファイルを作成 (delete=Falseにして、後で手動で削除する)
+            with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as temp_f:
+                image_file.save(temp_f)
+                temp_image_path = temp_f.name
 
-    # 複数店舗対応を想定し、ループで処理する
-    results = []
-    for store_id in store_ids:
-        try:
-            # Step2で作成する自動化ロジックを呼び出す
-            result = post_blog_to_store(
-                store_id=store_id,
-                title=title,
-                content=content,
-                category=category,
-                publish_status=publish_status,
-                image_path=temp_image_path
-            )
-            results.append(result)
-        except Exception as e:
-            app.logger.error(f"ブログ投稿処理中にエラー (store_id: {store_id}): {e}\n{traceback.format_exc()}")
-            results.append({"store_id": store_id, "status": "error", "message": f"サーバー側で予期せぬエラーが発生しました: {e}"})
+        # 複数店舗対応を想定し、ループで処理する
+        results = []
+        for store_id in store_ids:
+            try:
+                # Step2で作成する自動化ロジックを呼び出す
+                result = post_blog_to_store(
+                    store_id=store_id,
+                    title=title,
+                    content=content,
+                    category=category,
+                    publish_status=publish_status,
+                    image_path=temp_image_path
+                )
+                results.append(result)
+            except Exception as e:
+                app.logger.error(f"ブログ投稿処理中にエラー (store_id: {store_id}): {e}\n{traceback.format_exc()}")
+                results.append({"store_id": store_id, "status": "error", "message": f"サーバー側で予期せぬエラーが発生しました: {e}"})
 
-    # 一時ファイルの削除
-    if temp_image_path and os.path.exists(temp_image_path):
-        try:
-            os.remove(temp_image_path)
-        except Exception as e:
-            app.logger.warning(f"一時ファイルの削除に失敗しました: {e}")
-
-    # 1件でも成功があれば全体としては成功として返す（詳細はresults内で確認）
-    has_success = any(r.get('status') == 'success' for r in results)
-    if has_success:
-        return jsonify({"status": "completed", "results": results}), 200
-    else:
-        return jsonify({"status": "failed", "results": results}), 500
+        # 1件でも成功があれば全体としては成功として返す（詳細はresults内で確認）
+        has_success = any(r.get('status') == 'success' for r in results)
+        if has_success:
+            return jsonify({"status": "completed", "results": results}), 200
+        else:
+            return jsonify({"status": "failed", "results": results}), 500
+            
+    finally:
+        # 一時ファイルの削除 (成功・失敗に関わらず必ず実行)
+        if temp_image_path and os.path.exists(temp_image_path):
+            try:
+                os.remove(temp_image_path)
+            except Exception as e:
+                app.logger.warning(f"一時ファイルの削除に失敗しました: {e}")
 
 # --- アプリケーションの起動とスケジューラの設定 ---
 scheduler = BackgroundScheduler(daemon=True)
@@ -435,7 +443,9 @@ def scheduled_job_wrapper():
         return
     with app.app_context():
         try:
-            run_scheduled_check()
+            # run_scheduled_checkはジェネレータなので、ループで回して実行させる
+            for _ in run_scheduled_check():
+                pass
         finally:
             measurement_lock.release()
 

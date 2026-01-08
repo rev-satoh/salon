@@ -57,3 +57,7 @@ EXCEL_OUT_OF_RANGE_RANK = 101 # グラフのY軸の最大値としても利用
 EXCEL_CHART_Y_AXIS_MIN = 1
 # グラフのY軸の最大値（圏外表示用）
 EXCEL_CHART_Y_AXIS_MAX = 101
+
+# --- Playwright設定 ---
+# ヘッドレスモード (True: ブラウザを表示しない / False: 表示する)
+HEADLESS_MODE = False

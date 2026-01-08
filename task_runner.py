@@ -45,7 +45,7 @@ def update_history(history, task, date_str, rank, screenshot_path):
             "log": [log_entry]
         })
 
-def _run_normal_tasks(driver, tasks, history, today, stream_progress, job_counter, total_job_count):
+def _run_normal_tasks(driver, tasks, history, history_filename, today, stream_progress, job_counter, total_job_count):
     """HPB通常検索タスクを実行する"""
     for task in tasks:
         job_counter += 1
@@ -73,6 +73,7 @@ def _run_normal_tasks(driver, tasks, history, today, stream_progress, job_counte
 
         rank_to_save = result.get('results', [{}])[0].get('rank', result.get('rank', '圏外'))
         update_history(history, task, today, rank_to_save, result.get('screenshot_path'))
+        save_json_file(history_filename, history) # 1件ごとに保存
         current_app.logger.info(f"タスク '{task_id}' の結果: {rank_to_save}位")
 
         if stream_progress:
@@ -82,7 +83,7 @@ def _run_normal_tasks(driver, tasks, history, today, stream_progress, job_counte
             time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX))
     return job_counter
 
-def _run_special_tasks(driver, tasks_grouped, history, all_tasks, today, stream_progress, job_counter, total_job_count):
+def _run_special_tasks(driver, tasks_grouped, history, history_filename, all_tasks, today, stream_progress, job_counter, total_job_count):
     """HPB特集ページタスクを実行する"""
     for url, tasks_in_group in tasks_grouped.items():
         job_counter += 1
@@ -119,6 +120,7 @@ def _run_special_tasks(driver, tasks_grouped, history, all_tasks, today, stream_
             salon_results = result.get('results_map', {}).get(salon_name, [])
             rank_to_save = salon_results[0]['rank'] if salon_results else '圏外'
             update_history(history, task, today, rank_to_save, result.get('screenshot_path'))
+            save_json_file(history_filename, history) # 1件ごとに保存
             current_app.logger.info(f"タスク '{task_id}' ({salon_name}) の結果: {rank_to_save}位")
 
             if stream_progress:
@@ -130,7 +132,7 @@ def _run_special_tasks(driver, tasks_grouped, history, all_tasks, today, stream_
             time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX))
     return job_counter
 
-def _run_meo_tasks(driver, tasks_grouped, history, today, stream_progress, job_counter, total_job_count):
+def _run_meo_tasks(driver, tasks_grouped, history, history_filename, today, stream_progress, job_counter, total_job_count):
     """MEOタスクを実行する"""
     for (location, keyword), tasks_in_group in tasks_grouped.items():
         job_counter += 1
@@ -166,6 +168,7 @@ def _run_meo_tasks(driver, tasks_grouped, history, today, stream_progress, job_c
                 
                 screenshot_path_to_save = result.get('screenshot_path')
                 update_history(history, task, today, rank_to_save, screenshot_path_to_save)
+                save_json_file(history_filename, history) # 1件ごとに保存
                 current_app.logger.info(f"MEOタスク '{task_id}' の結果: {rank_to_save}")
 
                 if stream_progress:
@@ -175,6 +178,7 @@ def _run_meo_tasks(driver, tasks_grouped, history, today, stream_progress, job_c
             except Exception as e:
                 current_app.logger.exception(f"MEOタスク '{task.get('id', '不明')}' の結果処理中にエラーが発生しました。")
                 update_history(history, task, today, "エラー", None)
+                save_json_file(history_filename, history) # エラー時も保存
 
         if not stream_progress:
             time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX))
@@ -234,15 +238,15 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
         if normal_tasks or special_tasks_grouped_by_url or meo_tasks_grouped:
             with get_webdriver(is_seo=False) as driver:
                 # HPB通常タスク
-                yield from _run_normal_tasks(driver, normal_tasks, history_normal, today, stream_progress, job_counter, total_job_count)
+                yield from _run_normal_tasks(driver, normal_tasks, history_normal, config.HISTORY_FILES['normal'], today, stream_progress, job_counter, total_job_count)
                 job_counter = len(normal_tasks)
 
                 # HPB特集タスク
-                yield from _run_special_tasks(driver, special_tasks_grouped_by_url, history_special, all_tasks, today, stream_progress, job_counter, total_job_count)
+                yield from _run_special_tasks(driver, special_tasks_grouped_by_url, history_special, config.HISTORY_FILES['special'], all_tasks, today, stream_progress, job_counter, total_job_count)
                 job_counter += len(special_tasks_grouped_by_url)
 
                 # MEOタスク
-                yield from _run_meo_tasks(driver, meo_tasks_grouped, history_meo, today, stream_progress, job_counter, total_job_count)
+                yield from _run_meo_tasks(driver, meo_tasks_grouped, history_meo, config.HISTORY_FILES['google'], today, stream_progress, job_counter, total_job_count)
                 job_counter += len(meo_tasks_grouped)
 
     except Exception as e:
