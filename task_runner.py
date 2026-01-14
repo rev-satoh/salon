@@ -88,7 +88,10 @@ def _run_special_tasks(driver, tasks_grouped, history, history_filename, all_tas
     for url, tasks_in_group in tasks_grouped.items():
         job_counter += 1
         salon_names_in_group = [t['salonName'] for t in tasks_in_group]
-        representative_task = tasks_in_group[0]
+        # フロントエンド表示用にフィールドを補完
+        representative_task = tasks_in_group[0].copy()
+        representative_task['areaName'] = '特集'
+        representative_task['serviceKeyword'] = representative_task.get('featurePageName', url)
         task_name = representative_task.get('featurePageName', url)
 
         if stream_progress:
@@ -136,7 +139,10 @@ def _run_meo_tasks(driver, tasks_grouped, history, history_filename, today, stre
     """MEOタスクを実行する"""
     for (location, keyword), tasks_in_group in tasks_grouped.items():
         job_counter += 1
-        representative_task = tasks_in_group[0]
+        # フロントエンド表示用にフィールドを補完 ([undefined] undefined 回避)
+        representative_task = tasks_in_group[0].copy()
+        representative_task['areaName'] = location
+        representative_task['serviceKeyword'] = keyword
         task_name = f"[{location}] {keyword}"
 
         if stream_progress:

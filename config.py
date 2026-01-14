@@ -27,7 +27,7 @@ HISTORY_FILES = {
 # Seleniumのページ読み込みタイムアウト時間（秒）
 WEBDRIVER_TIMEOUT = 30
 # スクリーンショットの保存先ディレクトリ
-SCREENSHOT_DIR = 'screenshots' # この値は変更されていませんが、他のファイルから参照されるようになります
+SCREENSHOT_DIR = "/Users/satoudaisuke/Library/CloudStorage/OneDrive-合同会社リビジョン/画像/salon/screenshots"
 # スクリーンショットのJPEG品質 (0-95の範囲で設定)
 SCREENSHOT_JPEG_QUALITY = 15
 # デフォルトのUser-Agent

@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, current_app
+from flask import Flask, request, jsonify, current_app, send_from_directory
 from flask_cors import CORS
 import requests
 import random
@@ -87,7 +87,7 @@ def index():
 @app.route('/screenshots/<path:filename>')
 def serve_screenshot(filename):
     """screenshotsディレクトリから画像を配信する"""
-    return app.send_static_file(os.path.join(config.SCREENSHOT_DIR, filename))
+    return send_from_directory(config.SCREENSHOT_DIR, filename)
 
 @app.route('/check-ranking', methods=['GET', 'POST'])
 def check_ranking_api():
