@@ -220,7 +220,10 @@ def post_blog_to_store(store_id: str, title: str, content: str, category: str, p
 
             # nicEditが改行(\n)を<p>タグに変換して意図しない改行が生まれる問題への対策
             # 本文の改行コードを<br>タグに変換してから入力する
-            html_content = content.replace('\n', '<br>')
+            # 修正: \r\n や \r が残っていると、エディタによっては二重改行として扱われる場合があるため、
+            # 先に改行コードを \n に正規化してから <br> に変換する
+            normalized_content = content.replace('\r\n', '\n').replace('\r', '\n')
+            html_content = normalized_content.replace('\n', '<br>')
 
             if image_path and os.path.exists(image_path):
                 # 画像がある場合、エディタの末尾にHTMLとして追記する

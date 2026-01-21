@@ -89,6 +89,13 @@ def serve_screenshot(filename):
     """screenshotsディレクトリから画像を配信する"""
     return send_from_directory(config.SCREENSHOT_DIR, filename)
 
+# 追加: OneDrive内のスクリーンショットフォルダを配信するルート
+@app.route('/Users/satoudaisuke/Library/CloudStorage/OneDrive-合同会社リビジョン/画像/salon/screenshots/<path:filename>')
+def serve_onedrive_screenshots(filename):
+    # 実際の保存先ディレクトリ
+    directory = '/Users/satoudaisuke/Library/CloudStorage/OneDrive-合同会社リビジョン/画像/salon/screenshots'
+    return send_from_directory(directory, filename)
+
 @app.route('/check-ranking', methods=['GET', 'POST'])
 def check_ranking_api():
     if request.method == 'POST':
