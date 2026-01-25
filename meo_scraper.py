@@ -15,7 +15,7 @@ from flask import current_app
 import config
 from utils import sse_format, get_lat_lng_from_address
 
-def check_meo_ranking(driver, keyword, location_name):
+def check_meo_ranking(driver, keyword, location_name, save_screenshot=True):
     """Googleマップでの掲載順位をスクレイピングし、見つかった店舗をすべてリストアップするジェネレータ関数"""
     if not config.GOOGLE_API_KEY:
         yield sse_format({"error": "Google APIキーが設定されていません。"})
@@ -81,40 +81,41 @@ def check_meo_ranking(driver, keyword, location_name):
 
         last_url_checked = driver.current_url
 
-        yield sse_format({"status": "スクリーンショットを撮影しています..."})
-        try:
-            driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", scrollable_element)
-            time.sleep(1)
-            panel_height = driver.execute_script("return arguments[0].scrollHeight", scrollable_element)
-            window_height = max(800, min(panel_height, 8000))
-            driver.set_window_size(1200, window_height)
-            time.sleep(0.5)
-            driver.execute_script("arguments[0].scrollTop = 0", scrollable_element)
-            current_app.logger.info("スクリーンショット撮影のため、スクロール位置をトップに戻しました。")
-            time.sleep(0.5)
-        except Exception as e:
-            current_app.logger.warning(f"スクリーンショットのためのリサイズ中にエラーが発生: {e}")
+        if save_screenshot:
+            yield sse_format({"status": "スクリーンショットを撮影しています..."})
+            try:
+                driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", scrollable_element)
+                time.sleep(1)
+                panel_height = driver.execute_script("return arguments[0].scrollHeight", scrollable_element)
+                window_height = max(800, min(panel_height, 8000))
+                driver.set_window_size(1200, window_height)
+                time.sleep(0.5)
+                driver.execute_script("arguments[0].scrollTop = 0", scrollable_element)
+                current_app.logger.info("スクリーンショット撮影のため、スクロール位置をトップに戻しました。")
+                time.sleep(0.5)
+            except Exception as e:
+                current_app.logger.warning(f"スクリーンショットのためのリサイズ中にエラーが発生: {e}")
 
-        timestamp = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
-        safe_keyword = re.sub(r'[\\/:*?"<>|]', '_', keyword)
-        safe_location = re.sub(r'[\\/:*?"<>|]', '_', location_name)
-        base_filename = f"{timestamp}_{safe_location}_{safe_keyword}"
+            timestamp = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
+            safe_keyword = re.sub(r'[\\/:*?"<>|]', '_', keyword)
+            safe_location = re.sub(r'[\\/:*?"<>|]', '_', location_name)
+            base_filename = f"{timestamp}_{safe_location}_{safe_keyword}"
 
-        temp_png_path = os.path.join(config.SCREENSHOT_DIR, f"temp_meo_{timestamp}.png")
-        driver.save_screenshot(temp_png_path)
+            temp_png_path = os.path.join(config.SCREENSHOT_DIR, f"temp_meo_{timestamp}.png")
+            driver.save_screenshot(temp_png_path)
 
-        jpeg_filename = f"{base_filename}.jpg"
-        jpeg_filepath = os.path.join(config.SCREENSHOT_DIR, jpeg_filename)
-        
-        try:
-            with Image.open(temp_png_path) as img:
-                if img.mode == 'RGBA':
-                    img = img.convert('RGB')
-                img.save(jpeg_filepath, 'jpeg', quality=config.SCREENSHOT_JPEG_QUALITY)
-            screenshot_path = jpeg_filepath
-        finally:
-            if os.path.exists(temp_png_path):
-                os.remove(temp_png_path)
+            jpeg_filename = f"{base_filename}.jpg"
+            jpeg_filepath = os.path.join(config.SCREENSHOT_DIR, jpeg_filename)
+            
+            try:
+                with Image.open(temp_png_path) as img:
+                    if img.mode == 'RGBA':
+                        img = img.convert('RGB')
+                    img.save(jpeg_filepath, 'jpeg', quality=config.SCREENSHOT_JPEG_QUALITY)
+                screenshot_path = jpeg_filepath
+            finally:
+                if os.path.exists(temp_png_path):
+                    os.remove(temp_png_path)
 
         yield sse_format({"status": "検索結果を解析しています..."})
         found_salons = []

@@ -12,7 +12,7 @@ def sse_format(data: dict) -> str:
     """Server-Sent Eventsのフォーマットで文字列を返す"""
     return f"data: {json.dumps(data)}\n\n"
 
-def check_feature_page_ranking(driver, feature_page_url, salon_names):
+def check_feature_page_ranking(driver, feature_page_url, salon_names, save_screenshot=True):
     """
     ホットペッパービューティーの特集ページ内での掲載順位をスクレイピングで取得するジェネレータ関数。
     :param driver: SeleniumのWebDriverインスタンス
@@ -77,28 +77,29 @@ def check_feature_page_ranking(driver, feature_page_url, salon_names):
             # 1ページ目でのみ各種情報を取得
             if page == 1:
                 page_title = soup.title.string.strip() if soup.title else "（タイトル不明）"
-                yield sse_format({"status": "スクリーンショットを撮影しています..."})
-                
-                total_height = driver.execute_script("return document.body.parentNode.scrollHeight")
-                driver.set_window_size(1200, total_height)
-                time.sleep(0.5)
+                if save_screenshot:
+                    yield sse_format({"status": "スクリーンショットを撮影しています..."})
+                    
+                    total_height = driver.execute_script("return document.body.parentNode.scrollHeight")
+                    driver.set_window_size(1200, total_height)
+                    time.sleep(0.5)
 
-                timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-                temp_png_path = os.path.join(config.SCREENSHOT_DIR, f"temp_special_{timestamp}.png")
-                driver.save_screenshot(temp_png_path)
+                    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+                    temp_png_path = os.path.join(config.SCREENSHOT_DIR, f"temp_special_{timestamp}.png")
+                    driver.save_screenshot(temp_png_path)
 
-                jpeg_filename = f"screenshot_special_{timestamp}.jpg"
-                jpeg_filepath = os.path.join(config.SCREENSHOT_DIR, jpeg_filename)
-                
-                try:
-                    with Image.open(temp_png_path) as img:
-                        if img.mode == 'RGBA':
-                            img = img.convert('RGB')
-                        img.save(jpeg_filepath, 'jpeg', quality=config.SCREENSHOT_JPEG_QUALITY)
-                    screenshot_path = jpeg_filepath
-                finally:
-                    if os.path.exists(temp_png_path):
-                        os.remove(temp_png_path)
+                    jpeg_filename = f"screenshot_special_{timestamp}.jpg"
+                    jpeg_filepath = os.path.join(config.SCREENSHOT_DIR, jpeg_filename)
+                    
+                    try:
+                        with Image.open(temp_png_path) as img:
+                            if img.mode == 'RGBA':
+                                img = img.convert('RGB')
+                            img.save(jpeg_filepath, 'jpeg', quality=config.SCREENSHOT_JPEG_QUALITY)
+                        screenshot_path = jpeg_filepath
+                    finally:
+                        if os.path.exists(temp_png_path):
+                            os.remove(temp_png_path)
 
                 count_span = soup.select_one('span.numberOfResult')
                 if count_span:

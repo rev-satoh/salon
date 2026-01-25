@@ -50,12 +50,21 @@
             </div>
             <div id="autoTaskListContent" style="display: none; padding-top: 10px;">
                 <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 10px;">
+                    <label style="margin-right: 15px; font-size: 13px; display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" id="autoTaskScreenshotCheckbox" checked style="margin-right: 5px;"> スクショ保存
+                    </label>
                     <button type="button" id="manualTriggerButton" class="button-secondary" style="padding: 4px 10px; font-size: 13px;">選択したタスクを実行</button>
                 </div>
                 <div id="autoTaskListContainer">
                     <div id="selectAllContainer" style="padding-bottom: 10px; border-bottom: 1px solid #ddd; margin-bottom: 5px; display: none;">
                         <input type="checkbox" id="selectAllTasks">
                         <label for="selectAllTasks" style="font-weight: 500; margin-left: 5px; cursor: pointer;">すべて選択</label>
+                        <label style="margin-left: 15px; cursor: pointer;">
+                            <input type="checkbox" id="selectMyStore"> 自店（広島・福山）
+                        </label>
+                        <label style="margin-left: 15px; cursor: pointer;">
+                            <input type="checkbox" id="selectOtherStores"> 他店
+                        </label>
                     </div>
                     <ul id="autoTaskList" style="list-style: none; padding: 0;"></ul>
                 </div>
@@ -125,6 +134,10 @@
                 <div class="button-container">
                     <button type="button" id="checkRankButton" class="button-primary">順位を計測</button>
                     <button type="button" id="addAutoTaskButton" class="button-secondary">自動計測に追加</button>
+                    <div style="display: flex; align-items: center; margin-left: 15px;">
+                        <input type="checkbox" id="manualScreenshotCheckbox" checked style="margin-right: 5px;">
+                        <label for="manualScreenshotCheckbox" style="font-size: 14px; cursor: pointer; user-select: none;">スクショ保存</label>
+                    </div>
                     <div class="schedule-setting-inline" style="display: flex; align-items: center; gap: 8px; margin-left: 15px; border-left: 1px solid #ddd; padding-left: 15px;">
                         <label for="scheduleHourSelect" style="font-size: 14px; color: #6c6c70; white-space: nowrap;">自動計測: 毎日</label>
                         <select id="scheduleHourSelect" style="padding: 4px 8px; font-size: 14px; border-radius: 6px; border: 1px solid #c8c7cc;"></select>

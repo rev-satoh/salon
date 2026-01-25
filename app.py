@@ -28,7 +28,6 @@ from hpb_scraper import check_hotpepper_ranking
 from meo_scraper import check_meo_ranking
 from task_runner import run_scheduled_check, update_history
 from driver_manager import get_webdriver
-from seo_scraper import check_seo_ranking # SEOスクレイパーをインポート
 from excel_generator import create_excel_report # Excel生成関数をインポート
 from salon_board_automator import post_blog_to_store # Step2で作成するファイルをインポート
 import config # 設定ファイルをインポート
@@ -98,19 +97,25 @@ def serve_onedrive_screenshots(filename):
 
 @app.route('/check-ranking', methods=['GET', 'POST'])
 def check_ranking_api():
+    save_screenshot = True
     if request.method == 'POST':
         data = request.get_json()
+        save_screenshot = data.get('save_screenshot', True)
     else: # GETリクエストの場合
         data = {
             'serviceKeyword': request.args.get('serviceKeyword'),
             'salonName': request.args.get('salonName'),
             'areaCodes': json.loads(request.args.get('areaCodes', '{}'))
         }
+        if request.args.get('save_screenshot'):
+            save_screenshot = request.args.get('save_screenshot').lower() == 'true'
 
     serviceKeyword = data['serviceKeyword']
     salonName = data['salonName']
     areaCodes = data['areaCodes']
     
+    app.logger.info(f"check_ranking_api called. save_screenshot={save_screenshot}")
+
     if not measurement_lock.acquire(blocking=False):
         return jsonify({"error": "現在、他の計測タスクが実行中です。しばらく待ってから再度お試しください。"}), 429 # Too Many Requests
 
@@ -119,11 +124,17 @@ def check_ranking_api():
             try:
                 yield sse_format({"status": "ブラウザを起動しています..."})
                 with get_webdriver() as driver:
-                    yield from check_hotpepper_ranking(driver, serviceKeyword, salonName, areaCodes)
+                    try:
+                        yield from check_hotpepper_ranking(driver, serviceKeyword, salonName, areaCodes, save_screenshot=save_screenshot)
+                    except TypeError as e:
+                        if "unexpected keyword argument 'save_screenshot'" in str(e):
+                            app.logger.warning("check_hotpepper_rankingはsave_screenshot引数をサポートしていません。引数なしで実行します。")
+                            yield from check_hotpepper_ranking(driver, serviceKeyword, salonName, areaCodes)
+                        else:
+                            raise e
             except Exception as e:
-                yield sse_format({"status": "ブラウザを起動しています..."})
-                app.logger.error(f"手動計測でのWebDriver生成中にエラー: {e}")
-                yield sse_format({"error": "ブラウザの起動に失敗しました。"})
+                app.logger.error(f"手動計測中にエラー: {e}\n{traceback.format_exc()}")
+                yield sse_format({"error": f"計測中にエラーが発生しました: {str(e)}"})
         finally:
             measurement_lock.release() # ストリームが終了したら必ずロックを解放
 
@@ -300,13 +311,19 @@ def run_tasks_manually():
     フロントエンドから手動でトリガーされた複数のタスクを、ストリーミングで実行・進捗報告するAPI。
     ブラウザの起動を一度に抑えることで、リソース消費を削減する。
     """
+    save_screenshot = True
     if request.method == 'POST':
         data = request.get_json()
         task_ids = data.get('task_ids')
+        save_screenshot = data.get('save_screenshot', True)
     else:
         # GETリクエストの場合（旧バージョンとの互換性のため）
         task_ids_json = request.args.get('task_ids')
         task_ids = json.loads(task_ids_json) if task_ids_json else None
+        if request.args.get('save_screenshot'):
+            save_screenshot = request.args.get('save_screenshot').lower() == 'true'
+
+    app.logger.info(f"run_tasks_manually called. save_screenshot={save_screenshot}")
 
     # --- 修正点: ストリーム開始前にロックを取得 ---
     if not measurement_lock.acquire(blocking=False):
@@ -319,7 +336,17 @@ def run_tasks_manually():
         try:
             with app.app_context():
                 # run_scheduled_check と同様のロジックだが、進捗をyieldで返す
-                yield from run_scheduled_check(task_ids_to_run=task_ids, stream_progress=True)
+                try:
+                    yield from run_scheduled_check(task_ids_to_run=task_ids, stream_progress=True, save_screenshot=save_screenshot)
+                except TypeError as e:
+                    if "unexpected keyword argument 'save_screenshot'" in str(e):
+                        app.logger.warning("run_scheduled_checkはsave_screenshot引数をサポートしていません。引数なしで実行します。")
+                        yield from run_scheduled_check(task_ids_to_run=task_ids, stream_progress=True)
+                    else:
+                        raise e
+        except Exception as e:
+            app.logger.error(f"run_tasks_manually error: {e}\n{traceback.format_exc()}")
+            yield sse_format({"error": f"システムエラーが発生しました: {str(e)}"})
         finally:
             measurement_lock.release() # ストリームが終了したら必ずロックを解放
 

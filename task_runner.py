@@ -11,7 +11,6 @@ from driver_manager import get_webdriver
 from hpb_scraper import check_hotpepper_ranking
 from feature_page_scraper import check_feature_page_ranking
 from meo_scraper import check_meo_ranking
-from seo_scraper import check_seo_ranking
 def load_json_file(filename):
     if not os.path.exists(filename):
         return []
@@ -45,7 +44,7 @@ def update_history(history, task, date_str, rank, screenshot_path):
             "log": [log_entry]
         })
 
-def _run_normal_tasks(driver, tasks, history, history_filename, today, stream_progress, job_counter, total_job_count):
+def _run_normal_tasks(driver, tasks, history, history_filename, today, stream_progress, job_counter, total_job_count, save_screenshot=True):
     """HPB通常検索タスクを実行する"""
     for task in tasks:
         job_counter += 1
@@ -61,7 +60,13 @@ def _run_normal_tasks(driver, tasks, history, history_filename, today, stream_pr
 
         result = {}
         try:
-            for sse_message in check_hotpepper_ranking(driver, task.get('serviceKeyword', ''), task['salonName'], task['areaCodes']):
+            try:
+                generator = check_hotpepper_ranking(driver, task.get('serviceKeyword', ''), task['salonName'], task['areaCodes'], save_screenshot=save_screenshot)
+            except TypeError:
+                # save_screenshot引数に対応していない場合のフォールバック
+                generator = check_hotpepper_ranking(driver, task.get('serviceKeyword', ''), task['salonName'], task['areaCodes'])
+
+            for sse_message in generator:
                 data = json.loads(sse_message.split('data: ')[1])
                 if stream_progress and 'status' in data:
                     yield sse_format({"status": data['status'], "task_name": task_name})
@@ -83,7 +88,7 @@ def _run_normal_tasks(driver, tasks, history, history_filename, today, stream_pr
             time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX))
     return job_counter
 
-def _run_special_tasks(driver, tasks_grouped, history, history_filename, all_tasks, today, stream_progress, job_counter, total_job_count):
+def _run_special_tasks(driver, tasks_grouped, history, history_filename, all_tasks, today, stream_progress, job_counter, total_job_count, save_screenshot=True):
     """HPB特集ページタスクを実行する"""
     for url, tasks_in_group in tasks_grouped.items():
         job_counter += 1
@@ -101,7 +106,13 @@ def _run_special_tasks(driver, tasks_grouped, history, history_filename, all_tas
 
         result = {}
         try:
-            for sse_message in check_feature_page_ranking(driver, url, salon_names_in_group):
+            try:
+                generator = check_feature_page_ranking(driver, url, salon_names_in_group, save_screenshot=save_screenshot)
+            except TypeError:
+                # save_screenshot引数に対応していない場合のフォールバック
+                generator = check_feature_page_ranking(driver, url, salon_names_in_group)
+
+            for sse_message in generator:
                 data = json.loads(sse_message.split('data: ')[1])
                 if stream_progress and 'status' in data:
                     yield sse_format({"status": data['status'], "task_name": task_name})
@@ -135,7 +146,7 @@ def _run_special_tasks(driver, tasks_grouped, history, history_filename, all_tas
             time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX))
     return job_counter
 
-def _run_meo_tasks(driver, tasks_grouped, history, history_filename, today, stream_progress, job_counter, total_job_count):
+def _run_meo_tasks(driver, tasks_grouped, history, history_filename, today, stream_progress, job_counter, total_job_count, save_screenshot=True):
     """MEOタスクを実行する"""
     for (location, keyword), tasks_in_group in tasks_grouped.items():
         job_counter += 1
@@ -152,7 +163,12 @@ def _run_meo_tasks(driver, tasks_grouped, history, history_filename, today, stre
 
         result = {}
         try:
-            scraper_generator = check_meo_ranking(driver, keyword, location)
+            try:
+                scraper_generator = check_meo_ranking(driver, keyword, location, save_screenshot=save_screenshot)
+            except TypeError:
+                # save_screenshot引数に対応していない場合のフォールバック
+                scraper_generator = check_meo_ranking(driver, keyword, location)
+
             for sse_message in scraper_generator:
                 data = json.loads(sse_message.split('data: ')[1])
                 if stream_progress and 'status' in data:
@@ -190,7 +206,7 @@ def _run_meo_tasks(driver, tasks_grouped, history, history_filename, today, stre
             time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX))
     return job_counter
 
-def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
+def run_scheduled_check(task_ids_to_run=None, stream_progress=False, save_screenshot=True):
     """
     指定されたタスク、またはすべてのタスクを実行し、結果を履歴ファイルに保存する
     :param task_ids_to_run: 実行するタスクIDのリスト。Noneの場合は全タスクを実行。
@@ -244,15 +260,15 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False):
         if normal_tasks or special_tasks_grouped_by_url or meo_tasks_grouped:
             with get_webdriver(is_seo=False) as driver:
                 # HPB通常タスク
-                yield from _run_normal_tasks(driver, normal_tasks, history_normal, config.HISTORY_FILES['normal'], today, stream_progress, job_counter, total_job_count)
+                yield from _run_normal_tasks(driver, normal_tasks, history_normal, config.HISTORY_FILES['normal'], today, stream_progress, job_counter, total_job_count, save_screenshot=save_screenshot)
                 job_counter = len(normal_tasks)
 
                 # HPB特集タスク
-                yield from _run_special_tasks(driver, special_tasks_grouped_by_url, history_special, config.HISTORY_FILES['special'], all_tasks, today, stream_progress, job_counter, total_job_count)
+                yield from _run_special_tasks(driver, special_tasks_grouped_by_url, history_special, config.HISTORY_FILES['special'], all_tasks, today, stream_progress, job_counter, total_job_count, save_screenshot=save_screenshot)
                 job_counter += len(special_tasks_grouped_by_url)
 
                 # MEOタスク
-                yield from _run_meo_tasks(driver, meo_tasks_grouped, history_meo, config.HISTORY_FILES['google'], today, stream_progress, job_counter, total_job_count)
+                yield from _run_meo_tasks(driver, meo_tasks_grouped, history_meo, config.HISTORY_FILES['google'], today, stream_progress, job_counter, total_job_count, save_screenshot=save_screenshot)
                 job_counter += len(meo_tasks_grouped)
 
     except Exception as e:

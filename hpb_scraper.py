@@ -14,7 +14,7 @@ from flask import current_app
 import config
 from utils import sse_format
 
-def check_hotpepper_ranking(driver, keyword, salon_name, area_codes):
+def check_hotpepper_ranking(driver, keyword, salon_name, area_codes, save_screenshot=True):
     """
     ホットペッパービューティーの掲載順位をスクレイピングで取得するジェネレータ関数。
     処理の進捗を yield で返す。
@@ -110,36 +110,37 @@ def check_hotpepper_ranking(driver, keyword, salon_name, area_codes):
 
             # 1ページ目でのみスクリーンショットと総件数を取得
             if page == 1:
-                yield sse_format({"status": "スクリーンショットを撮影しています..."})
-                # ページ全体の高さを取得してウィンドウサイズを変更し、フルページのスクリーンショットを撮影
-                total_height = driver.execute_script("return document.body.parentNode.scrollHeight")
-                driver.set_window_size(1200, total_height)
-                time.sleep(0.5) # リサイズを待機
+                if save_screenshot:
+                    yield sse_format({"status": "スクリーンショットを撮影しています..."})
+                    # ページ全体の高さを取得してウィンドウサイズを変更し、フルページのスクリーンショットを撮影
+                    total_height = driver.execute_script("return document.body.parentNode.scrollHeight")
+                    driver.set_window_size(1200, total_height)
+                    time.sleep(0.5) # リサイズを待機
 
-                # --- ファイル名生成ロジックの改善 (yyMMdd形式, 接頭辞なし) ---
-                timestamp = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
-                # ファイル名に使えない文字を置換
-                safe_keyword = re.sub(r'[\\/:*?"<>|]', '_', keyword)
-                safe_area = re.sub(r'[\\/:*?"<>|]', '_', area_codes.get('areaName', ''))
-                base_filename = f"{timestamp}_{safe_area}_{safe_keyword}"
-                
-                temp_png_path = os.path.join(config.SCREENSHOT_DIR, f"temp_{timestamp}.png") # 一時ファイル名はタイムスタンプのみでOK
-                driver.save_screenshot(temp_png_path)
+                    # --- ファイル名生成ロジックの改善 (yyMMdd形式, 接頭辞なし) ---
+                    timestamp = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
+                    # ファイル名に使えない文字を置換
+                    safe_keyword = re.sub(r'[\\/:*?"<>|]', '_', keyword)
+                    safe_area = re.sub(r'[\\/:*?"<>|]', '_', area_codes.get('areaName', ''))
+                    base_filename = f"{timestamp}_{safe_area}_{safe_keyword}"
+                    
+                    temp_png_path = os.path.join(config.SCREENSHOT_DIR, f"temp_{timestamp}.png") # 一時ファイル名はタイムスタンプのみでOK
+                    driver.save_screenshot(temp_png_path)
 
-                # 最終的なファイル名を指定
-                jpeg_filename = f"{base_filename}.jpg"
-                jpeg_filepath = os.path.join(config.SCREENSHOT_DIR, jpeg_filename)
-                
-                try:
-                    with Image.open(temp_png_path) as img:
-                        if img.mode == 'RGBA': # JPEGは透明度をサポートしないためRGBに変換
-                            img = img.convert('RGB')
-                        img.save(jpeg_filepath, 'jpeg', quality=config.SCREENSHOT_JPEG_QUALITY) # qualityは0-95の範囲で調整可能
-                    screenshot_path = jpeg_filepath
-                    current_app.logger.info(f"画質を調整したスクリーンショットを {jpeg_filepath} に保存しました。")
-                finally:
-                    if os.path.exists(temp_png_path): # 一時ファイルを削除
-                        os.remove(temp_png_path)
+                    # 最終的なファイル名を指定
+                    jpeg_filename = f"{base_filename}.jpg"
+                    jpeg_filepath = os.path.join(config.SCREENSHOT_DIR, jpeg_filename)
+                    
+                    try:
+                        with Image.open(temp_png_path) as img:
+                            if img.mode == 'RGBA': # JPEGは透明度をサポートしないためRGBに変換
+                                img = img.convert('RGB')
+                            img.save(jpeg_filepath, 'jpeg', quality=config.SCREENSHOT_JPEG_QUALITY) # qualityは0-95の範囲で調整可能
+                        screenshot_path = jpeg_filepath
+                        current_app.logger.info(f"画質を調整したスクリーンショットを {jpeg_filepath} に保存しました。")
+                    finally:
+                        if os.path.exists(temp_png_path): # 一時ファイルを削除
+                            os.remove(temp_png_path)
 
                 count_span = soup.select_one('span.numberOfResult')
                 if count_span:

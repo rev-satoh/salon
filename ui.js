@@ -159,6 +159,8 @@ dom.manualTriggerButton.addEventListener('click', async () => {
         return;
     }
 
+    const saveScreenshot = document.getElementById('autoTaskScreenshotCheckbox')?.checked ?? true;
+
     setMeasuringState(true, { isMeasuring: true }); // 計測状態を開始に設定
     dom.manualTriggerButton.textContent = '実行中...';
 
@@ -182,7 +184,7 @@ dom.manualTriggerButton.addEventListener('click', async () => {
     }, 1000);
 
     try {
-        await processStream(Array.from(selectedTaskIds));
+        await processStream(Array.from(selectedTaskIds), saveScreenshot);
         const durationString = getDurationString(startTime);
         overallStatusContainer.textContent = `すべての計測が完了しました。（${selectedTaskIds.size}件 / 所要時間: ${durationString}）`;
     } catch (error) {
@@ -204,13 +206,13 @@ function getDurationString(startTime) {
     return minutes > 0 ? `${minutes}分${seconds}秒` : `${seconds}秒`;
 }
 
-async function processStream(taskIds) {
+async function processStream(taskIds, saveScreenshot = true) {
     if (taskIds.length === 0) return;
 
     const response = await fetch('/api/run-tasks-manually', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ task_ids: taskIds })
+        body: JSON.stringify({ task_ids: taskIds, save_screenshot: saveScreenshot })
     });
 
     if (!response.body) throw new Error('Response body is missing');
