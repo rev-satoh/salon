@@ -60,11 +60,11 @@
                                         </select>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="blogTitle" class="form-label">記事タイトル</label>
+                                        <label for="blogTitle" class="form-label">記事タイトル <span id="titleCount" class="text-muted small" style="font-weight: normal;">0/25</span></label>
                                         <input type="text" class="form-control" id="blogTitle" placeholder="例：今月のおすすめクーポン！">
                                     </div>
                                     <div class="mb-3">
-                                        <label for="blogContent" class="form-label">記事本文</label>
+                                        <label for="blogContent" class="form-label">記事本文 <span id="contentCount" class="text-muted small" style="font-weight: normal;">0/1000</span></label>
                                         <textarea class="form-control" id="blogContent" rows="12" placeholder="ブログの内容をここに入力してください..."></textarea>
                                     </div>
                                     <div class="mb-3">
@@ -198,6 +198,8 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             loadStoreSettings();
+            setupCharCount('blogTitle', 'titleCount', 25);
+            setupCharCount('blogContent', 'contentCount', 1000);
         });
 
         async function loadStoreSettings() {
@@ -216,6 +218,33 @@
                 }
             } catch (e) {
                 console.error("設定の読み込みに失敗しました", e);
+            }
+        }
+
+        function getCharCount(str) {
+            let len = 0;
+            for (let i = 0; i < str.length; i++) {
+                const c = str.charCodeAt(i);
+                // 半角文字 (ASCII: 0x00-0x7E, 半角カタカナ: 0xFF61-0xFF9F)
+                if ((c >= 0x00 && c <= 0x7E) || (c >= 0xFF61 && c <= 0xFF9F)) {
+                    len += 0.5;
+                } else {
+                    len += 1;
+                }
+            }
+            return len;
+        }
+
+        function setupCharCount(inputId, displayId, maxLength) {
+            const input = document.getElementById(inputId);
+            const display = document.getElementById(displayId);
+            if (input && display) {
+                const update = () => {
+                    const count = getCharCount(input.value);
+                    display.textContent = `${count}/${maxLength}`;
+                };
+                input.addEventListener('input', update);
+                update(); // 初期表示の更新
             }
         }
 
