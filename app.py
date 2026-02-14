@@ -162,28 +162,6 @@ def check_meo_ranking_api():
 
     return app.response_class(generate_stream(), mimetype='text/event-stream')
 
-@app.route('/check-seo-ranking', methods=['GET'])
-def check_seo_ranking_api():
-    url_to_find = request.args.get('url')
-    keyword = request.args.get('keyword')
-    location = request.args.get('location') # location パラメータを受け取る
-
-    if not measurement_lock.acquire(blocking=False):
-        return jsonify({"error": "現在、他の計測タスクが実行中です。しばらく待ってから再度お試しください。"}), 429
-
-    def generate_stream():
-        try:
-            try:
-                with get_webdriver(is_seo=True) as driver:
-                    yield from check_seo_ranking(driver, url_to_find, keyword, location) # locationを渡す
-            except Exception as e:
-                app.logger.error(f"SEO計測でのWebDriver生成中にエラー: {e}")
-                yield sse_format({"error": "ブラウザの起動に失敗しました。"})
-        finally:
-            measurement_lock.release()
-
-    return app.response_class(generate_stream(), mimetype='text/event-stream')
-
 # --- 特集ページ一括計測API ---
 @app.route('/api/run-feature-page-tasks', methods=['GET'])
 def run_feature_page_tasks_api():
