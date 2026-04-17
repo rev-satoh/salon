@@ -135,6 +135,17 @@ function setupEventListeners(state) {
     // スケジュール保存
     dom.saveScheduleButton.addEventListener('click', saveSchedule);
 
+    // 自動計測ON/OFFスイッチ
+    dom.isAutoScheduleEnabled.addEventListener('change', (e) => {
+        updateScheduleControlsState(e.target.checked);
+        markScheduleAsModified();
+    });
+
+    // スケジュール時間変更
+    dom.scheduleHourSelect.addEventListener('change', () => {
+        markScheduleAsModified();
+    });
+
     // タスクリスト開閉
     dom.autoTaskListToggle.addEventListener('click', toggleTaskList);
 
@@ -347,17 +358,56 @@ function showModeHelp() {
 }
 
 /**
+ * 自動計測スケジュールの設定UIの有効/無効を切り替えます。
+ * @param {boolean} enabled - 有効にするかどうか
+ */
+function updateScheduleControlsState(enabled) {
+    dom.scheduleHourSelect.disabled = !enabled;
+    dom.saveScheduleButton.disabled = !enabled;
+    const labels = dom.saveScheduleButton.parentElement.querySelectorAll('label[for="scheduleHourSelect"]');
+    labels.forEach(label => {
+        label.style.opacity = enabled ? '1' : '0.5';
+    });
+}
+
+/**
  * スケジュール設定を取得して表示します。
  */
 async function fetchSchedule() {
     try {
         const data = await fetchScheduleAPI();
+        dom.isAutoScheduleEnabled.checked = data.enabled;
         dom.scheduleHourSelect.value = data.hour;
-        dom.scheduleStatus.textContent = `現在の設定: 毎日 ${String(data.hour).padStart(2, '0')}:${String(data.minute).padStart(2, '0')} に実行されます。`;
+        updateScheduleControlsState(data.enabled);
+        const statusText = data.enabled
+            ? `現在の設定: 毎日 ${String(data.hour).padStart(2, '0')}:${String(data.minute).padStart(2, '0')} に実行されます。`
+            : '現在の設定: 自動計測はOFFです。';
+        resetScheduleButton();
+        dom.scheduleStatus.textContent = statusText;
     } catch (error) {
         console.error('スケジュールの取得に失敗しました:', error);
+        dom.isAutoScheduleEnabled.checked = false;
+        updateScheduleControlsState(false);
         dom.scheduleStatus.textContent = '現在の設定時間を取得できませんでした。';
     }
+}
+
+/**
+ * スケジュール設定が変更されたことを示すためにボタンのスタイルを変更します。
+ */
+function markScheduleAsModified() {
+    dom.saveScheduleButton.textContent = '設定を保存';
+    dom.saveScheduleButton.classList.remove('button-secondary');
+    dom.saveScheduleButton.classList.add('button-primary');
+}
+
+/**
+ * スケジュール設定ボタンをデフォルトの状態に戻します。
+ */
+function resetScheduleButton() {
+    dom.saveScheduleButton.textContent = '設定';
+    dom.saveScheduleButton.classList.remove('button-primary');
+    dom.saveScheduleButton.classList.add('button-secondary');
 }
 
 /**
@@ -370,18 +420,19 @@ async function saveSchedule() {
         return;
     }
 
-    dom.saveScheduleButton.disabled = true;
-    dom.saveScheduleButton.textContent = '保存中...';
+    dom.saveScheduleButton.textContent = '設定中...';
+    dom.saveScheduleButton.disabled = true; 
 
     try {
-        const result = await saveScheduleAPI({ hour: newHour, minute: 0 });
+        const enabled = dom.isAutoScheduleEnabled.checked;
+        const result = await saveScheduleAPI({ hour: newHour, minute: 0, enabled });
         alert(result.message);
-        fetchSchedule();
+        await fetchSchedule();
     } catch (error) {
         alert(`エラー: ${error.message}`);
-    } finally {
-        dom.saveScheduleButton.disabled = false;
-        dom.saveScheduleButton.textContent = '設定を保存';
+        // エラーが発生した場合は、ボタンを「保存」状態に戻す
+        markScheduleAsModified();
+        updateScheduleControlsState(dom.isAutoScheduleEnabled.checked);
     }
 }
 

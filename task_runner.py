@@ -164,7 +164,7 @@ def _run_meo_tasks(driver, tasks_grouped, history, history_filename, today, stre
         result = {}
         try:
             try:
-                scraper_generator = check_meo_ranking(driver, keyword, location, save_screenshot=save_screenshot)
+                scraper_generator = check_meo_ranking(driver, keyword, location, target_salon_name=tasks_in_group[0]['salonName'], save_screenshot=save_screenshot)
             except TypeError:
                 # save_screenshot引数に対応していない場合のフォールバック
                 scraper_generator = check_meo_ranking(driver, keyword, location)

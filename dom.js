@@ -20,6 +20,7 @@ export const selectAllContainer = document.getElementById('selectAllContainer');
 export const selectAllCheckbox = document.getElementById('selectAllTasks');
 export const scheduleHourSelect = document.getElementById('scheduleHourSelect');
 export const saveScheduleButton = document.getElementById('saveScheduleButton');
+export const isAutoScheduleEnabled = document.getElementById('isAutoScheduleEnabled');
 export const scheduleStatus = document.getElementById('scheduleStatus');
 export const autoTaskListToggle = document.getElementById('autoTaskListToggle');
 export const autoTaskListContent = document.getElementById('autoTaskListContent');

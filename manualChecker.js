@@ -103,6 +103,7 @@ export async function checkRank(state) {
             eventSourceUrl = `/check-meo-ranking?` + new URLSearchParams({
                 keyword: serviceKeyword,
                 location: searchLocation,
+                salonName: salonName,
             });
         } else { // special
             fullKeyword = serviceKeyword;

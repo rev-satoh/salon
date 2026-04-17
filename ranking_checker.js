@@ -1,4 +1,4 @@
-import { initializeUI, updateUIForSearchType } from './ui.js';
+import { initializeUI, updateUIForSearchType, renderAutoTasks } from './ui.js';
 import { fetchAutoTasks, fetchAndDisplayAutoHistory } from './history.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (initialActiveButton) {
         const initialActiveType = initialActiveButton.dataset.type;
         updateUIForSearchType(initialActiveType, state.autoTasks);
+        renderAutoTasks(state);
     }
 
     // 自店（広島・福山）選択チェックボックスのイベントリスナー
