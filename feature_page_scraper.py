@@ -122,6 +122,12 @@ def check_feature_page_ranking(driver, feature_page_url, salon_names, save_scree
                         rank = (page - 1) * 20 + (i + 1)
                         found_salons_map[salon_name].append({"rank": rank, "foundSalonName": current_salon_name})
 
+            # すべての対象サロンが1つ以上見つかったか確認
+            # 全店舗の順位が確定した場合は、次ページ以降の読み込みをスキップして終了する
+            if all(len(results) > 0 for results in found_salons_map.values()):
+                current_app.logger.info(f"すべての対象サロンが見つかったため、{page}ページ目で検索を終了します。")
+                break
+
     except Exception as e:
         current_app.logger.error(f"特集ページ解析中にエラー: {e}")
         # エラー発生時にも、それまでに取得した情報を返す

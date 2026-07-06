@@ -164,6 +164,12 @@ def check_hotpepper_ranking(driver, keyword, salon_name, area_codes, save_screen
                 if salon_name in current_salon_name:
                     rank = (page - 1) * 20 + (i + 1)
                     found_salons.append({"rank": rank, "foundSalonName": current_salon_name})
+                    break # このページの残りの店舗チェックをスキップ
+            
+            # 自店が見つかった場合は、2ページ目以降の読み込みを中止する
+            if found_salons:
+                current_app.logger.info(f"自店「{salon_name}」が見つかったため、{page}ページ目で検索を終了します。")
+                break
 
     except Exception as e:
         current_app.logger.error(f"Selenium処理中にエラーが発生しました: {e}")
