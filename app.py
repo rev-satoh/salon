@@ -26,8 +26,9 @@ import threading # ロック機能のためにインポート
 from utils import sse_format, get_lat_lng_from_address # 共通関数をインポート
 from hpb_scraper import check_hotpepper_ranking
 from meo_scraper import check_meo_ranking
+from ubereats_scraper import check_ubereats_ranking
 from task_runner import run_scheduled_check, update_history
-from driver_manager import get_webdriver
+from driver_manager import get_attached_chrome, get_webdriver
 from excel_generator import create_excel_report # Excel生成関数をインポート
 from salon_board_automator import post_blog_to_store # Step2で作成するファイルをインポート
 import config # 設定ファイルをインポート
@@ -50,6 +51,20 @@ SALON_BOARD_SETTINGS_FILE = 'salon_board_settings.json'
 
 # --- 計測ジョブの同時実行を防ぐためのロック ---
 measurement_lock = threading.Lock()
+
+# 🔴 コードが変わったら自分で入れ替わる（共通部品＝全常駐サーバで同じ1本を使う）。
+#    背景＝常駐プロセスは起動時のコードを抱え、直しても画面の再読み込みでは直らない
+#    （2026-09-03・管理PLで発生）。ツールごとに別方式を作らない。
+#    計測の実行中（measurement_lock）は入れ替えない＝走っているSeleniumを殺さない。
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, "/Users/satoudaisuke/anaconda/company/.company/開発部/tools/_common")
+from live_reload import LiveReload  # noqa: E402
+
+LiveReload(_Path(__file__).resolve().parent, title="順位チェッカー",
+           entry=_Path(__file__).resolve(),
+           busy=lambda: measurement_lock.locked()).install_flask(app)
+measurement_cancel_event = threading.Event()
 
 # --- ヘルパー関数 (ファイルの読み書き) ---
 def load_json_file(filename):
@@ -95,6 +110,11 @@ def serve_onedrive_screenshots(filename):
     directory = '/Users/satoudaisuke/Library/CloudStorage/OneDrive-合同会社リビジョン/画像/salon/screenshots'
     return send_from_directory(directory, filename)
 
+@app.route('/api/cancel-measurement', methods=['POST'])
+def cancel_measurement_api():
+    measurement_cancel_event.set()
+    return jsonify({"status": "cancel_requested"}), 200
+
 @app.route('/check-ranking', methods=['GET', 'POST'])
 def check_ranking_api():
     save_screenshot = True
@@ -118,6 +138,7 @@ def check_ranking_api():
 
     if not measurement_lock.acquire(blocking=False):
         return jsonify({"error": "現在、他の計測タスクが実行中です。しばらく待ってから再度お試しください。"}), 429 # Too Many Requests
+    measurement_cancel_event.clear()
 
     def generate_stream():
         try:
@@ -125,7 +146,11 @@ def check_ranking_api():
                 yield sse_format({"status": "ブラウザを起動しています..."})
                 with get_webdriver() as driver:
                     try:
-                        yield from check_hotpepper_ranking(driver, serviceKeyword, salonName, areaCodes, save_screenshot=save_screenshot)
+                        for message in check_hotpepper_ranking(driver, serviceKeyword, salonName, areaCodes, save_screenshot=save_screenshot):
+                            if measurement_cancel_event.is_set():
+                                yield sse_format({"cancelled": True, "status": "計測を中断しました。"})
+                                return
+                            yield message
                     except TypeError as e:
                         if "unexpected keyword argument 'save_screenshot'" in str(e):
                             app.logger.warning("check_hotpepper_rankingはsave_screenshot引数をサポートしていません。引数なしで実行します。")
@@ -148,15 +173,54 @@ def check_meo_ranking_api():
 
     if not measurement_lock.acquire(blocking=False):
         return jsonify({"error": "現在、他の計測タスクが実行中です。しばらく待ってから再度お試しください。"}), 429
+    measurement_cancel_event.clear()
 
     def generate_stream():
         try:
             try:
                 with get_webdriver() as driver:
-                    yield from check_meo_ranking(driver, keyword, location)
+                    for message in check_meo_ranking(driver, keyword, location):
+                        if measurement_cancel_event.is_set():
+                            yield sse_format({"cancelled": True, "status": "計測を中断しました。"})
+                            return
+                        yield message
             except Exception as e:
                 app.logger.error(f"MEO計測でのWebDriver生成中にエラー: {e}")
                 yield sse_format({"error": "ブラウザの起動に失敗しました。"})
+        finally:
+            measurement_lock.release()
+
+    return app.response_class(generate_stream(), mimetype='text/event-stream')
+
+@app.route('/check-ubereats-ranking', methods=['GET'])
+def check_ubereats_ranking_api():
+    store_name = request.args.get('storeName', '').strip()
+    keyword = request.args.get('keyword', '').strip()
+    address = request.args.get('address', '').strip()
+    address_label = request.args.get('addressLabel', '').strip() or address
+    if not store_name or not keyword or not address:
+        return jsonify({"error": "店舗名、検索キーワード、配達先住所が必要です。"}), 400
+
+    if not measurement_lock.acquire(blocking=False):
+        return jsonify({"error": "現在、他の計測タスクが実行中です。しばらく待ってから再度お試しください。"}), 429
+    measurement_cancel_event.clear()
+
+    def generate_stream():
+        try:
+            yield sse_format({"status": "Uber Eats計測用Chromeに接続しています..."})
+            with app.app_context():
+                with get_attached_chrome(
+                    port=config.UBER_EATS_REMOTE_DEBUGGING_PORT,
+                    user_data_dir=config.UBER_EATS_CHROME_PROFILE_DIR,
+                ) as driver:
+                    for message in check_ubereats_ranking(driver, keyword, store_name, address):
+                        if measurement_cancel_event.is_set():
+                            yield sse_format({"cancelled": True, "status": "計測を中断しました。"})
+                            return
+                        yield message
+        except Exception as e:
+            app.logger.error(f"Uber Eats計測でのWebDriver生成中にエラー: {e}\n{traceback.format_exc()}")
+            yield sse_format({"error": f"ブラウザの起動またはUber Eats計測に失敗しました: {str(e)}"})
         finally:
             measurement_lock.release()
 
@@ -309,17 +373,26 @@ def run_tasks_manually():
         def error_stream():
             yield sse_format({"error": "現在、他の計測タスクが実行中です。しばらく待ってから再度お試しください。"})
         return app.response_class(error_stream(), mimetype='text/event-stream')
+    measurement_cancel_event.clear()
 
     def generate_stream():
         try:
             with app.app_context():
                 # run_scheduled_check と同様のロジックだが、進捗をyieldで返す
                 try:
-                    yield from run_scheduled_check(task_ids_to_run=task_ids, stream_progress=True, save_screenshot=save_screenshot)
+                    for message in run_scheduled_check(task_ids_to_run=task_ids, stream_progress=True, save_screenshot=save_screenshot):
+                        if measurement_cancel_event.is_set():
+                            yield sse_format({"cancelled": True, "status": "計測を中断しました。"})
+                            return
+                        yield message
                 except TypeError as e:
                     if "unexpected keyword argument 'save_screenshot'" in str(e):
                         app.logger.warning("run_scheduled_checkはsave_screenshot引数をサポートしていません。引数なしで実行します。")
-                        yield from run_scheduled_check(task_ids_to_run=task_ids, stream_progress=True)
+                        for message in run_scheduled_check(task_ids_to_run=task_ids, stream_progress=True):
+                            if measurement_cancel_event.is_set():
+                                yield sse_format({"cancelled": True, "status": "計測を中断しました。"})
+                                return
+                            yield message
                     else:
                         raise e
         except Exception as e:

@@ -3,9 +3,12 @@
  */
 import { areas } from './config.js';
 import * as dom from './dom.js';
-import { saveAutoTasksAPI, saveScheduleAPI, fetchScheduleAPI } from './api.js';
+import { saveAutoTasksAPI, saveScheduleAPI, fetchScheduleAPI, fetchHistoryAPI } from './api.js';
+import { buildUberModel, uberSeries, uberLatest, uberSummary, uberStatusLabel, formatUberDate, UBER_BASE_LABEL } from './uberData.js';
 import { checkRank } from './manualChecker.js'; // この行を追加
 import { fetchAndDisplayAutoHistory } from './history.js';
+
+let activeTaskStreamAbortController = null;
 
 /**
  * UI要素の初期化とイベントリスナーの設定を行います。
@@ -100,6 +103,18 @@ function setupEventListeners(state) {
 
     // 手動計測ボタン
     dom.checkRankButton.addEventListener('click', () => checkRank(state));
+
+    // 手動計測中断ボタン
+    dom.stopMeasurementButton.addEventListener('click', () => {
+        state.cancelMeasurement = true;
+        dom.stopMeasurementButton.textContent = '中断中...';
+        dom.stopMeasurementButton.disabled = true;
+        window.dispatchEvent(new CustomEvent('manual-measurement-stop'));
+        fetch('/api/cancel-measurement', { method: 'POST' }).catch(() => {});
+        if (activeTaskStreamAbortController) {
+            activeTaskStreamAbortController.abort();
+        }
+    });
 
     // 自動計測タスク追加ボタン
     dom.addAutoTaskButton.addEventListener('click', () => addAutoTask(state));
@@ -220,33 +235,42 @@ function getDurationString(startTime) {
 async function processStream(taskIds, saveScreenshot = true) {
     if (taskIds.length === 0) return;
 
-    const response = await fetch('/api/run-tasks-manually', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ task_ids: taskIds, save_screenshot: saveScreenshot })
-    });
+    activeTaskStreamAbortController = new AbortController();
+    try {
+        const response = await fetch('/api/run-tasks-manually', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ task_ids: taskIds, save_screenshot: saveScreenshot }),
+            signal: activeTaskStreamAbortController.signal,
+        });
 
-    if (!response.body) throw new Error('Response body is missing');
+        if (!response.body) throw new Error('Response body is missing');
 
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
 
-    while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
 
-        const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk.split('\n\n');
+            const chunk = decoder.decode(value, { stream: true });
+            const lines = chunk.split('\n\n');
 
-        for (const line of lines) {
-            if (line.startsWith('data: ')) {
-                const jsonData = line.substring(6);
-                if (!jsonData) continue;
+            for (const line of lines) {
+                if (line.startsWith('data: ')) {
+                    const jsonData = line.substring(6);
+                    if (!jsonData) continue;
 
-                const data = JSON.parse(jsonData);
-                handleStreamData(data);
+                    const data = JSON.parse(jsonData);
+                    if (data.cancelled) {
+                        return;
+                    }
+                    handleStreamData(data);
+                }
             }
         }
+    } finally {
+        activeTaskStreamAbortController = null;
     }
 }
 
@@ -260,7 +284,7 @@ function handleStreamData(data) {
 
     if (data.progress) {
         const { current, total, task } = data.progress;
-        const taskName = task.featurePageName || task.featurePageUrl || `[${task.areaName}] ${task.serviceKeyword}` || `[${task.searchLocation}] ${task.keyword}`;
+        const taskName = getTaskDisplayName(task);
         document.getElementById('overallStatus').textContent = `${current} / ${total} 件目: 「${taskName}」を計測中... `;
         
         const taskContainer = document.createElement('div');
@@ -291,6 +315,14 @@ function handleStreamData(data) {
     }
 }
 
+function getTaskDisplayName(task) {
+    if (task.featurePageName) return task.featurePageName;
+    if (task.featurePageUrl) return task.featurePageUrl;
+    if (task.type === 'google') return `[${task.searchLocation}] ${task.keyword}`;
+    if (task.type === 'ubereats') return `[${task.addressLabel || task.address}] ${task.keyword}`;
+    return `[${task.areaName}] ${task.serviceKeyword}`;
+}
+
 /**
  * 検索タイプに応じてUIの表示を更新します。
  * @param {string} activeType - 'normal', 'special', 'google'
@@ -300,6 +332,8 @@ export function updateUIForSearchType(activeType, autoTasks) {
     dom.normalSearchInputs.style.display = 'none';
     dom.specialSearchInputs.style.display = 'none';
     dom.googleMapSearchInputs.style.display = 'none';
+    dom.uberEatsSearchInputs.style.display = 'none';
+    dom.salonNameFormGroup.style.display = 'block';
 
     if (activeType === 'normal') {
         dom.normalSearchInputs.style.display = 'block';
@@ -307,6 +341,10 @@ export function updateUIForSearchType(activeType, autoTasks) {
         dom.specialSearchInputs.style.display = 'block';
     } else if (activeType === 'google') {
         dom.googleMapSearchInputs.style.display = 'block';
+    } else if (activeType === 'ubereats') {
+        dom.uberEatsSearchInputs.style.display = 'block';
+        dom.salonNameFormGroup.style.display = 'none';
+        renderUberEatsPanel();
     }
 
     // コピー機能セクション
@@ -326,6 +364,256 @@ export function updateUIForSearchType(activeType, autoTasks) {
     }
 }
 
+let uberHistoryCache = null;
+
+/**
+ * Uber Eatsモードの結果欄を実データ（/api/auto-history）で描画します。
+ * @param {string|null} selectedKeyword - 表示するキーワード（未指定なら先頭）
+ */
+async function renderUberEatsPanel(selectedKeyword = null) {
+    dom.resultArea.innerHTML = `<p style="color:#6c6c70;">Uber Eatsの計測履歴を読み込んでいます...</p>`;
+    let model = null;
+    try {
+        if (!uberHistoryCache) uberHistoryCache = await fetchHistoryAPI();
+        model = buildUberModel(uberHistoryCache);
+    } catch (error) {
+        console.error('Uber Eats履歴の取得に失敗しました:', error);
+        dom.resultArea.innerHTML = `<p style="color:#ff3b30;">Uber Eatsの計測履歴を取得できませんでした。</p>`;
+        return;
+    }
+    if (!model) {
+        dom.resultArea.innerHTML = `<p style="color:#6c6c70;">Uber Eatsの計測履歴がまだありません。手動計測または自動計測を実行してください。</p>`;
+        return;
+    }
+    drawUberEatsPanel(model, selectedKeyword);
+}
+
+function drawUberEatsPanel(model, selectedKeyword) {
+    const keyword = model.keywords.includes(selectedKeyword) ? selectedKeyword : model.keywords[0];
+    const summary = uberSummary(model, keyword);
+    const latestLabels = Object.fromEntries(
+        model.points.map(point => [point.label, uberStatusLabel(uberLatest(model, keyword, point.label))])
+    );
+    const columns = Math.min(Math.max(Math.ceil(model.points.length / 2), 3), 6);
+
+    dom.resultArea.innerHTML = `
+        <div style="border: 1px solid #e5e5e7; border-radius: 10px; overflow: hidden; background: #fff;">
+            <div style="padding: 16px 18px; border-bottom: 1px solid #e5e5e7; display: flex; justify-content: space-between; gap: 16px; align-items: flex-start;">
+                <div>
+                    <p style="margin: 0 0 4px; color: #6c6c70; font-size: 13px;">Uber Eats モード / 計測履歴</p>
+                    <h4 style="margin: 0; font-size: 20px;">住所セット - ${model.storeName}</h4>
+                    <p style="margin: 6px 0 0; color: #6c6c70; font-size: 13px;">登録済みの配達先住所ごとに、Uber Eats検索での自店順位を比較します。</p>
+                </div>
+                <div style="text-align: right; font-size: 13px; color: #6c6c70;">
+                    <div>最終計測 ${model.latestDate || '-'}</div>
+                    <strong style="display: block; margin-top: 4px; color: #111;">${model.labels.length}住所 × ${model.keywords.length}キーワード</strong>
+                </div>
+            </div>
+            <div style="padding: 16px 18px;">
+                <div style="display: grid; grid-template-columns: 1.1fr 1fr; gap: 14px; margin-bottom: 16px;">
+                    <div style="border: 1px solid #ececf0; border-radius: 8px; padding: 14px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <strong style="font-size: 14px;">観測住所セット</strong>
+                            <span style="font-size: 12px; color: #6c6c70;">${keyword}の最新順位</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(${columns}, minmax(0, 1fr)); gap: 8px;">
+                            ${model.points.map(point => uberPointTile(point.label, latestLabels[point.label], uberRankColor(latestLabels[point.label]))).join('')}
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;">
+                        ${uberMetric('最良地点', summary.best ? summary.best.label : '-', summary.best ? `${keyword} ${summary.best.value}位` : '順位取得なし', '#007aff')}
+                        ${uberMetric('圏外の観測点', `${summary.outCount}件`, `計測できた${summary.measuredCount}件中`, '#ff3b30')}
+                        ${uberMetric('観測住所', `${model.labels.length}件`, `キーワード${model.keywords.length}語`, '#111')}
+                        ${uberMetric('観測タスク', `${model.taskCount}件`, `計測日 ${model.dates.length}日分`, '#111')}
+                    </div>
+                </div>
+                <div style="border: 1px solid #ececf0; border-radius: 8px; padding: 16px; background: linear-gradient(#fff, #fbfbfd); margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 10px;">
+                        <div>
+                            <strong style="font-size: 15px;">順位推移（${keyword}）</strong>
+                            <div style="font-size: 12px; color: #6c6c70; margin-top: 3px;">薄線=観測点別 / 太線=${UBER_BASE_LABEL}。上に行くほど上位。</div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+                            <div style="display: inline-flex; border: 1px solid #d7d7dc; border-radius: 8px; overflow: hidden; background: #fff; flex-wrap: wrap;">
+                                ${model.keywords.map(item => uberKeywordButton(item, item === keyword)).join('')}
+                            </div>
+                            <div style="display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; max-width: 390px;">
+                                ${model.points.map(point => uberLegend(point.label, point.color, point.opacity)).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    ${renderUberTrendChart(model, keyword)}
+                </div>
+                <div style="border: 1px solid #ececf0; border-radius: 8px; padding: 14px; margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <strong style="font-size: 14px;">最新順位ヒートマップ</strong>
+                        <span style="font-size: 12px; color: #6c6c70;">行=住所 / 列=キーワード</span>
+                    </div>
+                    <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                        <thead>
+                            <tr>
+                                <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">観測点</th>
+                                ${model.keywords.map(item => `<th style="text-align: center; padding: 8px; border-bottom: 1px solid #ddd;">${item}</th>`).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${model.labels.map(label => uberHeatRow(label, model.keywords.map(item => uberStatusLabel(uberLatest(model, item, label))))).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px;">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">観測点</th>
+                            <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">配達先住所</th>
+                            <th style="text-align: center; padding: 8px; border-bottom: 1px solid #ddd;">${keyword}</th>
+                            <th style="text-align: center; padding: 8px; border-bottom: 1px solid #ddd;">全キーワード順位</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${model.points.map(point => uberPointRow(
+                            point.label,
+                            point.address,
+                            latestLabels[point.label],
+                            model.keywords.map(item => uberStatusLabel(uberLatest(model, item, point.label))).join(' / ')
+                        )).join('')}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    `;
+    dom.resultArea.querySelectorAll('.uber-keyword-button').forEach(button => {
+        button.addEventListener('click', () => drawUberEatsPanel(model, button.dataset.keyword));
+    });
+}
+
+function uberKeywordButton(keyword, active) {
+    return `
+        <button type="button" class="uber-keyword-button" data-keyword="${keyword}" style="border: 0; border-right: 1px solid #d7d7dc; padding: 7px 10px; background: ${active ? '#111' : '#fff'}; color: ${active ? '#fff' : '#333'}; font-size: 12px; cursor: pointer; white-space: nowrap;">
+            ${keyword}
+        </button>
+    `;
+}
+
+function renderUberTrendChart(model, keyword) {
+    const dates = model.dates;
+    const left = 60;
+    const right = 720;
+    const dateX = dates.length === 1
+        ? [(left + right) / 2]
+        : dates.map((_, index) => left + ((right - left) * index) / (dates.length - 1));
+    return `
+        <svg viewBox="0 0 760 220" style="width: 100%; height: 250px; display: block;">
+            <line x1="48" y1="28" x2="735" y2="28" stroke="#ececf0"/>
+            <line x1="48" y1="68" x2="735" y2="68" stroke="#ececf0"/>
+            <line x1="48" y1="108" x2="735" y2="108" stroke="#ececf0"/>
+            <line x1="48" y1="148" x2="735" y2="148" stroke="#ececf0"/>
+            <line x1="48" y1="188" x2="735" y2="188" stroke="#ececf0"/>
+            <text x="8" y="32" font-size="11" fill="#6c6c70">1位</text>
+            <text x="8" y="72" font-size="11" fill="#6c6c70">5位</text>
+            <text x="8" y="112" font-size="11" fill="#6c6c70">10位</text>
+            <text x="8" y="152" font-size="11" fill="#6c6c70">20位</text>
+            <text x="8" y="192" font-size="11" fill="#6c6c70">圏外</text>
+            ${model.points.map(point => uberPolyline(dateX, uberSeries(model, keyword, point.label), point)).join('')}
+            ${dates.map((date, index) => `<text x="${Math.max(dateX[index] - 14, 2)}" y="214" font-size="11" fill="#6c6c70">${formatUberDate(date)}</text>`).join('')}
+        </svg>
+    `;
+}
+
+/**
+ * 観測点1つ分の折れ線を描画します。
+ * 欠測（未計測）は線を切り、圏外は最下段に置きます。
+ */
+function uberPolyline(dateX, series, point) {
+    const segments = [];
+    let current = [];
+    series.forEach((normalized, index) => {
+        if (!normalized) {
+            if (current.length) segments.push(current);
+            current = [];
+            return;
+        }
+        current.push(`${dateX[index]},${uberRankY(normalized)}`);
+    });
+    if (current.length) segments.push(current);
+
+    const lastIndex = series.map(item => !!item).lastIndexOf(true);
+    const circleRadius = point.width > 2 ? 4 : 3;
+    const marker = lastIndex < 0 ? '' : `
+        <circle cx="${dateX[lastIndex]}" cy="${uberRankY(series[lastIndex])}" r="${circleRadius}" fill="${point.color}" opacity="${Math.min(point.opacity + 0.28, 1)}"/>
+    `;
+    const lines = segments.map(segment => segment.length === 1
+        ? `<circle cx="${segment[0].split(',')[0]}" cy="${segment[0].split(',')[1]}" r="${circleRadius}" fill="${point.color}" opacity="${point.opacity}"/>`
+        : `<polyline points="${segment.join(' ')}" fill="none" stroke="${point.color}" stroke-width="${point.width}" opacity="${point.opacity}"/>`
+    ).join('');
+    return `${lines}${marker}`;
+}
+
+function uberRankY(normalized) {
+    if (!normalized || normalized.status !== 'rank' || normalized.value > 20) return 188;
+    return 28 + ((normalized.value - 1) / 19) * 120;
+}
+
+function uberPointTile(label, rank, color) {
+    return `
+        <div style="height: 48px; border: 1px solid #e5e5e7; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #fff;">
+            <span style="font-size: 12px; color: #333; line-height: 1.1;">${label}</span>
+            <strong style="font-size: 13px; color: ${color}; line-height: 1.2;">${rank}</strong>
+        </div>
+    `;
+}
+
+function uberMetric(label, rank, sub, color) {
+    return `
+        <div style="border: 1px solid #e5e5e7; border-radius: 8px; padding: 12px; min-height: 78px;">
+            <div style="font-size: 13px; color: #6c6c70; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${label}</div>
+            <div style="font-size: 24px; font-weight: 700; color: ${color}; margin-top: 4px;">${rank}</div>
+            <div style="font-size: 12px; color: #6c6c70; margin-top: 2px;">${sub}</div>
+        </div>
+    `;
+}
+
+function uberLegend(label, color, opacity) {
+    return `
+        <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: #333;">
+            <i style="display: inline-block; width: 18px; height: 3px; border-radius: 999px; background: ${color}; opacity: ${opacity};"></i>${label}
+        </span>
+    `;
+}
+
+function uberHeatRow(label, ranks) {
+    return `
+        <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: 600;">${label}</td>
+            ${ranks.map(rank => `<td style="padding: 8px; border-bottom: 1px solid #eee; text-align: center;">${uberRankBadge(rank)}</td>`).join('')}
+        </tr>
+    `;
+}
+
+function uberRankBadge(rank) {
+    const color = uberRankColor(rank);
+    return `<span style="display:inline-block; min-width: 46px; padding: 3px 6px; border-radius: 999px; color: ${color}; background: #f5f5f7; font-weight: 700;">${rank}</span>`;
+}
+
+function uberRankColor(rank) {
+    if (rank === '圏外' || rank === '未計測') return '#8e8e93';
+    const rankNumber = Number.parseInt(rank, 10);
+    if (rankNumber <= 8) return '#007aff';
+    if (rankNumber <= 15) return '#ff9500';
+    return '#ff3b30';
+}
+
+function uberPointRow(point, address, selectedRank, allRanks) {
+    return `
+        <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: 600;">${point}</td>
+            <td style="padding: 8px; border-bottom: 1px solid #eee; color: #6c6c70;">${address || '-'}</td>
+            <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: center; font-weight: 700;">${selectedRank}</td>
+            <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: center; color: #6c6c70;">${allRanks}</td>
+        </tr>
+    `;
+}
+
 /**
  * 計測状態に応じてUIの有効/無効を切り替えます。
  * @param {boolean} measuring - 計測中かどうか
@@ -334,6 +622,8 @@ export function setMeasuringState(measuring, state) {
     state.isMeasuring = measuring;
     dom.checkRankButton.disabled = measuring;
     dom.manualTriggerButton.disabled = measuring;
+    dom.stopMeasurementButton.style.display = measuring ? 'inline-block' : 'none';
+    dom.stopMeasurementButton.disabled = !measuring;
     dom.searchTypeToggle.querySelectorAll('button').forEach(btn => btn.disabled = measuring);
     dom.addAutoTaskButton.disabled = measuring;
     document.getElementById('executeCopyButton').disabled = measuring;
@@ -353,6 +643,8 @@ function showModeHelp() {
         helpText = `■ HPB特集検索モードについて\n\nこのモードは、「〇〇駅で人気のサロン特集」のような、ホットペッパービューティーが独自に編集した「特集ページ」での掲載順位を計測します。\n\n【計測方法】\n指定された特集ページのURLに直接アクセスし、そのページ内でのサロンの掲載順位を確認します。\n\n【用途】\nHPBの特集企画に掲載されている場合の順位を確認したい場合に使用します。代理店様などが「LP（ランディングページ）」と呼ぶページも、多くはこの特集ページに該当します。`;
     } else if (activeMode === 'google') {
         helpText = `■ MEO検索モードについて\n\nこのモードは、Googleマップでの検索結果（MEO）における掲載順位を計測します。\n\n【パーソナライズの排除】\nGoogleマップの検索結果は、検索場所や履歴によって変動しますが、このシステムでは以下の方法で客観的な順位を計測しています。\n\n1. クリーンな環境: 履歴のないブラウザで計測します。\n2. 検索場所の固定: あなたのPCの場所ではなく、指定された検索地点（例：「福山駅」）の座標を仮想的に設定して検索します。\n\nこれにより、誰がどこで計測しても、常に「指定した地点の周辺での検索結果」という同じ条件下での順位を確認できます。`;
+    } else if (activeMode === 'ubereats') {
+        helpText = `■ Uber Eats検索モードについて\n\nこのモードは、指定した配達先住所と検索キーワードでUber Eats上の表示順位を追跡するためのモードです。\n\n【想定する計測条件】\n1. 配達先住所を固定します。\n2. 検索キーワードを固定します。\n3. 店舗名の一部一致で自店順位を判定します。\n\n飲食店では時間帯・配達先・営業状態で順位が変わるため、同条件での露出傾向を見る用途に向いています。`;
     }
     alert(helpText);
 }
@@ -496,6 +788,8 @@ export function renderAutoTasks(state) {
     let groupedTasks;
     if (activeSearchType === 'google') {
         groupedTasks = groupTasks(filteredTasks, 'searchLocation', '地点未設定');
+    } else if (activeSearchType === 'ubereats') {
+        groupedTasks = groupTasks(filteredTasks, 'addressLabel', '住所未設定');
     } else if (activeSearchType === 'normal') {
         groupedTasks = groupTasks(filteredTasks, 'areaName', 'エリア未設定');
     } else if (activeSearchType === 'special') {
@@ -584,6 +878,7 @@ function renderTaskItem(task, parentElement, groupKey = null) {
     if (taskType === 'normal') taskText = `${task.serviceKeyword} - ${task.salonName}`;
     else if (taskType === 'special') taskText = task.salonName;
     else if (taskType === 'google') taskText = `${task.keyword} - ${task.salonName}`;
+    else if (taskType === 'ubereats') taskText = `${task.keyword} - ${task.storeName}`;
     taskTextSpan.textContent = taskText;
 
     taskLabel.append(checkbox, taskTextSpan);
@@ -605,7 +900,7 @@ function addAutoTask(state) {
     const salonName = dom.salonNameInput.value.trim();
     let addedTasks = [], existingTasks = [];
 
-    if (!salonName) {
+    if (activeSearchType !== 'ubereats' && !salonName) {
         alert('サロン名を入力してください。');
         return;
     }
@@ -662,6 +957,25 @@ function addAutoTask(state) {
             state.autoTasks.push({ id: taskId, type: 'google', salonName, searchLocation, keyword: cleanedKeyword });
             addedTasks.push(`[${searchLocation}] ${cleanedKeyword}`);
         }
+    } else if (activeSearchType === 'ubereats') {
+        const storeName = dom.uberStoreNameInput.value.trim();
+        const addresses = parseUberAddressSet(dom.uberAddressInput.value);
+        const keywordsRaw = dom.uberKeywordInput.value.trim();
+        const keywords = keywordsRaw ? keywordsRaw.split(/[\s,、]+/).filter(k => k) : [];
+        if (!storeName || addresses.length === 0 || keywords.length === 0) {
+            alert('Uber Eats検索では、店舗名・住所セット・検索キーワードを入力してください。');
+            return;
+        }
+        addresses.forEach(({ label, address }) => {
+            keywords.forEach(keyword => {
+                const taskId = `[ubereats]-${storeName}-${label}-${address}-${keyword}`;
+                if (state.autoTasks.some(t => t.id === taskId)) existingTasks.push(`[${label}] ${keyword}`);
+                else {
+                    state.autoTasks.push({ id: taskId, type: 'ubereats', storeName, addressLabel: label, address, keyword });
+                    addedTasks.push(`[${label}] ${keyword}`);
+                }
+            });
+        });
     }
 
     if (addedTasks.length > 0) {
@@ -672,6 +986,21 @@ function addAutoTask(state) {
     if (existingTasks.length > 0) {
         alert(`以下のタスクは既に追加されています:\n- ${existingTasks.join('\n- ')}`);
     }
+}
+
+function parseUberAddressSet(rawText) {
+    return rawText
+        .split(/\n+/)
+        .map(line => line.trim())
+        .filter(Boolean)
+        .map((line, index) => {
+            const [labelPart, ...addressParts] = line.split(/[:：]/);
+            const hasExplicitLabel = addressParts.length > 0;
+            const label = hasExplicitLabel ? labelPart.trim() : `観測点${index + 1}`;
+            const address = hasExplicitLabel ? addressParts.join(':').trim() : line;
+            return { label, address };
+        })
+        .filter(item => item.label && item.address);
 }
 
 // --- コピー機能関連 ---

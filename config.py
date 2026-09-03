@@ -20,7 +20,8 @@ HISTORY_FILES = {
     'normal': 'history_normal.json',
     'special': 'history_special.json',
     'google': 'history_meo.json',
-    'seo': 'history_seo.json'
+    'seo': 'history_seo.json',
+    'ubereats': 'history_ubereats.json'
 }
 
 # --- スクレイピング共通設定 ---
@@ -29,7 +30,7 @@ WEBDRIVER_TIMEOUT = 30
 # スクリーンショットの保存先ディレクトリ
 SCREENSHOT_DIR = "/Users/satoudaisuke/Library/CloudStorage/OneDrive-合同会社リビジョン/画像/salon/screenshots"
 # スクリーンショットのJPEG品質 (0-95の範囲で設定)
-SCREENSHOT_JPEG_QUALITY = 15
+SCREENSHOT_JPEG_QUALITY = 10
 # デフォルトのUser-Agent
 DEFAULT_USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
 
@@ -44,6 +45,18 @@ HPB_SPECIAL_TITLE_MAX_LENGTH = 30
 MEO_SCROLL_COUNT = 3
 # SEO計測で1ページに表示する検索結果の数
 SEO_RESULTS_PER_PAGE = 100
+
+# --- Uber Eats 関連設定 ---
+# Uber Eats検索で読み込む最大店舗数の目安
+UBER_EATS_MAX_RESULTS = 80
+# Uber Eatsは自動セキュリティ確認が出ることがあるため、専用プロファイルを使って表示ブラウザで計測する
+UBER_EATS_CHROME_PROFILE_DIR = os.path.expanduser("~/Library/Application Support/salon-ranking-checker/ubereats-chrome-profile-v2")
+UBER_EATS_CHALLENGE_WAIT_SECONDS = 180
+UBER_EATS_REMOTE_DEBUGGING_PORT = 9225
+CHROMEDRIVER_PATH = "/opt/homebrew/bin/chromedriver"
+UBER_EATS_GEOCODE_CACHE_FILE = "ubereats_geocode_cache.json"
+# Uber Eatsは連続アクセスに弱いため、手動/自動の連続計測間隔を長めに取る
+UBER_EATS_TASK_WAIT_SECONDS = 3
 
 # --- 自動実行タスク関連設定 ---
 # 各タスク実行後のランダムな待機時間（秒）の範囲

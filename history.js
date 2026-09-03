@@ -77,7 +77,10 @@ export async function fetchAndDisplayAutoHistory() {
         historyData.forEach(item => {
             // 各アイテムのユニークなキーを生成（タスクIDから古いサロン名部分を除外）
             const task = item.task || {};
-            const key = `${task.type || 'normal'}-${task.areaName || task.searchLocation || task.featurePageUrl}-${task.salonName}-${task.serviceKeyword || task.keyword || ''}`;
+            const key = task.type === 'ubereats'
+                // Uber Eatsは areaName / salonName を持たず address（住所）・storeName（店名）で識別する
+                ? `ubereats-${task.address || task.addressLabel || ''}-${task.storeName || ''}-${task.keyword || ''}`
+                : `${task.type || 'normal'}-${task.areaName || task.searchLocation || task.featurePageUrl}-${task.salonName}-${task.serviceKeyword || task.keyword || ''}`;
 
             if (!mergedHistory[key]) {
                 // 新しいキーであれば、そのまま格納
@@ -136,6 +139,8 @@ function groupHistory(history, activeSearchType) {
             groupKey = historyItem.task.featurePageName || historyItem.task.featurePageUrl;
         } else if (activeSearchType === 'google') {
             groupKey = `${historyItem.task.searchLocation} - ${historyItem.task.salonName}`;
+        } else if (activeSearchType === 'ubereats') {
+            groupKey = `${historyItem.task.address} - ${historyItem.task.storeName}`;
         }
         if (!acc[groupKey]) acc[groupKey] = [];
         acc[groupKey].push(historyItem);
@@ -245,6 +250,8 @@ function prepareChartData(groupData, activeSearchType) {
         if (activeSearchType === 'normal') {
             labelText = taskData.task.serviceKeyword || '';
         } else if (activeSearchType === 'google') {
+            labelText = taskData.task.keyword || '';
+        } else if (activeSearchType === 'ubereats') {
             labelText = taskData.task.keyword || '';
         } // 'special' の場合はサロン名がそのまま使われる
 

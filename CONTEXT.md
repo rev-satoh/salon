@@ -99,3 +99,49 @@
 - カテゴリ選択: `select[name="blogCategoryCd"]`
 - 画像アップロード: `#upload` (ボタン), `#sendFile` (input)
 - 確認ボタン: `#confirm`
+
+## 運用メモ: HPB広島エリア改定（2026-08-07）
+- ケイトステージラッシュの通常検索タスク16件は、旧「八丁堀・幟町・銀山・白島」（smallAreaCd `X165`）から新「本通・八丁堀・袋町・紙屋町」（smallAreaCd `X164`）へ統合移行済み。
+- 新URLは `https://beauty.hotpepper.jp/nail/svcSF/macFA/salon/sacX164/`。`auto_tasks.json` と `history_normal.json` のID/areaName/areaCodesを新エリア名へリネームし、`config.js` のエリア候補も新名称へ差し替えた。
+- 旧エリア廃止により2026/08/07の旧タスク計測は一度すべて圏外になったが、移行後に同日分を再計測し、グラフ用履歴は8/7から新エリア順位で表示される状態に更新済み。
+
+## 運用メモ: 履歴グラフの過去データ間引き（2026-08-07）
+- 2025/09/01〜2026/04/30の計測ログが密集してグラフが読みにくくなっていたため、通常・特集・MEO履歴を各系列・各月ごとに「月初寄り、15日前後、月末寄り」の最大3点へ間引いた。
+- 削除量は `history_normal.json` 10,443ログ、`history_special.json` 4,963ログ、`history_meo.json` 7,970ログ。SEO履歴は各系列3件程度で密集していないため未変更。
+- 間引き前バックアップは `*.backup_thin_202509_202604_20260807214002` として同階層に保存済み。2026/05以降および2026/08/07の再計測結果は削除対象外。
+
+## 不具合修正: Uber Eats履歴が1グループに潰れる（2026-08-29）
+- 原因＝`history.js` `fetchAndDisplayAutoHistory` のログ統合キーが `areaName/searchLocation/featurePageUrl` と `salonName` 前提で、これらを持たないUber Eatsタスクが `ubereats-undefined-undefined-キーワード` に潰れ、さらに日付重複排除で同日40件が1件に削られていた。
+- 対処＝`type === 'ubereats'` のときだけキーを `ubereats-{address}-{storeName}-{keyword}` に切り替え（他タイプのキーは無変更）。データファイルは未変更。
+- 実測＝ubereats: 統合後 5件 → 60件、グラフのグループ 3 → 17、2026/08/29のログ 4 → 40（生データ40と一致）。normal/special/meo は統合後件数・グループ数・8/29ログ数すべて修正前後で同値。
+
+## 改修: Uber Eats画面下部のデザインモックを実データ描画へ置換（2026-08-29）
+- 従来＝`ui.js` の `renderUberEatsMock()` が固定値 `UBER_MOCK_DATES/POINTS/SERIES` でダミーの観測点タイル・サマリー指標・順位推移SVG・ヒートマップを描画していた（「最終計測 8/8 09:00」「10住所 × 3キーワード」等も固定文字列）。
+- 対処＝新規 `uberData.js`（`buildUberModel`／`uberSeries`／`uberLatest`／`uberSummary`／`normalizeUberRank`）を追加し、`ui.js` の呼び出しを `renderUberEatsPanel()` へ変更。データは `/api/auto-history` から取得し `task.type === 'ubereats'` で絞る。観測点・キーワード・X軸日付・最終計測日・タスク件数はすべて実データから動的生成。モード説明ヘルプの「現在はデザイン確認用のモック表示です。」の一文も削除。
+- rank文字列 "要確認" / "モック" は「未計測」扱い（グラフの線を引かない）とし、"圏外" とは区別する方針を採用。
+- 実測＝置換時点で観測住所14件・キーワード5語・観測タスク60件・X軸日付は8/9と8/29の2点・最新計測日2026/08/29。
+
+## データ整理: Uber Eats履歴からキーワード「グリーク」を削除（2026-08-29）
+- 対象＝`history_ubereats.json` の `task.keyword === "グリーク"` 完全一致1件（id `[ubereats]-YOGI-店と同じ住所-YOGI 岡山-グリーク`、log 2026/08/09・順位7）。「グリークヨーグルト」は対象外。
+- 実測＝総数 60 → 59。keyword別 グリーク1→0／グリークヨーグルト16→16／ヨーグルト16→16／アサイー17→17／アサイーボウル10→10。
+- バックアップ＝`history_ubereats.json.backup_delete_keyword_gurique_20260829`。
+
+## データ整理: Uber Eats履歴から未計測の観測点4つを削除（2026-08-29）
+- 対象＝`task.addressLabel` 完全一致「北側／南側／東側／西側」の12件。全ログが `rank: "モック"` のみで実計測ゼロだったため削除。
+- 部分一致の「中区北側」「中区東側」「北区南側」「南区北側」「南区南側」は実データありのため残す（今後の作業でも完全一致でのみ判定し、誤削除しないこと）。
+- 実測＝総数 59 → 47。残る観測点は10（店と同じ住所5・中心部A7・中心部B7・北区近隣4・北区南側4・中区北側4・中区東側4・南区北側4・南区南側4・東区代表4）。
+- バックアップ＝`history_ubereats.json.backup_delete_unmeasured_directions_20260829`。
+
+### 注意事項
+- Uber Eatsタスクは `auto_tasks.json` に1件も登録されていない（登録は normal138／google120／special80／seo12 のみ）。Uber Eatsの計測は自動計測タスク台帳の外で実行されており、台帳側から件数・観測点を把握できない。
+
+## 調査結果: ロケットナウは順位計測不可（アプリ専用・2026-08-29）
+- 結論＝ロケットナウの掲載順位計測は実装しない。社長判断で見送り（2026-08-29）。本日ブラウザで実測済み。
+- 理由＝消費者向けのWeb注文サイトが存在しない。公式サイト `https://www.rocketnow.co.jp/` はWordPressの紹介サイトのみで、sitemapは `post-sitemap.xml` と `page-sitemap.xml` の2本だけ＝店舗ページも検索ページも無い。
+- 公式FAQ `/customer/` の注文手順が「ロケットナウアプリをダウンロードした後、アプリを開き会員登録／ログイン → お届け先の住所を設定」＝住所指定も検索もアプリ内のみ。
+- サイト内CTAの遷移先は App Store（id6739188587）と Google Play のみ。
+- 注文用サブドメイン候補 order / m / web / app / shop はすべてNXDOMAIN。存在するのは `store.rocketnow.co.jp`（加盟店管理画面）のみで、注文明細APIはあるが検索順位の概念が無い。
+- 公式サイトはcurl直アクセスをAkamaiが403でブロック（ブラウザでは閲覧可）＝スクレイピング前提でも壁がある。
+- Uber Eats版から流用できるのは `task_runner.py` のモード分岐・履歴JSON・スクショ保存・UIタブの器のみ。URL生成（座標をbase64 `pl` に載せる方式）・配達先住所のUI操作・店舗カードのDOM解析・レート制限判定はすべてUber EatsのWeb DOM前提で、ロケットナウには対応物が存在しない＝中核は全て作り直しになる。
+- 未調査で残っている点＝`store.rocketnow.co.jp` の加盟店管理画面内に、掲載順位・露出に関する指標があるかは未確認。将来やるならここが最初の確認先。
+- 実装する唯一の経路＝Androidエミュレータ＋アプリ通信の解析（規約リスクあり）。着手するなら改めて社長判断が要る。

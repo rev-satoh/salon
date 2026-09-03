@@ -7,17 +7,23 @@ import { saveManualHistoryAPI } from './api.js';
 import { setMeasuringState } from './ui.js';
 import { fetchAndDisplayAutoHistory } from './history.js';
 
+let activeManualEventSource = null;
+let activeManualAbortController = null;
+const UBER_EATS_MANUAL_WAIT_MS = 3000;
+
 /**
  * 手動での順位計測を実行します。
  * @param {object} state - アプリケーションの状態オブジェクト
  */
 export async function checkRank(state) {
+    state.cancelMeasurement = false;
     const salonName = dom.salonNameInput.value.trim();
     const activeSearchType = dom.searchTypeToggle.querySelector('.toggle-button.active').dataset.type;
 
     let serviceKeywords = [];
     let areaCodes = {};
     let areaName = '';
+    let uberStoreName = '';
 
     if (activeSearchType === 'normal') {
         const largeArea = dom.largeAreaSelect.value;
@@ -57,10 +63,23 @@ export async function checkRank(state) {
             return;
         }
         serviceKeywords.push(googleKeyword);
+    } else if (activeSearchType === 'ubereats') {
+        uberStoreName = dom.uberStoreNameInput.value.trim();
+        const addresses = parseUberAddressSet(dom.uberAddressInput.value);
+        const keywordsRaw = dom.uberKeywordInput.value.trim();
+        const keywords = keywordsRaw ? keywordsRaw.split(/[\s,、]+/).filter(k => k) : [];
+        if (!uberStoreName || addresses.length === 0 || keywords.length === 0) {
+            alert('Uber Eats検索では、店舗名・住所セット・検索キーワードを入力してください。');
+            return;
+        }
+        serviceKeywords = addresses.flatMap(({ label, address }) =>
+            keywords.map(keyword => ({ label, address, keyword }))
+        );
     }
 
     setMeasuringState(true, state);
     dom.checkRankButton.textContent = '計測中...';
+    dom.stopMeasurementButton.textContent = '中断';
     dom.resultArea.innerHTML = '';
 
     const startTime = performance.now();
@@ -83,7 +102,12 @@ export async function checkRank(state) {
         }
     }, 1000);
 
+    const stopHandler = () => stopManualMeasurement(state);
+    window.addEventListener('manual-measurement-stop', stopHandler);
+
     for (const [index, serviceKeyword] of serviceKeywords.entries()) {
+        if (state.cancelMeasurement) break;
+
         const keywordResultContainer = document.createElement('div');
         keywordResultContainer.style.cssText = 'border-bottom: 1px solid #e5e5e7; padding-bottom: 15px; margin-bottom: 15px;';
         dom.resultArea.appendChild(keywordResultContainer);
@@ -105,6 +129,14 @@ export async function checkRank(state) {
                 location: searchLocation,
                 salonName: salonName,
             });
+        } else if (activeSearchType === 'ubereats') {
+            fullKeyword = `[${serviceKeyword.label}] ${serviceKeyword.keyword}`;
+            eventSourceUrl = `/check-ubereats-ranking?` + new URLSearchParams({
+                keyword: serviceKeyword.keyword,
+                address: serviceKeyword.address,
+                addressLabel: serviceKeyword.label,
+                storeName: uberStoreName,
+            });
         } else { // special
             fullKeyword = serviceKeyword;
             eventSourceUrl = `/check-feature-page-ranking?` + new URLSearchParams({
@@ -117,9 +149,23 @@ export async function checkRank(state) {
 
         await new Promise((resolve, reject) => {
             const eventSource = new EventSource(eventSourceUrl, { withCredentials: true });
+            activeManualEventSource = eventSource;
 
             eventSource.onmessage = (event) => {
+                if (state.cancelMeasurement) {
+                    eventSource.close();
+                    resolve();
+                    return;
+                }
                 const data = JSON.parse(event.data);
+
+                if (data.cancelled) {
+                    keywordResultContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${escapeHtml(fullKeyword)}」</h4><p style="color: #ff9500;">計測を中断しました。</p>`;
+                    eventSource.close();
+                    state.cancelMeasurement = true;
+                    resolve();
+                    return;
+                }
 
                 if (data.error) {
                     keywordResultContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${escapeHtml(fullKeyword)}」</h4><p style="color: red;">エラー: ${escapeHtml(data.error)}</p>`;
@@ -136,6 +182,7 @@ export async function checkRank(state) {
                     const result = data.final_result;
                     const resultTitle = (activeSearchType === 'special') ? (result.page_title || fullKeyword) : fullKeyword;
                     result.keyword = resultTitle;
+                    let manualUberTaskPayload = null;
 
                     let totalCountHtml = (result.total_count !== undefined) ? `<p style="font-size: 14px; color: #6c6c70; margin-bottom: 10px;">検索結果総数: <strong style="color: #1c1c1e;">${result.total_count}</strong> 件</p>` : '';
                     let resultMessageHtml = '';
@@ -167,6 +214,50 @@ export async function checkRank(state) {
                         } else {
                             resultMessageHtml = `<p>検索結果に店舗が見つかりませんでした。</p>`;
                         }
+                    } else if (activeSearchType === 'ubereats') {
+                        const rankText = result.rank || '圏外';
+                        totalCountHtml = (result.total_count !== undefined) ? `<p style="font-size: 14px; color: #6c6c70; margin-bottom: 10px;">検索結果総数: <strong style="color: #1c1c1e;">${result.total_count}</strong> 件</p>` : '';
+                        if (result.blocked) {
+                            resultMessageHtml = `
+                                <p style="font-weight: bold; color: #ff9500; margin-bottom: 8px;">計測中断: ${escapeHtml(result.blocked_reason || 'Uber Eatsの自動セキュリティチェックにより検索結果を取得できませんでした。')}</p>
+                                <p style="font-size: 13px; color: #6c6c70;">この結果は順位として扱わず、履歴には「要確認」として保存します。</p>
+                                <div class="ubereats-manual-rank-box" style="display: flex; gap: 8px; align-items: center; margin-top: 12px; padding: 10px; border: 1px solid #e5e5e7; border-radius: 8px; background: #fbfbfd;">
+                                    <label style="font-size: 13px; color: #333;">手動順位</label>
+                                    <input class="ubereats-manual-rank-input" type="text" placeholder="例: 12 / 圏外" style="width: 110px; padding: 7px 8px;">
+                                    <button type="button" class="button-secondary ubereats-manual-rank-save" style="padding: 7px 10px;">保存</button>
+                                    <span class="ubereats-manual-rank-status" style="font-size: 12px; color: #6c6c70;"></span>
+                                </div>
+                            `;
+                        } else if (result.results && result.results.length > 0) {
+                            let foundMyStore = false;
+                            const resultsListHtml = result.results.map((item, index) => {
+                                const foundName = item.foundStoreName || item.foundSalonName || '';
+                                const isMyStore = uberStoreName && foundName.toLowerCase().includes(uberStoreName.toLowerCase());
+                                if (isMyStore) foundMyStore = true;
+                                const itemStyle = isMyStore ? 'background-color: #eef7ff; border-left: 3px solid #007aff;' : '';
+                                const rankColor = isMyStore ? '#007aff' : '#1c1c1e';
+                                const detailText = (item.detailText || '').trim();
+                                const detail = detailText && detailText !== foundName ? `<div style="margin-top: 3px; color: #6c6c70; font-size: 12px; line-height: 1.25;">${escapeHtml(detailText)}</div>` : '';
+                                return `<div style="display: flex; align-items: center; gap: 10px; padding: 10px; ${index < result.results.length - 1 ? 'border-bottom: 1px solid #e5e5e7;' : ''} ${itemStyle}"><div style="color: ${rankColor}; font-size: 19px; font-weight: bold; line-height: 1.2; flex: 0 0 3em;">${item.rank}位</div><div style="min-width: 0; flex: 1;"><div style="font-size: 16px; font-weight: bold; line-height: 1.25; overflow-wrap: anywhere;">${escapeHtml(foundName)}</div>${detail}</div></div>`;
+                            }).join('');
+                            const summaryMessage = foundMyStore ? `<p style="font-weight: bold; color: #007aff; margin-bottom: 15px;">自店をリスト内に発見しました。順位: ${escapeHtml(String(rankText))}位</p>` : `<p style="font-weight: bold; color: #ff3b30; margin-bottom: 15px;">自店が見つかりませんでした。</p>`;
+                            resultMessageHtml = `${summaryMessage}<div style="text-align: left; max-height: 400px; overflow-y: auto;">${resultsListHtml}</div>`;
+                        } else {
+                            resultMessageHtml = `<p>検索結果に店舗が見つかりませんでした。</p>`;
+                        }
+                        const taskPayload = {
+                            id: `[ubereats]-${uberStoreName}-${serviceKeyword.label}-${serviceKeyword.address}-${serviceKeyword.keyword}`,
+                            type: 'ubereats',
+                            storeName: uberStoreName,
+                            addressLabel: serviceKeyword.label,
+                            address: serviceKeyword.address,
+                            keyword: serviceKeyword.keyword,
+                        };
+                        manualUberTaskPayload = taskPayload;
+                        saveManualHistoryAPI({ task: taskPayload, result: { rank: rankText, screenshot_path: result.screenshot_path } });
+                        if (result.stop_batch) {
+                            state.cancelMeasurement = true;
+                        }
                     } else { // Normal and Special
                         if (result.results && result.results.length > 0) {
                             const resultsListHtml = result.results.map((item, index) => {
@@ -191,6 +282,24 @@ export async function checkRank(state) {
                     keywordResultContainer.style.cursor = 'pointer';
                     keywordResultContainer.title = 'クリックして詳細（スクショとデバッグ情報）を表示';
                     keywordResultContainer.onclick = () => openResultInNewTab(result);
+                    if (activeSearchType === 'ubereats' && result.blocked && manualUberTaskPayload) {
+                        const manualBox = keywordResultContainer.querySelector('.ubereats-manual-rank-box');
+                        const manualInput = keywordResultContainer.querySelector('.ubereats-manual-rank-input');
+                        const manualSave = keywordResultContainer.querySelector('.ubereats-manual-rank-save');
+                        const manualStatus = keywordResultContainer.querySelector('.ubereats-manual-rank-status');
+                        manualBox.addEventListener('click', event => event.stopPropagation());
+                        manualSave.addEventListener('click', async event => {
+                            event.stopPropagation();
+                            const manualRank = manualInput.value.trim();
+                            if (!manualRank) {
+                                manualStatus.textContent = '順位を入力してください。';
+                                return;
+                            }
+                            await saveManualHistoryAPI({ task: manualUberTaskPayload, result: { rank: manualRank, screenshot_path: result.screenshot_path } });
+                            manualStatus.textContent = `${manualRank}で保存しました。`;
+                            fetchAndDisplayAutoHistory();
+                        });
+                    }
                     
                     eventSource.close();
                     resolve();
@@ -198,15 +307,31 @@ export async function checkRank(state) {
             };
 
             eventSource.onerror = (err) => {
+                if (state.cancelMeasurement) {
+                    eventSource.close();
+                    resolve();
+                    return;
+                }
                 keywordResultContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${escapeHtml(fullKeyword)}」</h4><p style="color: red;">エラー: サーバーとの接続に失敗しました。</p>`;
                 eventSource.close();
                 reject(err);
             };
         }).catch(error => {
             console.error(`「${fullKeyword}」の計測中にエラーが発生しました:`, error);
+        }).finally(() => {
+            activeManualEventSource = null;
         });
+
+        if (state.cancelMeasurement) break;
+
+        if (activeSearchType === 'ubereats' && index < serviceKeywords.length - 1) {
+            const waitSeconds = Math.round(UBER_EATS_MANUAL_WAIT_MS / 1000);
+            overallStatusContainer.textContent = `${index + 1} / ${serviceKeywords.length} 件目が完了しました。Uber Eats側の制限回避のため${waitSeconds}秒待機しています... `;
+            await sleep(UBER_EATS_MANUAL_WAIT_MS);
+        }
     }
 
+    window.removeEventListener('manual-measurement-stop', stopHandler);
     clearInterval(timerInterval);
     const endTime = performance.now();
     const elapsedTotalSeconds = Math.floor((endTime - startTime) / 1000);
@@ -214,10 +339,30 @@ export async function checkRank(state) {
     const seconds = elapsedTotalSeconds % 60;
     const durationString = minutes > 0 ? `${minutes}分${seconds}秒` : `${seconds}秒`;
 
-    overallStatusContainer.textContent = `すべての計測が完了しました。（${serviceKeywords.length}件 / 所要時間: ${durationString}）`;
+    overallStatusContainer.textContent = state.cancelMeasurement
+        ? `計測を中断しました。（所要時間: ${durationString}）`
+        : `すべての計測が完了しました。（${serviceKeywords.length}件 / 所要時間: ${durationString}）`;
     setMeasuringState(false, state);
     dom.checkRankButton.textContent = '順位を計測';
+    dom.stopMeasurementButton.textContent = '中断';
     fetchAndDisplayAutoHistory();
+}
+
+function stopManualMeasurement(state) {
+    state.cancelMeasurement = true;
+    dom.stopMeasurementButton.textContent = '中断中...';
+    dom.stopMeasurementButton.disabled = true;
+    if (activeManualEventSource) {
+        activeManualEventSource.close();
+    }
+    fetch('/api/cancel-measurement', { method: 'POST' }).catch(() => {});
+    if (activeManualAbortController) {
+        activeManualAbortController.abort();
+    }
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function createManualTaskPayload(type, salonName, areaName, areaCodes, keyword, pageTitle) {
@@ -232,7 +377,23 @@ function createManualTaskPayload(type, salonName, areaName, areaCodes, keyword, 
     return taskPayload;
 }
 
+function parseUberAddressSet(rawText) {
+    return rawText
+        .split(/\n+/)
+        .map(line => line.trim())
+        .filter(Boolean)
+        .map((line, index) => {
+            const [labelPart, ...addressParts] = line.split(/[:：]/);
+            const hasExplicitLabel = addressParts.length > 0;
+            const label = hasExplicitLabel ? labelPart.trim() : `観測点${index + 1}`;
+            const address = hasExplicitLabel ? addressParts.join(':').trim() : line;
+            return { label, address };
+        })
+        .filter(item => item.label && item.address);
+}
+
 function escapeHtml(unsafe) {
+    unsafe = String(unsafe ?? '');
     return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
 

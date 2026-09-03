@@ -7,10 +7,11 @@ from flask import current_app, jsonify
 
 import config
 from utils import sse_format
-from driver_manager import get_webdriver
+from driver_manager import get_attached_chrome, get_webdriver
 from hpb_scraper import check_hotpepper_ranking
 from feature_page_scraper import check_feature_page_ranking
 from meo_scraper import check_meo_ranking
+from ubereats_scraper import check_ubereats_ranking
 def load_json_file(filename):
     if not os.path.exists(filename):
         return []
@@ -206,6 +207,64 @@ def _run_meo_tasks(driver, tasks_grouped, history, history_filename, today, stre
             time.sleep(random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX))
     return job_counter
 
+def _run_ubereats_tasks(driver, tasks, history, history_filename, today, stream_progress, job_counter, total_job_count, save_screenshot=True):
+    """Uber Eats検索タスクを実行する。"""
+    for task in tasks:
+        job_counter += 1
+        task_id = task['id']
+        task_name = f"[{task.get('addressLabel') or task.get('address', '')}] {task.get('keyword', '')}"
+
+        if stream_progress:
+            yield sse_format({"progress": {"current": job_counter, "total": total_job_count, "task": task}})
+        else:
+            current_app.logger.info(f"Uber Eatsタスク '{task_id}' の計測を開始...")
+
+        result = {}
+        try:
+            generator = check_ubereats_ranking(
+                driver,
+                task.get('keyword', ''),
+                task.get('storeName', ''),
+                task.get('address', ''),
+                save_screenshot=save_screenshot,
+            )
+            for sse_message in generator:
+                data = json.loads(sse_message.split('data: ')[1])
+                if stream_progress and 'status' in data:
+                    yield sse_format({"status": data['status'], "task_name": task_name})
+                if 'final_result' in data:
+                    result = data['final_result']
+                if 'error' in data:
+                    result = {"rank": "エラー", "screenshot_path": data.get("screenshot_path")}
+        except Exception:
+            current_app.logger.exception(f"Uber Eatsタスク '{task_id}' の実行中にエラーが発生しました。")
+            result = {"rank": "エラー"}
+
+        rank_to_save = result.get('rank', '圏外')
+        update_history(history, task, today, rank_to_save, result.get('screenshot_path'))
+        save_json_file(history_filename, history)
+        current_app.logger.info(f"Uber Eatsタスク '{task_id}' の結果: {rank_to_save}位")
+
+        if stream_progress:
+            yield sse_format({
+                "result": {
+                    "rank": rank_to_save,
+                    "total_count": result.get("total_count"),
+                    "task_name": task_name,
+                    "task_id": task_id,
+                }
+            })
+            if result.get("stop_batch"):
+                current_app.logger.warning("Uber Eats側の制限または不完全結果を検出したため、後続のUber Eatsタスクを中断します。")
+                break
+            time.sleep(config.UBER_EATS_TASK_WAIT_SECONDS)
+        else:
+            if result.get("stop_batch"):
+                current_app.logger.warning("Uber Eats側の制限または不完全結果を検出したため、後続のUber Eatsタスクを中断します。")
+                break
+            time.sleep(max(config.UBER_EATS_TASK_WAIT_SECONDS, random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX)))
+    return job_counter
+
 def run_scheduled_check(task_ids_to_run=None, stream_progress=False, save_screenshot=True):
     """
     指定されたタスク、またはすべてのタスクを実行し、結果を履歴ファイルに保存する
@@ -232,11 +291,13 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False, save_screen
     history_normal = load_json_file(config.HISTORY_FILES['normal'])
     history_special = load_json_file(config.HISTORY_FILES['special'])
     history_meo = load_json_file(config.HISTORY_FILES['google'])
+    history_ubereats = load_json_file(config.HISTORY_FILES['ubereats'])
     today = datetime.date.today().strftime('%Y/%m/%d')
 
     normal_tasks = []
     special_tasks_grouped_by_url = {}
     meo_tasks_grouped = {} # MEOタスクをグループ化するための辞書
+    ubereats_tasks = []
     for task in tasks_to_run:
         task_type = task.get('type', 'normal')
         if task_type == 'special':
@@ -249,10 +310,12 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False, save_screen
             if group_key not in meo_tasks_grouped:
                 meo_tasks_grouped[group_key] = []
             meo_tasks_grouped[group_key].append(task)
+        elif task_type == 'ubereats':
+            ubereats_tasks.append(task)
         else:
             normal_tasks.append(task)
 
-    total_job_count = len(normal_tasks) + len(special_tasks_grouped_by_url) + len(meo_tasks_grouped)
+    total_job_count = len(normal_tasks) + len(special_tasks_grouped_by_url) + len(meo_tasks_grouped) + len(ubereats_tasks)
     job_counter = 0
 
     try:
@@ -271,6 +334,15 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False, save_screen
                 yield from _run_meo_tasks(driver, meo_tasks_grouped, history_meo, config.HISTORY_FILES['google'], today, stream_progress, job_counter, total_job_count, save_screenshot=save_screenshot)
                 job_counter += len(meo_tasks_grouped)
 
+        # Uber Eatsタスク
+        if ubereats_tasks:
+            with get_attached_chrome(
+                port=config.UBER_EATS_REMOTE_DEBUGGING_PORT,
+                user_data_dir=config.UBER_EATS_CHROME_PROFILE_DIR,
+            ) as uber_driver:
+                yield from _run_ubereats_tasks(uber_driver, ubereats_tasks, history_ubereats, config.HISTORY_FILES['ubereats'], today, stream_progress, job_counter, total_job_count, save_screenshot=save_screenshot)
+                job_counter += len(ubereats_tasks)
+
     except Exception as e:
         current_app.logger.exception("自動計測ジョブ全体で予期せぬエラーが発生しました。")
         if stream_progress:
@@ -282,12 +354,14 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False, save_screen
         history_normal.sort(key=lambda x: task_id_order.get(x['id'], float('inf')))
         history_special.sort(key=lambda x: task_id_order.get(x['id'], float('inf')))
         history_meo.sort(key=lambda x: task_id_order.get(x['id'], float('inf')))
+        history_ubereats.sort(key=lambda x: task_id_order.get(x['id'], float('inf')))
         
         current_app.logger.info("履歴データをタスク定義ファイルの順序に並び替えて保存します。")
 
         save_json_file(config.HISTORY_FILES['normal'], history_normal)
         save_json_file(config.HISTORY_FILES['special'], history_special)
         save_json_file(config.HISTORY_FILES['google'], history_meo)
+        save_json_file(config.HISTORY_FILES['ubereats'], history_ubereats)
         save_json_file(config.TASKS_FILE, all_tasks)
         
         if stream_progress:
