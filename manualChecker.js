@@ -216,7 +216,9 @@ export async function checkRank(state) {
                         }
                     } else if (activeSearchType === 'ubereats') {
                         const rankText = result.rank || '圏外';
-                        totalCountHtml = (result.total_count !== undefined) ? `<p style="font-size: 14px; color: #6c6c70; margin-bottom: 10px;">検索結果総数: <strong style="color: #1c1c1e;">${result.total_count}</strong> 件</p>` : '';
+                        const foodRankText = result.food_rank;
+                        const retailCount = result.retail_count;
+                        totalCountHtml = (result.total_count !== undefined) ? `<p style="font-size: 14px; color: #6c6c70; margin-bottom: 10px;">検索結果総数: <strong style="color: #1c1c1e;">${result.total_count}</strong> 件${retailCount !== undefined && retailCount !== null ? `（うち小売 ${retailCount} 件）` : ''}</p>` : '';
                         if (result.blocked) {
                             resultMessageHtml = `
                                 <p style="font-weight: bold; color: #ff9500; margin-bottom: 8px;">計測中断: ${escapeHtml(result.blocked_reason || 'Uber Eatsの自動セキュリティチェックにより検索結果を取得できませんでした。')}</p>
@@ -238,9 +240,11 @@ export async function checkRank(state) {
                                 const rankColor = isMyStore ? '#007aff' : '#1c1c1e';
                                 const detailText = (item.detailText || '').trim();
                                 const detail = detailText && detailText !== foundName ? `<div style="margin-top: 3px; color: #6c6c70; font-size: 12px; line-height: 1.25;">${escapeHtml(detailText)}</div>` : '';
-                                return `<div style="display: flex; align-items: center; gap: 10px; padding: 10px; ${index < result.results.length - 1 ? 'border-bottom: 1px solid #e5e5e7;' : ''} ${itemStyle}"><div style="color: ${rankColor}; font-size: 19px; font-weight: bold; line-height: 1.2; flex: 0 0 3em;">${item.rank}位</div><div style="min-width: 0; flex: 1;"><div style="font-size: 16px; font-weight: bold; line-height: 1.25; overflow-wrap: anywhere;">${escapeHtml(foundName)}</div>${detail}</div></div>`;
+                                const subRank = item.isRetail ? `<div style="font-size: 11px; color: #8e8e93; line-height: 1.2;">小売</div>` : (item.foodRank ? `<div style="font-size: 11px; color: #6c6c70; line-height: 1.2;">飲食${item.foodRank}</div>` : '');
+                                return `<div style="display: flex; align-items: center; gap: 10px; padding: 10px; ${index < result.results.length - 1 ? 'border-bottom: 1px solid #e5e5e7;' : ''} ${itemStyle}"><div style="flex: 0 0 3.4em;"><div style="color: ${rankColor}; font-size: 19px; font-weight: bold; line-height: 1.2;">${item.rank}位</div>${subRank}</div><div style="min-width: 0; flex: 1;"><div style="font-size: 16px; font-weight: bold; line-height: 1.25; overflow-wrap: anywhere;">${escapeHtml(foundName)}</div>${detail}</div></div>`;
                             }).join('');
-                            const summaryMessage = foundMyStore ? `<p style="font-weight: bold; color: #007aff; margin-bottom: 15px;">自店をリスト内に発見しました。順位: ${escapeHtml(String(rankText))}位</p>` : `<p style="font-weight: bold; color: #ff3b30; margin-bottom: 15px;">自店が見つかりませんでした。</p>`;
+                            const foodRankSuffix = (foodRankText === undefined || foodRankText === null || foodRankText === '') ? '' : `（飲食のみ ${escapeHtml(String(foodRankText))}${typeof foodRankText === 'number' ? '位' : ''}）`;
+                            const summaryMessage = foundMyStore ? `<p style="font-weight: bold; color: #007aff; margin-bottom: 15px;">自店をリスト内に発見しました。順位: ${escapeHtml(String(rankText))}位${foodRankSuffix}</p>` : `<p style="font-weight: bold; color: #ff3b30; margin-bottom: 15px;">自店が見つかりませんでした。</p>`;
                             resultMessageHtml = `${summaryMessage}<div style="text-align: left; max-height: 400px; overflow-y: auto;">${resultsListHtml}</div>`;
                         } else {
                             resultMessageHtml = `<p>検索結果に店舗が見つかりませんでした。</p>`;
@@ -254,7 +258,7 @@ export async function checkRank(state) {
                             keyword: serviceKeyword.keyword,
                         };
                         manualUberTaskPayload = taskPayload;
-                        saveManualHistoryAPI({ task: taskPayload, result: { rank: rankText, screenshot_path: result.screenshot_path } });
+                        saveManualHistoryAPI({ task: taskPayload, result: { rank: rankText, food_rank: foodRankText, screenshot_path: result.screenshot_path } });
                         if (result.stop_batch) {
                             state.cancelMeasurement = true;
                         }

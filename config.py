@@ -55,6 +55,8 @@ UBER_EATS_CHALLENGE_WAIT_SECONDS = 180
 UBER_EATS_REMOTE_DEBUGGING_PORT = 9225
 CHROMEDRIVER_PATH = "/opt/homebrew/bin/chromedriver"
 UBER_EATS_GEOCODE_CACHE_FILE = "ubereats_geocode_cache.json"
+# 実質順位（小売店を除いた飲食店内の順位）の判定に使う小売店リスト（社長が直接編集する設定ファイル）
+UBER_EATS_RETAIL_FILTER_FILE = "ubereats_retail_filter.json"
 # Uber Eatsは連続アクセスに弱いため、手動/自動の連続計測間隔を長めに取る
 UBER_EATS_TASK_WAIT_SECONDS = 3
 

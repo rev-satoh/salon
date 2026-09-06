@@ -317,7 +317,7 @@ def save_auto_history_entry():
     history = load_json_file(history_filename)
     
     # update_history関数を呼び出す
-    update_history(history, task, today, result.get('rank', '圏外'), result.get('screenshot_path'))
+    update_history(history, task, today, result.get('rank', '圏外'), result.get('screenshot_path'), result.get('food_rank'))
 
     save_json_file(history_filename, history)
     return jsonify({"message": f"タスク '{task_id}' の履歴を保存しました。"}), 200
@@ -347,6 +347,48 @@ def handle_schedule():
         save_json_file(config.SCHEDULER_CONFIG_FILE, {"hour": hour, "minute": minute})
         return jsonify({"message": "実行時間を保存しました。変更を有効にするには、アプリケーションの再起動が必要です。"}), 200
 
+@app.route('/api/measured-today', methods=['POST'])
+def measured_today_api():
+    """指定タスクのうち「本日の履歴が既に記録されているもの」を返す。
+
+    フロント側が回線断からストリームへ再接続する際、二重計測を避けて
+    未計測タスクだけを再開するために使う（切断されたストリームはサーバ側でも
+    GeneratorExitで停止するが、完了済みタスクの結果は履歴へ逐次保存済み）。
+    """
+    data = request.get_json(silent=True) or {}
+    task_ids = data.get('task_ids') or []
+    if not isinstance(task_ids, list):
+        return bad_request('task_idsは配列で指定してください。')
+
+    today = datetime.date.today().strftime('%Y/%m/%d')
+    all_tasks = load_json_file(config.TASKS_FILE)
+    task_type_by_id = {t.get('id'): t.get('type', 'normal') for t in all_tasks}
+
+    # 履歴ファイルは種別ごとに分かれているため、必要なものだけ読む
+    history_cache = {}
+
+    def measured(task_id):
+        task_type = task_type_by_id.get(task_id, 'normal')
+        history_key = task_type if task_type in config.HISTORY_FILES else 'normal'
+        if history_key not in history_cache:
+            history_cache[history_key] = load_json_file(config.HISTORY_FILES[history_key])
+        entry = next((h for h in history_cache[history_key] if h.get('id') == task_id), None)
+        if not entry:
+            return False
+        return any(log.get('date') == today for log in entry.get('log', []))
+
+    completed = [tid for tid in task_ids if measured(tid)]
+    completed_set = set(completed)
+    remaining = [tid for tid in task_ids if tid not in completed_set]
+
+    return jsonify({
+        "date": today,
+        "completed": completed,
+        "remaining": remaining,
+        "measuring": measurement_lock.locked(),
+    })
+
+
 @app.route('/api/run-tasks-manually', methods=['GET', 'POST'])
 def run_tasks_manually():
     """
@@ -371,7 +413,10 @@ def run_tasks_manually():
     if not measurement_lock.acquire(blocking=False):
         # すぐにエラーレスポンスを返すためのダミーのストリーム
         def error_stream():
-            yield sse_format({"error": "現在、他の計測タスクが実行中です。しばらく待ってから再度お試しください。"})
+            yield sse_format({
+                "error": "現在、他の計測タスクが実行中です。しばらく待ってから再度お試しください。",
+                "busy": True,
+            })
         return app.response_class(error_stream(), mimetype='text/event-stream')
     measurement_cancel_event.clear()
 

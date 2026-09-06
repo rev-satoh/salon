@@ -54,6 +54,101 @@ UBER_EATS_LOCATION_OVERRIDES = {
 }
 
 
+_RETAIL_FILTER_CACHE = {"mtime": None, "data": None}
+
+_RETAIL_FILTER_DEFAULT = {
+    "categoryKeywords": [],
+    "storeNameKeywords": [],
+    "excludeStoreNameKeywords": [],
+}
+
+
+def load_retail_filter():
+    """小売店判定の設定ファイル（ubereats_retail_filter.json）を読み込む。
+
+    設定ファイルは社長が直接編集する前提のため、毎回mtimeを見て自動で読み直す。
+    読めない場合は「小売判定なし」（＝実質順位＝生順位）として安全側に倒す。
+    """
+    path = getattr(config, "UBER_EATS_RETAIL_FILTER_FILE", "")
+    if not path:
+        return dict(_RETAIL_FILTER_DEFAULT)
+    try:
+        mtime = os.path.getmtime(path)
+    except OSError:
+        return dict(_RETAIL_FILTER_DEFAULT)
+    if _RETAIL_FILTER_CACHE["mtime"] == mtime and _RETAIL_FILTER_CACHE["data"] is not None:
+        return _RETAIL_FILTER_CACHE["data"]
+    try:
+        with open(path, "r", encoding="utf-8") as filter_file:
+            raw = json.load(filter_file)
+    except (OSError, ValueError):
+        return dict(_RETAIL_FILTER_DEFAULT)
+    data = {
+        key: [str(item) for item in (raw.get(key) or []) if str(item).strip()]
+        for key in _RETAIL_FILTER_DEFAULT
+    }
+    _RETAIL_FILTER_CACHE["mtime"] = mtime
+    _RETAIL_FILTER_CACHE["data"] = data
+    return data
+
+
+def _normalize_for_match(value):
+    return unicodedata.normalize("NFKC", str(value or "")).lower()
+
+
+def detect_retail_category(text, retail_filter=None):
+    """カード内テキストからUber側のカテゴリ表記（食料品・コンビニ等）を検出する。"""
+    retail_filter = retail_filter or load_retail_filter()
+    normalized = _normalize_for_match(text)
+    for keyword in retail_filter.get("categoryKeywords", []):
+        if _normalize_for_match(keyword) in normalized:
+            return keyword
+    return ""
+
+
+def classify_store_card(card, retail_filter=None):
+    """1店舗カードが小売店かを判定し、判定根拠を付けて返す。
+
+    優先順位：
+      1. カテゴリ表記（Uberが結果カードに出している場合のみ）
+      2. 店名キーワード（設定ファイルの storeNameKeywords）
+    excludeStoreNameKeywords に当たる店は必ず飲食店扱い（誤判定の救済）。
+    """
+    retail_filter = retail_filter or load_retail_filter()
+    name = _normalize_for_match(card.get("foundStoreName"))
+    for keyword in retail_filter.get("excludeStoreNameKeywords", []):
+        if _normalize_for_match(keyword) and _normalize_for_match(keyword) in name:
+            return {"isRetail": False, "retailReason": "", "categoryText": card.get("categoryText", "")}
+
+    category_text = card.get("categoryText") or ""
+    if category_text:
+        return {"isRetail": True, "retailReason": f"カテゴリ:{category_text}", "categoryText": category_text}
+
+    for keyword in retail_filter.get("storeNameKeywords", []):
+        normalized_keyword = _normalize_for_match(keyword)
+        if normalized_keyword and normalized_keyword in name:
+            return {"isRetail": True, "retailReason": f"店名:{keyword}", "categoryText": ""}
+    return {"isRetail": False, "retailReason": "", "categoryText": ""}
+
+
+def annotate_food_ranks(ranked_results, retail_filter=None):
+    """生順位付きリストへ、小売判定と実質順位（飲食のみの順位）を付与する。"""
+    retail_filter = retail_filter or load_retail_filter()
+    food_rank = 0
+    for item in ranked_results:
+        verdict = classify_store_card(item, retail_filter)
+        item["isRetail"] = verdict["isRetail"]
+        item["retailReason"] = verdict["retailReason"]
+        if verdict["categoryText"]:
+            item["categoryText"] = verdict["categoryText"]
+        if verdict["isRetail"]:
+            item["foodRank"] = None
+        else:
+            food_rank += 1
+            item["foodRank"] = food_rank
+    return ranked_results
+
+
 def _load_ubereats_geocode_cache():
     try:
         with open(config.UBER_EATS_GEOCODE_CACHE_FILE, "r", encoding="utf-8") as cache_file:
@@ -792,6 +887,7 @@ def _extract_store_cards(html):
         candidates.append({
             "foundStoreName": name,
             "detailText": detail_text,
+            "categoryText": detect_retail_category(text),
             "url": urllib.parse.urljoin("https://www.ubereats.com", href),
         })
 
@@ -858,6 +954,8 @@ def _store_card_from_text_and_href(text, href, name_text=None):
     return {
         "foundStoreName": name,
         "detailText": detail_text,
+        # カテゴリ表記は結果カードに出ないことが多い（2026-09-06実測）。取れた時だけ入る。
+        "categoryText": detect_retail_category(text),
         "url": urllib.parse.urljoin("https://www.ubereats.com", href),
     }
 
@@ -1343,6 +1441,9 @@ def check_ubereats_ranking(driver, keyword, store_name, address, save_screenshot
         for index, store in enumerate(stores, start=1):
             ranked = {"rank": index, **store}
             ranked_results.append(ranked)
+        annotate_food_ranks(ranked_results)
+        retail_count = sum(1 for item in ranked_results if item.get("isRetail"))
+        food_total_count = len(ranked_results) - retail_count
 
         matched = None
         normalized_target = store_name.lower()
@@ -1353,15 +1454,21 @@ def check_ubereats_ranking(driver, keyword, store_name, address, save_screenshot
 
         final_result = {
             "total_count": displayed_total if displayed_total is not None else len(ranked_results),
+            "retail_count": retail_count,
+            "food_total_count": food_total_count,
             "screenshot_path": screenshot_path,
             "url": last_url,
             "html": driver.page_source,
             "results": ranked_results,
+            "list_fetched": True, # 検索結果ページを読み切った
         }
         if matched:
             final_result["rank"] = matched["rank"]
+            # 実質順位＝小売店を除いた飲食店内の順位。自店が小売判定になった場合は付けない。
+            final_result["food_rank"] = matched.get("foodRank") if matched.get("foodRank") else "圏外"
         else:
             final_result["rank"] = "圏外"
+            final_result["food_rank"] = "圏外"
 
         yield sse_format({"final_result": final_result, "status": "完了"})
     except Exception as e:

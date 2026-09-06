@@ -4,7 +4,7 @@
 import { areas } from './config.js';
 import * as dom from './dom.js';
 import { saveAutoTasksAPI, saveScheduleAPI, fetchScheduleAPI, fetchHistoryAPI } from './api.js';
-import { buildUberModel, uberSeries, uberLatest, uberSummary, uberStatusLabel, formatUberDate, UBER_BASE_LABEL } from './uberData.js';
+import { buildUberModel, uberSeries, uberLatest, uberSummary, uberStatusLabel, uberRawStatusLabel, formatUberDate, UBER_BASE_LABEL } from './uberData.js';
 import { checkRank } from './manualChecker.js'; // この行を追加
 import { fetchAndDisplayAutoHistory } from './history.js';
 
@@ -232,10 +232,60 @@ function getDurationString(startTime) {
     return minutes > 0 ? `${minutes}分${seconds}秒` : `${seconds}秒`;
 }
 
-async function processStream(taskIds, saveScreenshot = true) {
-    if (taskIds.length === 0) return;
+// --- ストリーム自動再接続の設定 ---
+// 離席・ディスプレイスリープ・省電力でブラウザの接続が切れても計測を落とさないための共通設定。
+// 無限リトライはしない（上限を超えたら通常のエラーとして扱う）。
+const STREAM_RECONNECT_MAX_ATTEMPTS = 8;
+const STREAM_RECONNECT_BASE_DELAY_MS = 2000;
+const STREAM_RECONNECT_MAX_DELAY_MS = 30000;
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** 接続断・再接続中のメッセージを結果エリアの先頭に1行だけ表示する */
+function showReconnectNotice(message) {
+    let notice = document.getElementById('streamReconnectNotice');
+    if (!notice) {
+        notice = document.createElement('div');
+        notice.id = 'streamReconnectNotice';
+        notice.style.cssText = 'padding: 8px 10px; margin-bottom: 10px; border-radius: 6px; background: #fff4e5; color: #8a5300; font-size: 14px;';
+        dom.resultArea.insertBefore(notice, dom.resultArea.firstChild);
+    }
+    notice.textContent = message;
+}
+
+function clearReconnectNotice() {
+    document.getElementById('streamReconnectNotice')?.remove();
+}
+
+/**
+ * サーバに「本日ぶんの計測が既に記録されているタスク」を問い合わせ、未計測のタスクIDだけを返す。
+ * 通信できなければ null（＝判定不能。再接続を待つ）を返す。
+ */
+async function fetchRemainingTaskIds(taskIds) {
+    try {
+        const response = await fetch('/api/measured-today', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ task_ids: taskIds }),
+        });
+        if (!response.ok) return null;
+        const data = await response.json();
+        return Array.isArray(data.remaining) ? data.remaining : null;
+    } catch (error) {
+        return null;
+    }
+}
+
+/**
+ * ストリームを1回だけ接続して読み切る。
+ * 戻り値: { outcome: 'completed' | 'cancelled' | 'disconnected' | 'busy', receivedEvents: number }
+ * サーバから業務エラー（busy以外）が来た場合のみ例外を投げる。
+ */
+async function runTaskStreamOnce(taskIds, saveScreenshot) {
     activeTaskStreamAbortController = new AbortController();
+    let receivedEvents = 0;
+    let sawFinalStatus = false;
+
     try {
         const response = await fetch('/api/run-tasks-manually', {
             method: 'POST',
@@ -248,29 +298,102 @@ async function processStream(taskIds, saveScreenshot = true) {
 
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
+        let buffer = '';
 
         while (true) {
-            const { done, value } = await reader.read();
+            let chunkResult;
+            try {
+                chunkResult = await reader.read();
+            } catch (error) {
+                if (error?.name === 'AbortError') return { outcome: 'cancelled', receivedEvents };
+                // ネットワーク断（TypeError: network error / ERR_NETWORK_IO_SUSPENDED など）
+                return { outcome: 'disconnected', receivedEvents };
+            }
+
+            const { done, value } = chunkResult;
             if (done) break;
 
-            const chunk = decoder.decode(value, { stream: true });
-            const lines = chunk.split('\n\n');
+            buffer += decoder.decode(value, { stream: true });
+            // イベント境界（\n\n）で切り出し、途中で切れた分は次のチャンクへ持ち越す
+            const events = buffer.split('\n\n');
+            buffer = events.pop() ?? '';
 
-            for (const line of lines) {
-                if (line.startsWith('data: ')) {
-                    const jsonData = line.substring(6);
-                    if (!jsonData) continue;
+            for (const event of events) {
+                const line = event.trim();
+                if (!line.startsWith('data: ')) continue;
+                const jsonData = line.substring(6);
+                if (!jsonData) continue;
 
-                    const data = JSON.parse(jsonData);
-                    if (data.cancelled) {
-                        return;
-                    }
-                    handleStreamData(data);
+                let data;
+                try {
+                    data = JSON.parse(jsonData);
+                } catch (error) {
+                    continue;
                 }
+
+                receivedEvents++;
+                if (data.cancelled) return { outcome: 'cancelled', receivedEvents };
+                if (data.busy) return { outcome: 'busy', receivedEvents };
+                if (data.final_status) {
+                    sawFinalStatus = true;
+                    continue;
+                }
+                handleStreamData(data);
             }
         }
+
+        // final_status を受け取らずにストリームが閉じた＝途中で切れている
+        return { outcome: sawFinalStatus ? 'completed' : 'disconnected', receivedEvents };
+    } catch (error) {
+        if (error?.name === 'AbortError') return { outcome: 'cancelled', receivedEvents };
+        if (error instanceof TypeError) return { outcome: 'disconnected', receivedEvents };
+        throw error;
     } finally {
         activeTaskStreamAbortController = null;
+    }
+}
+
+/**
+ * 計測ストリームを実行する。回線断で切れた場合は指数バックオフで自動再接続し、
+ * サーバの履歴に未記録のタスク（＝未計測ぶん）だけを再開する（二重計測しない）。
+ * ユーザーの明示中断（中断ボタン＝AbortController）は再接続しない。
+ */
+async function processStream(taskIds, saveScreenshot = true) {
+    if (taskIds.length === 0) return;
+
+    let remaining = taskIds.slice();
+    let attempt = 0;
+
+    while (true) {
+        const { outcome, receivedEvents } = await runTaskStreamOnce(remaining, saveScreenshot);
+
+        if (outcome === 'completed' || outcome === 'cancelled') {
+            clearReconnectNotice();
+            return;
+        }
+
+        // 進捗が取れていた回は再試行回数をリセットする（長時間計測で上限に当たらないように）
+        if (receivedEvents > 0 && outcome === 'disconnected') attempt = 0;
+
+        attempt++;
+        if (attempt > STREAM_RECONNECT_MAX_ATTEMPTS) {
+            clearReconnectNotice();
+            throw new Error(`接続が復旧しないため中止しました（再接続 ${STREAM_RECONNECT_MAX_ATTEMPTS} 回失敗）。未計測ぶんは再実行してください。`);
+        }
+
+        const delay = Math.min(STREAM_RECONNECT_BASE_DELAY_MS * (2 ** (attempt - 1)), STREAM_RECONNECT_MAX_DELAY_MS);
+        const reason = outcome === 'busy' ? '前回の計測がサーバ側で終了処理中' : '接続が切れたため';
+        showReconnectNotice(`${reason}再接続中…（${attempt}/${STREAM_RECONNECT_MAX_ATTEMPTS}回目・${Math.round(delay / 1000)}秒後）`);
+        await sleep(delay);
+
+        const nextRemaining = await fetchRemainingTaskIds(remaining);
+        if (nextRemaining === null) continue; // サーバに届かない＝まだ復旧していない。バックオフを続ける
+        remaining = nextRemaining;
+        if (remaining.length === 0) {
+            clearReconnectNotice();
+            return;
+        }
+        showReconnectNotice(`接続を復旧しました。未計測の ${remaining.length} 件から再開します。`);
     }
 }
 
@@ -391,8 +514,12 @@ async function renderUberEatsPanel(selectedKeyword = null) {
 function drawUberEatsPanel(model, selectedKeyword) {
     const keyword = model.keywords.includes(selectedKeyword) ? selectedKeyword : model.keywords[0];
     const summary = uberSummary(model, keyword);
+    const latestNormalized = Object.fromEntries(
+        model.points.map(point => [point.label, uberLatest(model, keyword, point.label)])
+    );
+    // 生順位のみ（色分け・タイル見出し用）。実質順位は uberFoodLabel で併記する。
     const latestLabels = Object.fromEntries(
-        model.points.map(point => [point.label, uberStatusLabel(uberLatest(model, keyword, point.label))])
+        model.points.map(point => [point.label, uberRawStatusLabel(latestNormalized[point.label])])
     );
     const columns = Math.min(Math.max(Math.ceil(model.points.length / 2), 3), 6);
 
@@ -417,7 +544,7 @@ function drawUberEatsPanel(model, selectedKeyword) {
                             <span style="font-size: 12px; color: #6c6c70;">${keyword}の最新順位</span>
                         </div>
                         <div style="display: grid; grid-template-columns: repeat(${columns}, minmax(0, 1fr)); gap: 8px;">
-                            ${model.points.map(point => uberPointTile(point.label, latestLabels[point.label], uberRankColor(latestLabels[point.label]))).join('')}
+                            ${model.points.map(point => uberPointTile(point.label, latestLabels[point.label], uberRankColor(latestLabels[point.label]), uberFoodLabel(latestNormalized[point.label]))).join('')}
                         </div>
                     </div>
                     <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;">
@@ -457,7 +584,7 @@ function drawUberEatsPanel(model, selectedKeyword) {
                             </tr>
                         </thead>
                         <tbody>
-                            ${model.labels.map(label => uberHeatRow(label, model.keywords.map(item => uberStatusLabel(uberLatest(model, item, label))))).join('')}
+                            ${model.labels.map(label => uberHeatRow(label, model.keywords.map(item => uberLatest(model, item, label)))).join('')}
                         </tbody>
                     </table>
                 </div>
@@ -474,7 +601,7 @@ function drawUberEatsPanel(model, selectedKeyword) {
                         ${model.points.map(point => uberPointRow(
                             point.label,
                             point.address,
-                            latestLabels[point.label],
+                            uberStatusLabel(latestNormalized[point.label]),
                             model.keywords.map(item => uberStatusLabel(uberLatest(model, item, point.label))).join(' / ')
                         )).join('')}
                     </tbody>
@@ -554,13 +681,21 @@ function uberRankY(normalized) {
     return 28 + ((normalized.value - 1) / 19) * 120;
 }
 
-function uberPointTile(label, rank, color) {
+function uberPointTile(label, rank, color, foodLabel) {
     return `
-        <div style="height: 48px; border: 1px solid #e5e5e7; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #fff;">
+        <div style="min-height: 48px; padding: 4px 2px; border: 1px solid #e5e5e7; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #fff;">
             <span style="font-size: 12px; color: #333; line-height: 1.1;">${label}</span>
             <strong style="font-size: 13px; color: ${color}; line-height: 1.2;">${rank}</strong>
+            ${foodLabel ? `<span style="font-size: 11px; color: #6c6c70; line-height: 1.1;">飲食のみ ${foodLabel}</span>` : ''}
         </div>
     `;
+}
+
+/** 実質順位（小売店を除いた飲食店内の順位）のラベル。未計測なら空文字。 */
+function uberFoodLabel(normalized) {
+    const food = normalized?.food;
+    if (!food || food.status === 'none') return '';
+    return food.status === 'out' ? '圏外' : `${food.value}位`;
 }
 
 function uberMetric(label, rank, sub, color) {
@@ -581,11 +716,11 @@ function uberLegend(label, color, opacity) {
     `;
 }
 
-function uberHeatRow(label, ranks) {
+function uberHeatRow(label, normalizedList) {
     return `
         <tr>
             <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: 600;">${label}</td>
-            ${ranks.map(rank => `<td style="padding: 8px; border-bottom: 1px solid #eee; text-align: center;">${uberRankBadge(rank)}</td>`).join('')}
+            ${normalizedList.map(normalized => `<td style="padding: 8px; border-bottom: 1px solid #eee; text-align: center;">${uberRankBadge(uberRawStatusLabel(normalized))}${uberFoodLabel(normalized) ? `<div style="font-size: 11px; color: #6c6c70; margin-top: 2px;">飲食のみ ${uberFoodLabel(normalized)}</div>` : ''}</td>`).join('')}
         </tr>
     `;
 }

@@ -34,10 +34,23 @@ export function normalizeUberRank(rank) {
 
 /**
  * 正規化済みの順位を表示ラベルにします。
- * @param {{ value: number|null, status: string }} normalized
- * @returns {string} '3位' / '圏外' / '未計測'
+ * 実質順位（小売店を除いた飲食店内の順位）があれば括弧で併記します。
+ * @param {{ value: number|null, status: string, food?: object }} normalized
+ * @returns {string} '9位（飲食のみ 2位）' / '圏外' / '未計測'
  */
 export function uberStatusLabel(normalized) {
+    if (!normalized || normalized.status === 'none') return '未計測';
+    const base = normalized.status === 'out' ? '圏外' : `${normalized.value}位`;
+    const food = normalized.food;
+    if (!food || food.status === 'none') return base;
+    const foodLabel = food.status === 'out' ? '圏外' : `${food.value}位`;
+    return `${base}（飲食のみ ${foodLabel}）`;
+}
+
+/**
+ * 生順位のみのラベル（グラフ軸・比較用）。
+ */
+export function uberRawStatusLabel(normalized) {
     if (!normalized || normalized.status === 'none') return '未計測';
     if (normalized.status === 'out') return '圏外';
     return `${normalized.value}位`;
@@ -78,6 +91,8 @@ export function buildUberModel(history) {
             const normalized = normalizeUberRank(log.rank);
             // 未計測（モック等）は日付軸にも載せない
             if (normalized.status === 'none') return;
+            // 実質順位（小売店を除いた飲食店内の順位）。古い履歴には無いので未計測扱い。
+            normalized.food = normalizeUberRank(log.food_rank);
             dates.add(log.date);
             ranks[keyword][addressLabel][log.date] = normalized;
         });

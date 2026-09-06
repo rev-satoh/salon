@@ -25,11 +25,17 @@ def save_json_file(filename, data):
     with open(filename, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
-def update_history(history, task, date_str, rank, screenshot_path):
-    """履歴リストを更新するヘルパー関数"""
+def update_history(history, task, date_str, rank, screenshot_path, food_rank=None):
+    """履歴リストを更新するヘルパー関数
+
+    food_rank（実質順位＝小売店を除いた飲食店内の順位）はUber Eatsのみ。
+    値が無い場合はキー自体を付けない（既存履歴との後方互換のため）。
+    """
     task_id = task['id']
     task_history = next((item for item in history if item["id"] == task_id), None)
     log_entry = {'date': date_str, 'rank': rank, 'screenshot': screenshot_path}
+    if food_rank is not None:
+        log_entry['food_rank'] = food_rank
 
     if task_history:
         date_entry = next((d for d in task_history['log'] if d['date'] == date_str), None)
@@ -44,6 +50,33 @@ def update_history(history, task, date_str, rank, screenshot_path):
             "task": task,
             "log": [log_entry]
         })
+
+def _is_recordable(result, rank):
+    """履歴に書いてよい結果かを判定する（4モード共通）。
+
+    判定仕様：
+    - 数値の順位 … 常に書く
+    - '圏外' … スクレイパが `list_fetched: True`（一覧を実際に取得できた）を
+      返している時だけ「圏外確定」として書く。フラグが False／欠落＝一覧を
+      取得できていない＝「未取得」なので履歴に書かない（欠測にする）。
+    - それ以外（'エラー'・'枠無'・'要確認'）… 従来どおり書く
+    """
+    if rank == '圏外':
+        return bool(result.get('list_fetched'))
+    return True
+
+
+def _record_result(history, task, today, rank, screenshot_path, result, history_filename, food_rank=None):
+    """判定を通った結果だけを履歴へ書き込む。書いたら True を返す。"""
+    if not _is_recordable(result, rank):
+        current_app.logger.warning(
+            f"タスク '{task.get('id')}' は一覧を取得できなかったため履歴に記録しません（未取得）。"
+        )
+        return False
+    update_history(history, task, today, rank, screenshot_path, food_rank)
+    save_json_file(history_filename, history)
+    return True
+
 
 def _run_normal_tasks(driver, tasks, history, history_filename, today, stream_progress, job_counter, total_job_count, save_screenshot=True):
     """HPB通常検索タスクを実行する"""
@@ -78,8 +111,7 @@ def _run_normal_tasks(driver, tasks, history, history_filename, today, stream_pr
             result = {"rank": "エラー"}
 
         rank_to_save = result.get('results', [{}])[0].get('rank', result.get('rank', '圏外'))
-        update_history(history, task, today, rank_to_save, result.get('screenshot_path'))
-        save_json_file(history_filename, history) # 1件ごとに保存
+        _record_result(history, task, today, rank_to_save, result.get('screenshot_path'), result, history_filename)
         current_app.logger.info(f"タスク '{task_id}' の結果: {rank_to_save}位")
 
         if stream_progress:
@@ -134,8 +166,7 @@ def _run_special_tasks(driver, tasks_grouped, history, history_filename, all_tas
 
             salon_results = result.get('results_map', {}).get(salon_name, [])
             rank_to_save = salon_results[0]['rank'] if salon_results else '圏外'
-            update_history(history, task, today, rank_to_save, result.get('screenshot_path'))
-            save_json_file(history_filename, history) # 1件ごとに保存
+            _record_result(history, task, today, rank_to_save, result.get('screenshot_path'), result, history_filename)
             current_app.logger.info(f"タスク '{task_id}' ({salon_name}) の結果: {rank_to_save}位")
 
             if stream_progress:
@@ -190,8 +221,7 @@ def _run_meo_tasks(driver, tasks_grouped, history, history_filename, today, stre
                     rank_to_save = my_salon_result['rank'] if my_salon_result else '圏外'
                 
                 screenshot_path_to_save = result.get('screenshot_path')
-                update_history(history, task, today, rank_to_save, screenshot_path_to_save)
-                save_json_file(history_filename, history) # 1件ごとに保存
+                _record_result(history, task, today, rank_to_save, screenshot_path_to_save, result, history_filename)
                 current_app.logger.info(f"MEOタスク '{task_id}' の結果: {rank_to_save}")
 
                 if stream_progress:
@@ -241,15 +271,17 @@ def _run_ubereats_tasks(driver, tasks, history, history_filename, today, stream_
             result = {"rank": "エラー"}
 
         rank_to_save = result.get('rank', '圏外')
-        update_history(history, task, today, rank_to_save, result.get('screenshot_path'))
-        save_json_file(history_filename, history)
-        current_app.logger.info(f"Uber Eatsタスク '{task_id}' の結果: {rank_to_save}位")
+        food_rank_to_save = result.get('food_rank')
+        _record_result(history, task, today, rank_to_save, result.get('screenshot_path'), result, history_filename, food_rank_to_save)
+        current_app.logger.info(f"Uber Eatsタスク '{task_id}' の結果: {rank_to_save}位（飲食のみ {food_rank_to_save}）")
 
         if stream_progress:
             yield sse_format({
                 "result": {
                     "rank": rank_to_save,
+                    "food_rank": food_rank_to_save,
                     "total_count": result.get("total_count"),
+                    "retail_count": result.get("retail_count"),
                     "task_name": task_name,
                     "task_id": task_id,
                 }
