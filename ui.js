@@ -511,8 +511,10 @@ async function renderUberEatsPanel(selectedKeyword = null) {
     drawUberEatsPanel(model, selectedKeyword);
 }
 
-function drawUberEatsPanel(model, selectedKeyword) {
+function drawUberEatsPanel(model, selectedKeyword, selectedRankMode = 'raw') {
     const keyword = model.keywords.includes(selectedKeyword) ? selectedKeyword : model.keywords[0];
+    // グラフの表示系列。既定は生順位。'food'＝小売店を除いた飲食店内の順位。
+    const rankMode = selectedRankMode === 'food' ? 'food' : 'raw';
     const summary = uberSummary(model, keyword);
     const latestNormalized = Object.fromEntries(
         model.points.map(point => [point.label, uberLatest(model, keyword, point.label)])
@@ -561,6 +563,10 @@ function drawUberEatsPanel(model, selectedKeyword) {
                             <div style="font-size: 12px; color: #6c6c70; margin-top: 3px;">薄線=観測点別 / 太線=${UBER_BASE_LABEL}。上に行くほど上位。</div>
                         </div>
                         <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+                            <div style="display: inline-flex; border: 1px solid #d7d7dc; border-radius: 8px; overflow: hidden; background: #fff;">
+                                ${uberRankModeButton('raw', '生順位', rankMode === 'raw')}
+                                ${uberRankModeButton('food', '飲食のみ', rankMode === 'food')}
+                            </div>
                             <div style="display: inline-flex; border: 1px solid #d7d7dc; border-radius: 8px; overflow: hidden; background: #fff; flex-wrap: wrap;">
                                 ${model.keywords.map(item => uberKeywordButton(item, item === keyword)).join('')}
                             </div>
@@ -569,7 +575,7 @@ function drawUberEatsPanel(model, selectedKeyword) {
                             </div>
                         </div>
                     </div>
-                    ${renderUberTrendChart(model, keyword)}
+                    ${renderUberTrendChart(model, keyword, rankMode)}
                 </div>
                 <div style="border: 1px solid #ececf0; border-radius: 8px; padding: 14px; margin-bottom: 16px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -610,7 +616,10 @@ function drawUberEatsPanel(model, selectedKeyword) {
         </div>
     `;
     dom.resultArea.querySelectorAll('.uber-keyword-button').forEach(button => {
-        button.addEventListener('click', () => drawUberEatsPanel(model, button.dataset.keyword));
+        button.addEventListener('click', () => drawUberEatsPanel(model, button.dataset.keyword, rankMode));
+    });
+    dom.resultArea.querySelectorAll('.uber-rank-mode-button').forEach(button => {
+        button.addEventListener('click', () => drawUberEatsPanel(model, keyword, button.dataset.rankMode));
     });
 }
 
@@ -622,8 +631,37 @@ function uberKeywordButton(keyword, active) {
     `;
 }
 
-function renderUberTrendChart(model, keyword) {
+function uberRankModeButton(mode, label, active) {
+    return `
+        <button type="button" class="uber-rank-mode-button" data-rank-mode="${mode}" style="border: 0; border-right: 1px solid #d7d7dc; padding: 7px 10px; background: ${active ? '#111' : '#fff'}; color: ${active ? '#fff' : '#333'}; font-size: 12px; cursor: pointer; white-space: nowrap;">
+            ${label}
+        </button>
+    `;
+}
+
+/**
+ * 表示モードに応じた系列を返します。
+ * 'food' は各日の実質順位（小売店を除いた飲食店内の順位）。値の無い日は null＝線を引きません。
+ */
+function uberSeriesForMode(model, keyword, label, rankMode) {
+    const series = uberSeries(model, keyword, label);
+    if (rankMode !== 'food') return series;
+    return series.map(normalized => {
+        const food = normalized?.food;
+        return food && food.status !== 'none' ? food : null;
+    });
+}
+
+function renderUberTrendChart(model, keyword, rankMode = 'raw') {
     const dates = model.dates;
+    const seriesByPoint = model.points.map(point => uberSeriesForMode(model, keyword, point.label, rankMode));
+    if (rankMode === 'food' && !seriesByPoint.some(series => series.some(Boolean))) {
+        return `
+            <div style="height: 250px; display: flex; align-items: center; justify-content: center; text-align: center; color: #6c6c70; font-size: 13px; line-height: 1.6;">
+                飲食のみの順位は、まだ計測データがありません。<br>次回の計測分から表示されます。
+            </div>
+        `;
+    }
     const left = 60;
     const right = 720;
     const dateX = dates.length === 1
@@ -641,7 +679,7 @@ function renderUberTrendChart(model, keyword) {
             <text x="8" y="112" font-size="11" fill="#6c6c70">10位</text>
             <text x="8" y="152" font-size="11" fill="#6c6c70">20位</text>
             <text x="8" y="192" font-size="11" fill="#6c6c70">圏外</text>
-            ${model.points.map(point => uberPolyline(dateX, uberSeries(model, keyword, point.label), point)).join('')}
+            ${model.points.map((point, index) => uberPolyline(dateX, seriesByPoint[index], point)).join('')}
             ${dates.map((date, index) => `<text x="${Math.max(dateX[index] - 14, 2)}" y="214" font-size="11" fill="#6c6c70">${formatUberDate(date)}</text>`).join('')}
         </svg>
     `;
