@@ -271,3 +271,28 @@ Console に `net::ERR_NETWORK_IO_SUSPENDED` ／ `ui.js 手動実行中にエラ�
 ### 検証（2026-09-19・実走）
 - `driver_manager.get_webdriver()` 起動 → browserVersion 153.0.8010.48 / chromedriverVersion **153.0.8010.52**、stderr 0行。
 - `hpb_scraper.check_hotpepper_ranking(keyword="まつげパーマ", salonName="ケイトステージラッシュ", area=FC/SF)` を実走 → total_count 105・**rank 1** を取得（計測が最後まで通ることを確認）。
+
+## 改修: Uber Eatsの入力欄が保存済みタスクを反映しない（2026-09-19）
+
+### 事象
+Uber Eatsモードの「検索キーワード」欄が常に「グリークヨーグルト ヨーグルト アサイー」の3語で、
+「アサイーボウル」を足しても再読み込みで消える＝保存されていないように見える。
+
+### 原因（実データ・実コードで特定）
+- 保存自体は正常だった。`auto_tasks.json` には ubereats タスクが40件（4キーワード×10住所）あり、
+  `アサイーボウル` も `history_ubereats.json` に 2026/09/10〜09/14 の順位（例: 店と同じ住所 8位／飲食のみ1位）まで入っていた。
+- 真因は画面側。`ranking_checker.html` の入力欄に初期値がHTML直書きされていた
+  （`uberKeywordInput` に `value="グリークヨーグルト ヨーグルト アサイー"`、住所textareaにも同内容の本文、店舗名に `value="YOGI"`）。
+  Uber Eatsモードの入力欄だけ保存済みデータから復元する処理が無く、再読み込みのたびに直書きの3語へ戻っていた。
+- 重複判定・文字数/件数上限・部分一致による弾きは**存在しない**（`handleAddTask` のubereats分岐はタスクIDの完全一致だけを見る）。「アサイー」を含むことによる弾きも無い＝実測で否定。
+
+### 対処
+- `ranking_checker.html`: Uber Eats入力欄3つの直書き初期値を削除（プレースホルダのみ残す）。
+- `ui.js`: `fillUberFormFromTasks(autoTasks)` を追加し、`updateUIForSearchType` の ubereats 分岐で呼ぶ。
+  保存済み ubereats タスクから 店舗名／住所セット（ラベル: 住所・重複排除）／キーワード（重複排除・スペース区切り）を復元する。
+  画面の初期表示は常に保存済みデータ（auto_tasks.json）を正とし、HTMLに業務データを直書きしない。
+
+### 検証（2026-09-19・実走 http://127.0.0.1:5001/ranking_checker.html）
+- Uber Eatsタブを開く → キーワード欄「グリークヨーグルト ヨーグルト アサイーボウル アサイー」・住所10行・店舗名YOGI を復元（修正前は3語固定）。
+- 検証用キーワードを1語足して「自動計測に追加」→ `auto_tasks.json` の ubereats が40→50件、ページ再読み込み後も欄に残ることを確認。
+- 検証後、追加分はAPI経由で元の40件へ戻し（再読み込みで4キーワードに復帰・履歴グラフにアサイーボウルの線あり）。

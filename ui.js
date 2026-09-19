@@ -467,6 +467,7 @@ export function updateUIForSearchType(activeType, autoTasks) {
     } else if (activeType === 'ubereats') {
         dom.uberEatsSearchInputs.style.display = 'block';
         dom.salonNameFormGroup.style.display = 'none';
+        fillUberFormFromTasks(autoTasks);
         renderUberEatsPanel();
     }
 
@@ -485,6 +486,35 @@ export function updateUIForSearchType(activeType, autoTasks) {
         dom.hpbSpecialTaskCopySection.style.display = 'block';
         updateHpbSpecialCopySources(autoTasks);
     }
+}
+
+/**
+ * Uber Eatsの入力欄を、保存済みの自動計測タスク（auto_tasks.json）から復元します。
+ * HTMLに初期値を直書きすると、追加したキーワードが再読み込みで消えたように見えるため、
+ * 画面の表示は常に保存済みデータを正とする。
+ * @param {Array} autoTasks
+ */
+export function fillUberFormFromTasks(autoTasks) {
+    const tasks = (Array.isArray(autoTasks) ? autoTasks : []).filter(task => task?.type === 'ubereats');
+    if (tasks.length === 0) return;
+
+    const storeName = tasks[0].storeName || '';
+    const addressLines = [];
+    const seenLabels = new Set();
+    const keywords = [];
+    tasks.forEach(task => {
+        const label = task.addressLabel || '';
+        const address = task.address || '';
+        if (label && address && !seenLabels.has(label)) {
+            seenLabels.add(label);
+            addressLines.push(`${label}: ${address}`);
+        }
+        if (task.keyword && !keywords.includes(task.keyword)) keywords.push(task.keyword);
+    });
+
+    if (storeName) dom.uberStoreNameInput.value = storeName;
+    if (addressLines.length > 0) dom.uberAddressInput.value = addressLines.join('\n');
+    if (keywords.length > 0) dom.uberKeywordInput.value = keywords.join(' ');
 }
 
 let uberHistoryCache = null;
