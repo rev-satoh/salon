@@ -53,7 +53,10 @@ UBER_EATS_MAX_RESULTS = 80
 UBER_EATS_CHROME_PROFILE_DIR = os.path.expanduser("~/Library/Application Support/salon-ranking-checker/ubereats-chrome-profile-v2")
 UBER_EATS_CHALLENGE_WAIT_SECONDS = 180
 UBER_EATS_REMOTE_DEBUGGING_PORT = 9225
-CHROMEDRIVER_PATH = "/opt/homebrew/bin/chromedriver"
+# ChromeDriverはSelenium Manager（selenium同梱）に自動解決させる＝Noneのまま固定しない。
+# Chromeが自動更新されてもドライバが追従する（バージョン直書き・brew cask管理は2026-09-19に廃止）。
+# 固定パスを使う特殊事情が出た場合のみ、環境変数 SALON_CHROMEDRIVER_PATH で上書きする。
+CHROMEDRIVER_PATH = os.environ.get("SALON_CHROMEDRIVER_PATH") or None
 UBER_EATS_GEOCODE_CACHE_FILE = "ubereats_geocode_cache.json"
 # 実質順位（小売店を除いた飲食店内の順位）の判定に使う小売店リスト（社長が直接編集する設定ファイル）
 UBER_EATS_RETAIL_FILTER_FILE = "ubereats_retail_filter.json"

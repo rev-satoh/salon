@@ -243,3 +243,31 @@ Console に `net::ERR_NETWORK_IO_SUSPENDED` ／ `ui.js 手動実行中にエラ�
 
 ### 残課題
 - 小売判定は店名キーワード依存。新しいチェーンが上位に来たら `ubereats_retail_filter.json` に追記する運用。
+
+## 改修: ChromeDriverをSelenium Manager自動解決へ（2026-09-19）
+
+### 事象
+`session not created: This version of ChromeDriver only supports Chrome version 151 / Current browser version is 153.0.8010.48` で計測が起動不能。
+
+### 原因（実コードで特定）
+- `config.py` の `CHROMEDRIVER_PATH = "/opt/homebrew/bin/chromedriver"`（固定パス）を `driver_manager.py` の `Service(...)` が使用（`get_webdriver` / `get_attached_chrome` の2か所）。
+- 実体は Homebrew cask `chromedriver` 151.0.7922.77。Chrome は自動更新で 153.0.8010.48 になり、cask は追従しない＝Chrome更新のたびに再発する構造だった。
+- 🔴 追加の実測事実：`Service` を外して Selenium Manager に任せても、**PATH上に古い chromedriver があると Selenium Manager はそれを優先採用し、警告を出しつつ同じエラーで落ちる**。PATH側の掃除まで行わないと自動解決にならない。
+
+### 採った方式（バージョン直書きを増やさない汎用の仕組み）
+1. `brew uninstall --cask chromedriver` で PATH から固定バイナリを排除（PATHに chromedriver 無しを維持する＝これが前提条件）。
+2. `config.py` を `CHROMEDRIVER_PATH = os.environ.get("SALON_CHROMEDRIVER_PATH") or None` に変更。`driver_manager.py` は元から `None` なら `service=None`＝**selenium同梱のSelenium Managerがブラウザ実バージョンを検出して一致ドライバを取得・`~/.cache/selenium`へキャッシュ**する。
+3. 以後 Chrome が自動更新されてもドライバは自動追従。バージョン番号はコード・設定のどこにも書かない。`driver_manager.py` は無改修。
+
+採用理由＝selenium 4.35 同梱で追加依存ゼロ（webdriver-manager の新規導入不要）、解決ロジックが1か所（Selenium Manager）に閉じる、Chrome更新への追従が自動。
+
+### 他ツールへの波及（調査済み・再調査不要）
+- `~/anaconda` 配下で chromedriver を参照していた稼働コードは **`salon/config.py` のみ**。`~/anaconda/keisoku`（selenium 4.41）は元から固定パスを持たずSelenium Manager任せ＝同じ仕組みで整合済み。`_archive/2026-07/mercari-price-update*/boot.py` はアーカイブ（対象外）。
+- `.company` 配下に selenium / chromedriver を使うツールは無し（サロンボード系はPlaywright＝本件の影響なし）。
+
+### ログイン・プロファイル再利用への影響
+なし。`get_attached_chrome`（`--remote-debugging-port` で通常Chromeへアタッチ）と `user-data-dir` によるプロファイル維持は無改修。変えたのはドライバの調達方法だけで、セッション再利用の設計は保持。
+
+### 検証（2026-09-19・実走）
+- `driver_manager.get_webdriver()` 起動 → browserVersion 153.0.8010.48 / chromedriverVersion **153.0.8010.52**、stderr 0行。
+- `hpb_scraper.check_hotpepper_ranking(keyword="まつげパーマ", salonName="ケイトステージラッシュ", area=FC/SF)` を実走 → total_count 105・**rank 1** を取得（計測が最後まで通ることを確認）。
