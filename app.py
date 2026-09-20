@@ -30,7 +30,9 @@ from ubereats_scraper import check_ubereats_ranking
 from task_runner import run_scheduled_check, update_history
 from driver_manager import get_attached_chrome, get_webdriver
 from excel_generator import create_excel_report # Excel生成関数をインポート
-from salon_board_automator import post_blog_to_store # Step2で作成するファイルをインポート
+# salon_board_automator は playwright に依存する。playwright はMacローカル運用専用で
+# Render等のサーバ環境には入れていないため、トップレベルでimportするとアプリ全体が
+# 起動不能になる（2026-09-21 Renderデプロイ失敗の真因）。実際に投稿する時だけ読み込む。
 import config # 設定ファイルをインポート
 
 # app.pyと同じ階層にある静的ファイル(css, js, html)を読み込めるように設定
@@ -496,6 +498,16 @@ def post_blog_api():
     """
     フロントエンドからブログ投稿リクエストを受け取り、自動化処理を呼び出すAPI。
     """
+    # playwright未導入の環境（Render等）では投稿機能は利用できない
+    try:
+        from salon_board_automator import post_blog_to_store
+    except ImportError as e:
+        app.logger.error(f"salon_board_automatorの読み込みに失敗（playwright未導入の可能性）: {e}")
+        return jsonify({
+            "status": "error",
+            "message": "この環境ではサロンボード自動投稿は利用できません（playwright未導入）。Macのターミナルから実行してください。"
+        }), 503
+
     # フォームデータとファイルを受け取る
     store_ids_json = request.form.get('store_ids')
     title = request.form.get('title')
