@@ -58,14 +58,30 @@ measurement_lock = threading.Lock()
 #    背景＝常駐プロセスは起動時のコードを抱え、直しても画面の再読み込みでは直らない
 #    （2026-09-03・管理PLで発生）。ツールごとに別方式を作らない。
 #    計測の実行中（measurement_lock）は入れ替えない＝走っているSeleniumを殺さない。
+#    live_reload はMacローカル開発専用の共通部品（companyリポジトリ内）。Render等の
+#    サーバ環境には存在しないため、「使えるときだけ有効化する」（2026-09-21）。
 import sys as _sys
 from pathlib import Path as _Path
-_sys.path.insert(0, "/Users/satoudaisuke/anaconda/company/.company/開発部/tools/_common")
-from live_reload import LiveReload  # noqa: E402
 
-LiveReload(_Path(__file__).resolve().parent, title="順位チェッカー",
-           entry=_Path(__file__).resolve(),
-           busy=lambda: measurement_lock.locked()).install_flask(app)
+_LIVE_RELOAD_COMMON = _Path(
+    os.environ.get(
+        "LIVE_RELOAD_COMMON_DIR",
+        "/Users/satoudaisuke/anaconda/company/.company/開発部/tools/_common",
+    )
+)
+try:
+    if not _LIVE_RELOAD_COMMON.is_dir():
+        raise FileNotFoundError(_LIVE_RELOAD_COMMON)
+    if str(_LIVE_RELOAD_COMMON) not in _sys.path:
+        _sys.path.insert(0, str(_LIVE_RELOAD_COMMON))
+    from live_reload import LiveReload  # noqa: E402
+
+    LiveReload(_Path(__file__).resolve().parent, title="順位チェッカー",
+               entry=_Path(__file__).resolve(),
+               busy=lambda: measurement_lock.locked()).install_flask(app)
+except (ImportError, FileNotFoundError, OSError) as _live_reload_error:
+    # 本番（Render）には共通部品が無い＝自動リロード無しで通常起動する。
+    app.logger.info("live_reload を無効化して起動します: %s", _live_reload_error)
 measurement_cancel_event = threading.Event()
 
 # --- ヘルパー関数 (ファイルの読み書き) ---

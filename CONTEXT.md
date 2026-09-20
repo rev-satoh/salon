@@ -296,3 +296,30 @@ Uber Eatsモードの「検索キーワード」欄が常に「グリークヨ�
 - Uber Eatsタブを開く → キーワード欄「グリークヨーグルト ヨーグルト アサイーボウル アサイー」・住所10行・店舗名YOGI を復元（修正前は3語固定）。
 - 検証用キーワードを1語足して「自動計測に追加」→ `auto_tasks.json` の ubereats が40→50件、ページ再読み込み後も欄に残ることを確認。
 - 検証後、追加分はAPI経由で元の40件へ戻し（再読み込みで4キーワードに復帰・履歴グラフにアサイーボウルの線あり）。
+
+## 恒久策: 本番(Render)相当のimportスモークチェック（2026-09-21）
+
+### 背景
+`app.py` が Mac固有パス（company リポの `_common`）を `sys.path` に足して `live_reload` を
+トップレベルimportしていたため、Renderで `ModuleNotFoundError: live_reload` となり起動失敗。
+同種（requirements.txt に無い外部パッケージ・ローカル専用モジュール）を1件ずつ直しては落ちる、
+を止めるためのチェックを追加した。
+
+### 使い方
+- `python3 scripts/check_prod_import.py` … requirements.txt（＋その依存）のパッケージだけを見せ、
+  Mac固有パスを無効化（`LIVE_RELOAD_COMMON_DIR` を実在しないパスへ）した状態で `import app` を検証する。
+  push前に必ず実行し、`OK:` が出ることを確認する（NG時は落ちたモジュール名が出る）。
+
+### 実装側の約束
+- `live_reload` は「共通部品ディレクトリが実在し、importできる時だけ」有効化する（app.py 57〜79行）。
+  Renderでは自動リロード無しで通常起動する。ローカルでは従来どおり `before_request` フックが入る。
+- Render に無いものをトップレベルでimportしない（playwright 等は使う直前に遅延import）。
+
+### 実測（2026-09-21）
+- `scripts/check_prod_import.py` → `OK: 本番相当（requirements.txt のみ / Mac固有パス無効）で import app 成功`
+- 検知力の確認：app.py に一時的に `import playwright` を足すと
+  `NG ... 'playwright' は requirements.txt に無く、本番(Render)には存在しません` で exit 1。
+- 全トップレベルimportの棚卸し結果＝app.py と自作モジュール（feature_page_scraper / utils / hpb_scraper /
+  meo_scraper / ubereats_scraper / task_runner / driver_manager / excel_generator / config）を再帰確認し、
+  外部依存は flask, flask_cors, requests, bs4, selenium, PIL, apscheduler, dotenv, pandas のみ＝全て
+  requirements.txt に存在。Render非対応は `live_reload` の1件のみだった。
