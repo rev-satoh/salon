@@ -323,3 +323,11 @@ Uber Eatsモードの「検索キーワード」欄が常に「グリークヨ�
   meo_scraper / ubereats_scraper / task_runner / driver_manager / excel_generator / config）を再帰確認し、
   外部依存は flask, flask_cors, requests, bs4, selenium, PIL, apscheduler, dotenv, pandas のみ＝全て
   requirements.txt に存在。Render非対応は `live_reload` の1件のみだった。
+
+## 廃止: Renderの公開サービス（2026-09-21・社長決定で削除）
+
+- **経緯**＝Render Web Service `salon`（srv-d284h4u3jp1c73fv4560／URL `https://kuchikomi-api.onrender.com`・無料枠）は、**2025/9/30のコミット `78485a5`「MEO順位計測のUIを追加、不要な口コミ機能を削除」以前に口コミ作成機能（`review_generator.html`/`.js`）を公開していた時の名残**。サービス名 `kuchikomi-api` はその当時のもの。
+- **削除の理由**＝現行の順位チェッカーはMacローカル（`app.py` ポート5001・手動実行）で使っており、Render側は使っていなかった。実測＝Render側 `/api/auto-history` の最新が 2026/9/3 で停止、Mac側は 2026/9/20 まで更新。さらに 2026/9/19 以降のデプロイが連続失敗し、失敗メールだけが届く状態だった。
+- **削除の実施**＝2026/9/21、Renderダッシュボードから Web Service を削除（社長指示）。以後この順位チェッカーに本番・公開環境は存在しない＝**Renderを前提にした案内・デプロイ手順を書かない**。
+- **残した対策**＝`scripts/check_prod_import.py`（Mac固有パス・未導入パッケージのトップレベルimport検知）は削除せず残す。ローカル環境でも「Mac固有パスへの依存を増やさない」チェックとして有効なため。
+
