@@ -8,7 +8,52 @@ import { buildUberModel, uberSeries, uberLatest, uberSummary, uberStatusLabel, u
 import { checkRank } from './manualChecker.js'; // この行を追加
 import { fetchAndDisplayAutoHistory } from './history.js';
 
-let activeTaskStreamAbortController = null;
+// 計測は2レーン（サーバの2本のロックに対応）：Uber Eats と それ以外（HPB通常・特集・MEO）。
+// レーンが違えば同時に計測できる。同じレーンの中は1本ずつ。
+export const LANE_HPB = 'hpb';
+export const LANE_UBEREATS = 'ubereats';
+const activeTaskStreamAbortControllers = { [LANE_HPB]: null, [LANE_UBEREATS]: null };
+
+/** 計測タイプ（normal/special/google/ubereats）からレーンを返す */
+export function laneOfType(type) {
+    return type === 'ubereats' ? LANE_UBEREATS : LANE_HPB;
+}
+
+/** いま選ばれている計測タイプ */
+export function getActiveSearchType() {
+    return dom.searchTypeToggle.querySelector('.toggle-button.active').dataset.type;
+}
+
+/**
+ * resultArea の中身を「HPB・MEOの計測結果／Uber Eatsの計測結果／Uber Eatsの履歴パネル」の3つに分けて用意する。
+ * 片方のレーンの計測開始・タイプ切り替えで、もう片方の計測中の表示を消さないため。
+ */
+function ensureResultLayout() {
+    let panel = document.getElementById('uberPanelArea');
+    if (panel) return;
+    document.getElementById('initialResultMessage')?.remove();
+    for (const lane of [LANE_HPB, LANE_UBEREATS]) {
+        const area = document.createElement('div');
+        area.id = `resultArea-${lane}`;
+        area.className = 'lane-result-area';
+        dom.resultArea.appendChild(area);
+    }
+    panel = document.createElement('div');
+    panel.id = 'uberPanelArea';
+    dom.resultArea.appendChild(panel);
+}
+
+/** レーンごとの結果欄 */
+export function getLaneResultArea(lane) {
+    ensureResultLayout();
+    return document.getElementById(`resultArea-${lane}`);
+}
+
+/** Uber Eatsの履歴パネルの置き場（Uber Eatsタイプ表示中だけ見せる） */
+function getUberPanelArea() {
+    ensureResultLayout();
+    return document.getElementById('uberPanelArea');
+}
 
 /**
  * UI要素の初期化とイベントリスナーの設定を行います。
@@ -17,6 +62,7 @@ let activeTaskStreamAbortController = null;
 export function initializeUI(state) {
     populateAreaSelectors();
     setupEventListeners(state);
+    setupManualTriggerButton(state);
     initializeTaskListVisibility();
     fetchSchedule();
 }
@@ -91,6 +137,7 @@ function setupEventListeners(state) {
         const activeType = clickedButton.dataset.type;
         updateUIForSearchType(activeType, state.autoTasks);
         renderAutoTasks(state);
+        applyMeasuringUI(state); // ボタンの有効/無効を、切り替え先のレーンの状態に合わせる
     });
 
     // モード説明
@@ -105,14 +152,20 @@ function setupEventListeners(state) {
     dom.checkRankButton.addEventListener('click', () => checkRank(state));
 
     // 手動計測中断ボタン
+    // 中断するのは「いま表示中のタイプのレーン」だけ（HPBの中断でUber計測は止めない）
     dom.stopMeasurementButton.addEventListener('click', () => {
-        state.cancelMeasurement = true;
-        dom.stopMeasurementButton.textContent = '中断中...';
-        dom.stopMeasurementButton.disabled = true;
-        window.dispatchEvent(new CustomEvent('manual-measurement-stop'));
-        fetch('/api/cancel-measurement', { method: 'POST' }).catch(() => {});
-        if (activeTaskStreamAbortController) {
-            activeTaskStreamAbortController.abort();
+        const lane = laneOfType(getActiveSearchType());
+        if (!state.measuring[lane]) return;
+        state.cancelRequested[lane] = true;
+        applyMeasuringUI(state);
+        window.dispatchEvent(new CustomEvent('manual-measurement-stop', { detail: { lane } }));
+        fetch('/api/cancel-measurement', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ lane }),
+        }).catch(() => {});
+        if (activeTaskStreamAbortControllers[lane]) {
+            activeTaskStreamAbortControllers[lane].abort();
         }
     });
 
@@ -172,6 +225,7 @@ function setupEventListeners(state) {
 }
 
 // --- 「選択したタスクを実行」ボタンのロジック ---
+export function setupManualTriggerButton(state) {
 dom.manualTriggerButton.addEventListener('click', async () => {
     const selectedCheckboxes = dom.autoTaskList.querySelectorAll('.auto-task-checkbox:checked');
     const selectedTaskIds = new Set(Array.from(selectedCheckboxes).map(cb => cb.value));
@@ -187,14 +241,24 @@ dom.manualTriggerButton.addEventListener('click', async () => {
 
     const saveScreenshot = document.getElementById('autoTaskScreenshotCheckbox')?.checked ?? true;
 
-    setMeasuringState(true, { isMeasuring: true }); // 計測状態を開始に設定
-    dom.manualTriggerButton.textContent = '実行中...';
+    // 選んだタスクの種類から使うレーンを決める（混在なら両方）
+    const typeById = new Map(state.autoTasks.map(t => [t.id, t.type || 'normal']));
+    const lanes = Array.from(new Set(Array.from(selectedTaskIds).map(id => laneOfType(typeById.get(id) || 'normal'))));
+    const busyLane = lanes.find(lane => state.measuring[lane]);
+    if (busyLane) {
+        alert(busyLane === LANE_UBEREATS ? 'Uber Eatsの計測が実行中です。終わってから実行してください。' : 'HPB・MEOの計測が実行中です。終わってから実行してください。');
+        return;
+    }
+    const displayLane = lanes.length === 1 ? lanes[0] : LANE_HPB;
+    const area = getLaneResultArea(displayLane);
 
-    dom.resultArea.innerHTML = ''; // 結果エリアをクリア
+    lanes.forEach(lane => setMeasuringState(lane, true, state)); // 計測状態を開始に設定
+
+    area.innerHTML = ''; // このレーンの結果欄だけクリア（もう片方の計測結果は残す）
     const overallStatusContainer = document.createElement('div');
-    overallStatusContainer.id = 'overallStatus';
+    overallStatusContainer.className = 'overall-status';
     overallStatusContainer.style.cssText = 'padding: 10px; margin-bottom: 15px; font-weight: 500;';
-    dom.resultArea.appendChild(overallStatusContainer);
+    area.appendChild(overallStatusContainer);
     overallStatusContainer.textContent = `選択された ${selectedTaskIds.size} 件のタスクを実行します...`;
 
     const startTime = performance.now();
@@ -210,7 +274,7 @@ dom.manualTriggerButton.addEventListener('click', async () => {
     }, 1000);
 
     try {
-        await processStream(Array.from(selectedTaskIds), saveScreenshot);
+        await processStream(Array.from(selectedTaskIds), saveScreenshot, { lanes, area, statusEl: overallStatusContainer });
         const durationString = getDurationString(startTime);
         overallStatusContainer.textContent = `すべての計測が完了しました。（${selectedTaskIds.size}件 / 所要時間: ${durationString}）`;
     } catch (error) {
@@ -219,11 +283,11 @@ dom.manualTriggerButton.addEventListener('click', async () => {
         overallStatusContainer.textContent = `計測中にエラーが発生しました。（所要時間: ${durationString}）詳細はコンソールを確認してください。`;
     } finally {
         clearInterval(timerInterval);
-        setMeasuringState(false, { isMeasuring: false });
-        dom.manualTriggerButton.textContent = '選択したタスクを実行';
+        lanes.forEach(lane => setMeasuringState(lane, false, state));
         fetchAndDisplayAutoHistory();
     }
 });
+}
 
 function getDurationString(startTime) {
     const elapsedSeconds = Math.floor((performance.now() - startTime) / 1000);
@@ -242,19 +306,19 @@ const STREAM_RECONNECT_MAX_DELAY_MS = 30000;
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /** 接続断・再接続中のメッセージを結果エリアの先頭に1行だけ表示する */
-function showReconnectNotice(message) {
-    let notice = document.getElementById('streamReconnectNotice');
+function showReconnectNotice(ctx, message) {
+    let notice = ctx.area.querySelector('.stream-reconnect-notice');
     if (!notice) {
         notice = document.createElement('div');
-        notice.id = 'streamReconnectNotice';
+        notice.className = 'stream-reconnect-notice';
         notice.style.cssText = 'padding: 8px 10px; margin-bottom: 10px; border-radius: 6px; background: #fff4e5; color: #8a5300; font-size: 14px;';
-        dom.resultArea.insertBefore(notice, dom.resultArea.firstChild);
+        ctx.area.insertBefore(notice, ctx.area.firstChild);
     }
     notice.textContent = message;
 }
 
-function clearReconnectNotice() {
-    document.getElementById('streamReconnectNotice')?.remove();
+function clearReconnectNotice(ctx) {
+    ctx.area.querySelector('.stream-reconnect-notice')?.remove();
 }
 
 /**
@@ -281,8 +345,9 @@ async function fetchRemainingTaskIds(taskIds) {
  * 戻り値: { outcome: 'completed' | 'cancelled' | 'disconnected' | 'busy', receivedEvents: number }
  * サーバから業務エラー（busy以外）が来た場合のみ例外を投げる。
  */
-async function runTaskStreamOnce(taskIds, saveScreenshot) {
-    activeTaskStreamAbortController = new AbortController();
+async function runTaskStreamOnce(taskIds, saveScreenshot, ctx) {
+    const abortController = new AbortController();
+    ctx.lanes.forEach(lane => { activeTaskStreamAbortControllers[lane] = abortController; });
     let receivedEvents = 0;
     let sawFinalStatus = false;
 
@@ -291,7 +356,7 @@ async function runTaskStreamOnce(taskIds, saveScreenshot) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ task_ids: taskIds, save_screenshot: saveScreenshot }),
-            signal: activeTaskStreamAbortController.signal,
+            signal: abortController.signal,
         });
 
         if (!response.body) throw new Error('Response body is missing');
@@ -338,7 +403,7 @@ async function runTaskStreamOnce(taskIds, saveScreenshot) {
                     sawFinalStatus = true;
                     continue;
                 }
-                handleStreamData(data);
+                handleStreamData(data, ctx);
             }
         }
 
@@ -349,7 +414,9 @@ async function runTaskStreamOnce(taskIds, saveScreenshot) {
         if (error instanceof TypeError) return { outcome: 'disconnected', receivedEvents };
         throw error;
     } finally {
-        activeTaskStreamAbortController = null;
+        ctx.lanes.forEach(lane => {
+            if (activeTaskStreamAbortControllers[lane] === abortController) activeTaskStreamAbortControllers[lane] = null;
+        });
     }
 }
 
@@ -358,17 +425,17 @@ async function runTaskStreamOnce(taskIds, saveScreenshot) {
  * サーバの履歴に未記録のタスク（＝未計測ぶん）だけを再開する（二重計測しない）。
  * ユーザーの明示中断（中断ボタン＝AbortController）は再接続しない。
  */
-async function processStream(taskIds, saveScreenshot = true) {
+async function processStream(taskIds, saveScreenshot = true, ctx) {
     if (taskIds.length === 0) return;
 
     let remaining = taskIds.slice();
     let attempt = 0;
 
     while (true) {
-        const { outcome, receivedEvents } = await runTaskStreamOnce(remaining, saveScreenshot);
+        const { outcome, receivedEvents } = await runTaskStreamOnce(remaining, saveScreenshot, ctx);
 
         if (outcome === 'completed' || outcome === 'cancelled') {
-            clearReconnectNotice();
+            clearReconnectNotice(ctx);
             return;
         }
 
@@ -377,48 +444,49 @@ async function processStream(taskIds, saveScreenshot = true) {
 
         attempt++;
         if (attempt > STREAM_RECONNECT_MAX_ATTEMPTS) {
-            clearReconnectNotice();
+            clearReconnectNotice(ctx);
             throw new Error(`接続が復旧しないため中止しました（再接続 ${STREAM_RECONNECT_MAX_ATTEMPTS} 回失敗）。未計測ぶんは再実行してください。`);
         }
 
         const delay = Math.min(STREAM_RECONNECT_BASE_DELAY_MS * (2 ** (attempt - 1)), STREAM_RECONNECT_MAX_DELAY_MS);
         const reason = outcome === 'busy' ? '前回の計測がサーバ側で終了処理中' : '接続が切れたため';
-        showReconnectNotice(`${reason}再接続中…（${attempt}/${STREAM_RECONNECT_MAX_ATTEMPTS}回目・${Math.round(delay / 1000)}秒後）`);
+        showReconnectNotice(ctx, `${reason}再接続中…（${attempt}/${STREAM_RECONNECT_MAX_ATTEMPTS}回目・${Math.round(delay / 1000)}秒後）`);
         await sleep(delay);
 
         const nextRemaining = await fetchRemainingTaskIds(remaining);
         if (nextRemaining === null) continue; // サーバに届かない＝まだ復旧していない。バックオフを続ける
         remaining = nextRemaining;
         if (remaining.length === 0) {
-            clearReconnectNotice();
+            clearReconnectNotice(ctx);
             return;
         }
-        showReconnectNotice(`接続を復旧しました。未計測の ${remaining.length} 件から再開します。`);
+        showReconnectNotice(ctx, `接続を復旧しました。未計測の ${remaining.length} 件から再開します。`);
     }
 }
 
-function handleStreamData(data) {
+function handleStreamData(data, ctx) {
+    const area = ctx.area;
     if (data.error) {
         const errorContainer = document.createElement('div');
         errorContainer.innerHTML = `<p style="color: red;">エラー: ${data.error}</p>`;
-        dom.resultArea.appendChild(errorContainer);
+        area.appendChild(errorContainer);
         throw new Error(data.error);
     }
 
     if (data.progress) {
         const { current, total, task } = data.progress;
         const taskName = getTaskDisplayName(task);
-        document.getElementById('overallStatus').textContent = `${current} / ${total} 件目: 「${taskName}」を計測中... `;
+        ctx.statusEl.textContent = `${current} / ${total} 件目: 「${taskName}」を計測中... `;
         
         const taskContainer = document.createElement('div');
         taskContainer.id = `task-container-${task.id}`;
         taskContainer.style.cssText = 'border-bottom: 1px solid #e5e5e7; padding-bottom: 15px; margin-bottom: 15px;';
         taskContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${taskName}」</h4><p>計測を開始します...</p>`;
-        dom.resultArea.appendChild(taskContainer);
+        area.appendChild(taskContainer);
     }
 
     if (data.status) {
-        const lastContainer = dom.resultArea.querySelector('div:last-of-type');
+        const lastContainer = area.querySelector(':scope > div:last-of-type');
         if (lastContainer) {
             lastContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${data.task_name}」</h4><p>${data.status}</p>`;
         }
@@ -430,7 +498,7 @@ function handleStreamData(data) {
         if (!taskContainer) {
             taskContainer = document.createElement('div');
             taskContainer.id = `task-container-${task_id}`;
-            dom.resultArea.appendChild(taskContainer);
+            area.appendChild(taskContainer);
         }
         const totalCountHtml = total_count !== undefined ? `<p style="font-size: 14px; color: #6c6c70;">検索結果総数: <strong>${total_count}</strong> 件</p>` : '';
         const resultMessageHtml = `<p style="margin: 0; font-size: 18px; font-weight: bold;"><span style="color: #007aff; font-size: 1.3em;">${rank}</span> 位</p>`;
@@ -469,6 +537,10 @@ export function updateUIForSearchType(activeType, autoTasks) {
         dom.salonNameFormGroup.style.display = 'none';
         fillUberFormFromTasks(autoTasks);
         renderUberEatsPanel();
+    }
+    // Uber Eatsの履歴パネルは Uber Eats タイプ表示中だけ（計測結果欄は両レーンとも残す）
+    if (document.getElementById('uberPanelArea') || activeType === 'ubereats') {
+        getUberPanelArea().style.display = activeType === 'ubereats' ? 'block' : 'none';
     }
 
     // コピー機能セクション
@@ -524,24 +596,26 @@ let uberHistoryCache = null;
  * @param {string|null} selectedKeyword - 表示するキーワード（未指定なら先頭）
  */
 async function renderUberEatsPanel(selectedKeyword = null) {
-    dom.resultArea.innerHTML = `<p style="color:#6c6c70;">Uber Eatsの計測履歴を読み込んでいます...</p>`;
+    const panelArea = getUberPanelArea();
+    panelArea.innerHTML = `<p style="color:#6c6c70;">Uber Eatsの計測履歴を読み込んでいます...</p>`;
     let model = null;
     try {
         if (!uberHistoryCache) uberHistoryCache = await fetchHistoryAPI();
         model = buildUberModel(uberHistoryCache);
     } catch (error) {
         console.error('Uber Eats履歴の取得に失敗しました:', error);
-        dom.resultArea.innerHTML = `<p style="color:#ff3b30;">Uber Eatsの計測履歴を取得できませんでした。</p>`;
+        panelArea.innerHTML = `<p style="color:#ff3b30;">Uber Eatsの計測履歴を取得できませんでした。</p>`;
         return;
     }
     if (!model) {
-        dom.resultArea.innerHTML = `<p style="color:#6c6c70;">Uber Eatsの計測履歴がまだありません。手動計測または自動計測を実行してください。</p>`;
+        panelArea.innerHTML = `<p style="color:#6c6c70;">Uber Eatsの計測履歴がまだありません。手動計測または自動計測を実行してください。</p>`;
         return;
     }
     drawUberEatsPanel(model, selectedKeyword);
 }
 
 function drawUberEatsPanel(model, selectedKeyword, selectedRankMode = 'raw') {
+    const panelArea = getUberPanelArea();
     const keyword = model.keywords.includes(selectedKeyword) ? selectedKeyword : model.keywords[0];
     // グラフの表示系列。既定は生順位。'food'＝小売店を除いた飲食店内の順位。
     const rankMode = selectedRankMode === 'food' ? 'food' : 'raw';
@@ -555,7 +629,7 @@ function drawUberEatsPanel(model, selectedKeyword, selectedRankMode = 'raw') {
     );
     const columns = Math.min(Math.max(Math.ceil(model.points.length / 2), 3), 6);
 
-    dom.resultArea.innerHTML = `
+    panelArea.innerHTML = `
         <div style="border: 1px solid #e5e5e7; border-radius: 10px; overflow: hidden; background: #fff;">
             <div style="padding: 16px 18px; border-bottom: 1px solid #e5e5e7; display: flex; justify-content: space-between; gap: 16px; align-items: flex-start;">
                 <div>
@@ -645,10 +719,10 @@ function drawUberEatsPanel(model, selectedKeyword, selectedRankMode = 'raw') {
             </div>
         </div>
     `;
-    dom.resultArea.querySelectorAll('.uber-keyword-button').forEach(button => {
+    panelArea.querySelectorAll('.uber-keyword-button').forEach(button => {
         button.addEventListener('click', () => drawUberEatsPanel(model, button.dataset.keyword, rankMode));
     });
-    dom.resultArea.querySelectorAll('.uber-rank-mode-button').forEach(button => {
+    panelArea.querySelectorAll('.uber-rank-mode-button').forEach(button => {
         button.addEventListener('click', () => drawUberEatsPanel(model, keyword, button.dataset.rankMode));
     });
 }
@@ -821,17 +895,34 @@ function uberPointRow(point, address, selectedRank, allRanks) {
  * 計測状態に応じてUIの有効/無効を切り替えます。
  * @param {boolean} measuring - 計測中かどうか
  */
-export function setMeasuringState(measuring, state) {
-    state.isMeasuring = measuring;
+export function setMeasuringState(lane, measuring, state) {
+    state.measuring[lane] = measuring;
+    if (!measuring) state.cancelRequested[lane] = false;
+    state.isMeasuring = Object.values(state.measuring).some(Boolean);
+    applyMeasuringUI(state);
+}
+
+/**
+ * いま表示中のタイプのレーンが計測中かどうかで、ボタンの有効/無効・文言を合わせます。
+ * 計測タイプの切り替えは止めない（Uber計測中にHPB・MEOへ切り替えて計測を始められるように）。
+ */
+export function applyMeasuringUI(state) {
+    const lane = laneOfType(getActiveSearchType());
+    const measuring = state.measuring[lane];
+    const cancelling = state.cancelRequested[lane];
     dom.checkRankButton.disabled = measuring;
+    dom.checkRankButton.textContent = measuring ? '計測中...' : '順位を計測';
     dom.manualTriggerButton.disabled = measuring;
+    dom.manualTriggerButton.textContent = measuring ? '実行中...' : '選択したタスクを実行';
     dom.stopMeasurementButton.style.display = measuring ? 'inline-block' : 'none';
-    dom.stopMeasurementButton.disabled = !measuring;
-    dom.searchTypeToggle.querySelectorAll('button').forEach(btn => btn.disabled = measuring);
-    dom.addAutoTaskButton.disabled = measuring;
-    document.getElementById('executeCopyButton').disabled = measuring;
-    document.getElementById('executeHpbNormalCopyButton').disabled = measuring;
-    document.getElementById('executeHpbSpecialCopyButton').disabled = measuring;
+    dom.stopMeasurementButton.disabled = !measuring || cancelling;
+    dom.stopMeasurementButton.textContent = cancelling ? '中断中...' : '中断';
+    // タスク定義の保存は HPB・MEO の計測終了時にも書き戻されるため、HPB・MEO計測中だけ止める
+    const hpbMeasuring = state.measuring[LANE_HPB];
+    dom.addAutoTaskButton.disabled = hpbMeasuring;
+    document.getElementById('executeCopyButton').disabled = hpbMeasuring;
+    document.getElementById('executeHpbNormalCopyButton').disabled = hpbMeasuring;
+    document.getElementById('executeHpbSpecialCopyButton').disabled = hpbMeasuring;
 }
 
 /**

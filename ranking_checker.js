@@ -4,7 +4,9 @@ import { fetchAutoTasks, fetchAndDisplayAutoHistory } from './history.js';
 document.addEventListener('DOMContentLoaded', async () => {
     // 状態管理オブジェクト
     const state = {
-        isMeasuring: false,
+        isMeasuring: false,                          // どちらかのレーンが計測中
+        measuring: { hpb: false, ubereats: false },  // レーン別の計測中（Uber Eats と HPB・MEO は並行可）
+        cancelRequested: { hpb: false, ubereats: false },
         autoTasks: []
     };
 

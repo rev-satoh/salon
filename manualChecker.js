@@ -4,10 +4,11 @@
 import * as dom from './dom.js';
 import { areas } from './config.js';
 import { saveManualHistoryAPI } from './api.js';
-import { setMeasuringState } from './ui.js';
+import { setMeasuringState, laneOfType, getLaneResultArea } from './ui.js';
 import { fetchAndDisplayAutoHistory } from './history.js';
 
-let activeManualEventSource = null;
+// 実行中の EventSource はレーンごと（Uber計測中にHPB・MEOを並行で走らせられるように）
+const activeManualEventSources = { hpb: null, ubereats: null };
 let activeManualAbortController = null;
 const UBER_EATS_MANUAL_WAIT_MS = 3000;
 
@@ -16,9 +17,13 @@ const UBER_EATS_MANUAL_WAIT_MS = 3000;
  * @param {object} state - アプリケーションの状態オブジェクト
  */
 export async function checkRank(state) {
-    state.cancelMeasurement = false;
     const salonName = dom.salonNameInput.value.trim();
     const activeSearchType = dom.searchTypeToggle.querySelector('.toggle-button.active').dataset.type;
+    const lane = laneOfType(activeSearchType);
+    if (state.measuring[lane]) return;
+    // 計測途中にタイプを切り替えても入力欄の値が変わらないよう、MEOの入力は開始時に確定させる
+    const googleSearchLocation = document.getElementById('searchLocationInput').value.trim();
+    const googleKeywordAtStart = document.getElementById('googleKeywordInput').value.trim();
 
     let serviceKeywords = [];
     let areaCodes = {};
@@ -77,18 +82,18 @@ export async function checkRank(state) {
         );
     }
 
-    setMeasuringState(true, state);
-    dom.checkRankButton.textContent = '計測中...';
-    dom.stopMeasurementButton.textContent = '中断';
-    dom.resultArea.innerHTML = '';
+    setMeasuringState(lane, true, state);
+    const isCancelled = () => state.cancelRequested[lane];
+    const resultArea = getLaneResultArea(lane);
+    resultArea.innerHTML = ''; // このレーンの結果欄だけクリア（もう片方の計測中の表示は残す）
 
     const startTime = performance.now();
     let timerInterval = null;
 
     const overallStatusContainer = document.createElement('div');
-    overallStatusContainer.id = 'overallStatus';
+    overallStatusContainer.className = 'overall-status';
     overallStatusContainer.style.cssText = 'padding: 10px; margin-bottom: 15px; border-bottom: 1px solid #ddd; font-weight: 500;';
-    dom.resultArea.appendChild(overallStatusContainer);
+    resultArea.appendChild(overallStatusContainer);
 
     timerInterval = setInterval(() => {
         const elapsedSeconds = Math.floor((performance.now() - startTime) / 1000);
@@ -102,15 +107,18 @@ export async function checkRank(state) {
         }
     }, 1000);
 
-    const stopHandler = () => stopManualMeasurement(state);
+    const stopHandler = (event) => {
+        if (event?.detail?.lane && event.detail.lane !== lane) return; // 別レーンの中断は無視
+        stopManualMeasurement(lane);
+    };
     window.addEventListener('manual-measurement-stop', stopHandler);
 
     for (const [index, serviceKeyword] of serviceKeywords.entries()) {
-        if (state.cancelMeasurement) break;
+        if (isCancelled()) break;
 
         const keywordResultContainer = document.createElement('div');
         keywordResultContainer.style.cssText = 'border-bottom: 1px solid #e5e5e7; padding-bottom: 15px; margin-bottom: 15px;';
-        dom.resultArea.appendChild(keywordResultContainer);
+        resultArea.appendChild(keywordResultContainer);
 
         let fullKeyword = '';
         let eventSourceUrl = '';
@@ -122,7 +130,7 @@ export async function checkRank(state) {
                 serviceKeyword, salonName, areaCodes: JSON.stringify(areaCodes)
             });
         } else if (activeSearchType === 'google') {
-            const searchLocation = document.getElementById('searchLocationInput').value.trim();
+            const searchLocation = googleSearchLocation;
             fullKeyword = `[${searchLocation}] ${serviceKeyword}`;
             eventSourceUrl = `/check-meo-ranking?` + new URLSearchParams({
                 keyword: serviceKeyword,
@@ -149,10 +157,10 @@ export async function checkRank(state) {
 
         await new Promise((resolve, reject) => {
             const eventSource = new EventSource(eventSourceUrl, { withCredentials: true });
-            activeManualEventSource = eventSource;
+            activeManualEventSources[lane] = eventSource;
 
             eventSource.onmessage = (event) => {
-                if (state.cancelMeasurement) {
+                if (isCancelled()) {
                     eventSource.close();
                     resolve();
                     return;
@@ -162,7 +170,7 @@ export async function checkRank(state) {
                 if (data.cancelled) {
                     keywordResultContainer.innerHTML = `<h4 style="margin-top:0; margin-bottom: 10px;">「${escapeHtml(fullKeyword)}」</h4><p style="color: #ff9500;">計測を中断しました。</p>`;
                     eventSource.close();
-                    state.cancelMeasurement = true;
+                    state.cancelRequested[lane] = true;
                     resolve();
                     return;
                 }
@@ -203,8 +211,8 @@ export async function checkRank(state) {
 
                             const mySalonRankItem = result.results.find(item => salonName && item.foundSalonName.toLowerCase().includes(salonName.toLowerCase()));
                             const finalRank = mySalonRankItem ? mySalonRankItem.rank : '圏外';
-                            const searchLocation = document.getElementById('searchLocationInput').value.trim();
-                            const googleKeyword = document.getElementById('googleKeywordInput').value.trim();
+                            const searchLocation = googleSearchLocation;
+                            const googleKeyword = googleKeywordAtStart;
                             if (result.rank === "エリア不一致") resultMessageHtml = `<p style="color: #ff9500;">検索地点と結果が一致しませんでした (エリア不一致)</p>`;
                             
                             const taskId = `[google]-${salonName}-${searchLocation}-${googleKeyword}`; 
@@ -260,7 +268,7 @@ export async function checkRank(state) {
                         manualUberTaskPayload = taskPayload;
                         saveManualHistoryAPI({ task: taskPayload, result: { rank: rankText, food_rank: foodRankText, screenshot_path: result.screenshot_path } });
                         if (result.stop_batch) {
-                            state.cancelMeasurement = true;
+                            state.cancelRequested[lane] = true;
                         }
                     } else { // Normal and Special
                         if (result.results && result.results.length > 0) {
@@ -311,7 +319,7 @@ export async function checkRank(state) {
             };
 
             eventSource.onerror = (err) => {
-                if (state.cancelMeasurement) {
+                if (isCancelled()) {
                     eventSource.close();
                     resolve();
                     return;
@@ -323,10 +331,10 @@ export async function checkRank(state) {
         }).catch(error => {
             console.error(`「${fullKeyword}」の計測中にエラーが発生しました:`, error);
         }).finally(() => {
-            activeManualEventSource = null;
+            activeManualEventSources[lane] = null;
         });
 
-        if (state.cancelMeasurement) break;
+        if (isCancelled()) break;
 
         if (activeSearchType === 'ubereats' && index < serviceKeywords.length - 1) {
             const waitSeconds = Math.round(UBER_EATS_MANUAL_WAIT_MS / 1000);
@@ -343,23 +351,18 @@ export async function checkRank(state) {
     const seconds = elapsedTotalSeconds % 60;
     const durationString = minutes > 0 ? `${minutes}分${seconds}秒` : `${seconds}秒`;
 
-    overallStatusContainer.textContent = state.cancelMeasurement
+    overallStatusContainer.textContent = isCancelled()
         ? `計測を中断しました。（所要時間: ${durationString}）`
         : `すべての計測が完了しました。（${serviceKeywords.length}件 / 所要時間: ${durationString}）`;
-    setMeasuringState(false, state);
-    dom.checkRankButton.textContent = '順位を計測';
-    dom.stopMeasurementButton.textContent = '中断';
+    setMeasuringState(lane, false, state);
     fetchAndDisplayAutoHistory();
 }
 
-function stopManualMeasurement(state) {
-    state.cancelMeasurement = true;
-    dom.stopMeasurementButton.textContent = '中断中...';
-    dom.stopMeasurementButton.disabled = true;
-    if (activeManualEventSource) {
-        activeManualEventSource.close();
+// 中断フラグ・サーバへの中断要求は中断ボタン側（ui.js）がレーン指定で出す。ここは接続を閉じるだけ。
+function stopManualMeasurement(lane) {
+    if (activeManualEventSources[lane]) {
+        activeManualEventSources[lane].close();
     }
-    fetch('/api/cancel-measurement', { method: 'POST' }).catch(() => {});
     if (activeManualAbortController) {
         activeManualAbortController.abort();
     }

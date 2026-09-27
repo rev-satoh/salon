@@ -51,13 +51,76 @@ if not config.GOOGLE_API_KEY:
 SALON_BOARD_SETTINGS_FILE = 'salon_board_settings.json'
 # --- グローバル変数と設定 ---
 
-# --- 計測ジョブの同時実行を防ぐためのロック ---
-measurement_lock = threading.Lock()
+# --- 計測ジョブの同時実行を防ぐためのロック（2レーン） ---
+# 🔴 Uber Eats とそれ以外（HPB通常・特集・MEO）はブラウザが別
+#    （Uber＝専用Chrome 9225 にアタッチ／HPB・MEO＝都度起動のヘッドレスChrome）なので、
+#    ロックを2本に分けて並行計測できるようにする（2026-09-27 社長決定）。
+#    同じレーンの中は従来どおり1本ずつ（取れなければ busy で弾く）。
+LANE_HPB = 'hpb'          # HPB通常・HPB特集・MEO
+LANE_UBEREATS = 'ubereats'
+measurement_lock = threading.Lock()            # HPB・特集・MEO レーン
+ubereats_measurement_lock = threading.Lock()   # Uber Eats レーン
+measurement_locks = {LANE_HPB: measurement_lock, LANE_UBEREATS: ubereats_measurement_lock}
+LANE_LABELS = {LANE_HPB: 'HPB・MEO', LANE_UBEREATS: 'Uber Eats'}
+# 手動計測はキーワード1件ごとに別リクエスト（間に数秒の待ち）で、その隙間はロックが空く。
+# 最後の計測が終わってから この秒数は「計測中」とみなし、live_reload の入れ替えを止める。
+MEASUREMENT_IDLE_GRACE_SECONDS = 60
+_last_measurement_finished_at = 0.0
+
+
+def lane_of_task_type(task_type):
+    return LANE_UBEREATS if task_type == 'ubereats' else LANE_HPB
+
+
+def release_measurement(lane):
+    """レーンのロックを外し、最終計測時刻を記録する（live_reload の猶予判定に使う）。"""
+    global _last_measurement_finished_at
+    _last_measurement_finished_at = time.monotonic()
+    measurement_locks[lane].release()
+
+
+def acquire_measurement_lanes(lanes):
+    """必要なレーンのロックを全部取る。1本でも取れなければ取った分を戻して、使用中のレーンを返す。"""
+    acquired = []
+    for lane in sorted(lanes):
+        if measurement_locks[lane].acquire(blocking=False):
+            acquired.append(lane)
+        else:
+            for got in acquired:
+                release_measurement(got)
+            return lane
+    return None
+
+
+def with_app_context(generator_func):
+    """SSEのジェネレータをアプリコンテキスト内で回す。
+    🔴 ストリームはリクエスト処理が戻った後に回るため、そのままだとスクレイパー内の
+       current_app.logger が "Working outside of application context" で落ちる
+       （2026-09-27 手動HPB計測で実測）。全計測ストリームはこれを通す。"""
+    def wrapped():
+        with app.app_context():
+            yield from generator_func()
+    return wrapped()
+
+
+def busy_message(lane):
+    return f"現在、{LANE_LABELS[lane]}の計測が実行中です。しばらく待ってから再度お試しください。"
+
+
+def any_measurement_running():
+    return any(lock.locked() for lock in measurement_locks.values())
+
+
+def measurement_reload_blocked():
+    """live_reload 用：どちらかのレーンが計測中、または最後の計測から猶予時間内なら入れ替えない。"""
+    if any_measurement_running():
+        return True
+    return (time.monotonic() - _last_measurement_finished_at) < MEASUREMENT_IDLE_GRACE_SECONDS
 
 # 🔴 コードが変わったら自分で入れ替わる（共通部品＝全常駐サーバで同じ1本を使う）。
 #    背景＝常駐プロセスは起動時のコードを抱え、直しても画面の再読み込みでは直らない
 #    （2026-09-03・管理PLで発生）。ツールごとに別方式を作らない。
-#    計測の実行中（measurement_lock）は入れ替えない＝走っているSeleniumを殺さない。
+#    計測の実行中（どちらかのレーンのロック使用中＋最終計測後60秒）は入れ替えない＝走っているSeleniumを殺さない。
 #    live_reload はMacローカル開発専用の共通部品（companyリポジトリ内）。Render等の
 #    サーバ環境には存在しないため、「使えるときだけ有効化する」（2026-09-21）。
 import sys as _sys
@@ -78,11 +141,14 @@ try:
 
     LiveReload(_Path(__file__).resolve().parent, title="順位チェッカー",
                entry=_Path(__file__).resolve(),
-               busy=lambda: measurement_lock.locked()).install_flask(app)
+               busy=measurement_reload_blocked).install_flask(app)
 except (ImportError, FileNotFoundError, OSError) as _live_reload_error:
     # 本番（Render）には共通部品が無い＝自動リロード無しで通常起動する。
     app.logger.info("live_reload を無効化して起動します: %s", _live_reload_error)
-measurement_cancel_event = threading.Event()
+# 中断フラグもレーンごと（HPBの中断ボタンでUber計測まで止めない）
+measurement_cancel_event = threading.Event()            # HPB・特集・MEO レーン
+ubereats_cancel_event = threading.Event()               # Uber Eats レーン
+cancel_events = {LANE_HPB: measurement_cancel_event, LANE_UBEREATS: ubereats_cancel_event}
 
 # --- ヘルパー関数 (ファイルの読み書き) ---
 def load_json_file(filename):
@@ -130,8 +196,13 @@ def serve_onedrive_screenshots(filename):
 
 @app.route('/api/cancel-measurement', methods=['POST'])
 def cancel_measurement_api():
-    measurement_cancel_event.set()
-    return jsonify({"status": "cancel_requested"}), 200
+    # lane 指定（'hpb' / 'ubereats'）があればそのレーンだけ中断。無ければ両方（旧画面互換）。
+    data = request.get_json(silent=True) or {}
+    lane = data.get('lane') or request.args.get('lane')
+    lanes = [lane] if lane in cancel_events else list(cancel_events)
+    for target in lanes:
+        cancel_events[target].set()
+    return jsonify({"status": "cancel_requested", "lanes": lanes}), 200
 
 @app.route('/check-ranking', methods=['GET', 'POST'])
 def check_ranking_api():
@@ -155,7 +226,7 @@ def check_ranking_api():
     app.logger.info(f"check_ranking_api called. save_screenshot={save_screenshot}")
 
     if not measurement_lock.acquire(blocking=False):
-        return jsonify({"error": "現在、他の計測タスクが実行中です。しばらく待ってから再度お試しください。"}), 429 # Too Many Requests
+        return jsonify({"error": busy_message(LANE_HPB), "busy": True, "lane": LANE_HPB}), 429
     measurement_cancel_event.clear()
 
     def generate_stream():
@@ -179,10 +250,10 @@ def check_ranking_api():
                 app.logger.error(f"手動計測中にエラー: {e}\n{traceback.format_exc()}")
                 yield sse_format({"error": f"計測中にエラーが発生しました: {str(e)}"})
         finally:
-            measurement_lock.release() # ストリームが終了したら必ずロックを解放
+            release_measurement(LANE_HPB) # ストリームが終了したら必ずロックを解放
 
     # ストリーミングレスポンスを返す
-    return app.response_class(generate_stream(), mimetype='text/event-stream')
+    return app.response_class(with_app_context(generate_stream), mimetype='text/event-stream')
 
 @app.route('/check-meo-ranking', methods=['GET'])
 def check_meo_ranking_api():
@@ -190,7 +261,7 @@ def check_meo_ranking_api():
     location = request.args.get('location')
 
     if not measurement_lock.acquire(blocking=False):
-        return jsonify({"error": "現在、他の計測タスクが実行中です。しばらく待ってから再度お試しください。"}), 429
+        return jsonify({"error": busy_message(LANE_HPB), "busy": True, "lane": LANE_HPB}), 429
     measurement_cancel_event.clear()
 
     def generate_stream():
@@ -206,9 +277,9 @@ def check_meo_ranking_api():
                 app.logger.error(f"MEO計測でのWebDriver生成中にエラー: {e}")
                 yield sse_format({"error": "ブラウザの起動に失敗しました。"})
         finally:
-            measurement_lock.release()
+            release_measurement(LANE_HPB)
 
-    return app.response_class(generate_stream(), mimetype='text/event-stream')
+    return app.response_class(with_app_context(generate_stream), mimetype='text/event-stream')
 
 @app.route('/check-ubereats-ranking', methods=['GET'])
 def check_ubereats_ranking_api():
@@ -219,9 +290,9 @@ def check_ubereats_ranking_api():
     if not store_name or not keyword or not address:
         return jsonify({"error": "店舗名、検索キーワード、配達先住所が必要です。"}), 400
 
-    if not measurement_lock.acquire(blocking=False):
-        return jsonify({"error": "現在、他の計測タスクが実行中です。しばらく待ってから再度お試しください。"}), 429
-    measurement_cancel_event.clear()
+    if not ubereats_measurement_lock.acquire(blocking=False):
+        return jsonify({"error": busy_message(LANE_UBEREATS), "busy": True, "lane": LANE_UBEREATS}), 429
+    ubereats_cancel_event.clear()
 
     def generate_stream():
         try:
@@ -232,7 +303,7 @@ def check_ubereats_ranking_api():
                     user_data_dir=config.UBER_EATS_CHROME_PROFILE_DIR,
                 ) as driver:
                     for message in check_ubereats_ranking(driver, keyword, store_name, address):
-                        if measurement_cancel_event.is_set():
+                        if ubereats_cancel_event.is_set():
                             yield sse_format({"cancelled": True, "status": "計測を中断しました。"})
                             return
                         yield message
@@ -240,9 +311,9 @@ def check_ubereats_ranking_api():
             app.logger.error(f"Uber Eats計測でのWebDriver生成中にエラー: {e}\n{traceback.format_exc()}")
             yield sse_format({"error": f"ブラウザの起動またはUber Eats計測に失敗しました: {str(e)}"})
         finally:
-            measurement_lock.release()
+            release_measurement(LANE_UBEREATS)
 
-    return app.response_class(generate_stream(), mimetype='text/event-stream')
+    return app.response_class(with_app_context(generate_stream), mimetype='text/event-stream')
 
 # --- 特集ページ一括計測API ---
 @app.route('/api/run-feature-page-tasks', methods=['GET'])
@@ -253,7 +324,7 @@ def run_feature_page_tasks_api():
     salon_names = json.loads(salon_names_json)
 
     if not measurement_lock.acquire(blocking=False):
-        return jsonify({"error": "現在、他の計測タスクが実行中です。しばらく待ってから再度お試しください。"}), 429
+        return jsonify({"error": busy_message(LANE_HPB), "busy": True, "lane": LANE_HPB}), 429
 
     def generate_stream():
         try:
@@ -265,9 +336,9 @@ def run_feature_page_tasks_api():
                 app.logger.error(f"特集ページ一括計測でのWebDriver生成中にエラー: {e}")
                 yield sse_format({"error": "ブラウザの起動に失敗しました。"})
         finally:
-            measurement_lock.release()
+            release_measurement(LANE_HPB)
 
-    return app.response_class(generate_stream(), mimetype='text/event-stream')
+    return app.response_class(with_app_context(generate_stream), mimetype='text/event-stream')
 
 # --- 特集ページ順位計測API ---
 @app.route('/check-feature-page-ranking', methods=['GET'])
@@ -276,7 +347,7 @@ def check_feature_page_ranking_api():
     salon_name = request.args.get('salonName')
 
     if not measurement_lock.acquire(blocking=False):
-        return jsonify({"error": "現在、他の計測タスクが実行中です。しばらく待ってから再度お試しください。"}), 429
+        return jsonify({"error": busy_message(LANE_HPB), "busy": True, "lane": LANE_HPB}), 429
 
     def generate_stream():
         try:
@@ -289,9 +360,9 @@ def check_feature_page_ranking_api():
                 app.logger.error(f"特集ページ計測でのWebDriver生成中にエラー: {e}")
                 yield sse_format({"error": "ブラウザの起動に失敗しました。"})
         finally:
-            measurement_lock.release()
+            release_measurement(LANE_HPB)
 
-    return app.response_class(generate_stream(), mimetype='text/event-stream')
+    return app.response_class(with_app_context(generate_stream), mimetype='text/event-stream')
 
 
 @app.route('/api/auto-tasks', methods=['GET', 'POST'])
@@ -403,7 +474,8 @@ def measured_today_api():
         "date": today,
         "completed": completed,
         "remaining": remaining,
-        "measuring": measurement_lock.locked(),
+        "measuring": any_measurement_running(),
+        "measuring_lanes": {lane: lock.locked() for lane, lock in measurement_locks.items()},
     })
 
 
@@ -427,32 +499,47 @@ def run_tasks_manually():
 
     app.logger.info(f"run_tasks_manually called. save_screenshot={save_screenshot}")
 
-    # --- 修正点: ストリーム開始前にロックを取得 ---
-    if not measurement_lock.acquire(blocking=False):
+    # --- ストリーム開始前に、選ばれたタスクの種類に必要なレーンのロックを全部取る ---
+    #     （Uberだけ→Uberレーン／HPB・MEOだけ→HPBレーン／混在→両方。1本でも使用中なら busy）
+    lanes = lanes_for_task_ids(task_ids)
+    busy_lane = acquire_measurement_lanes(lanes)
+    if busy_lane:
         # すぐにエラーレスポンスを返すためのダミーのストリーム
         def error_stream():
             yield sse_format({
-                "error": "現在、他の計測タスクが実行中です。しばらく待ってから再度お試しください。",
+                "error": busy_message(busy_lane),
                 "busy": True,
+                "lane": busy_lane,
             })
         return app.response_class(error_stream(), mimetype='text/event-stream')
-    measurement_cancel_event.clear()
+    held = set(lanes)
+    for lane in lanes:
+        cancel_events[lane].clear()
+
+    def cancelled():
+        return any(cancel_events[lane].is_set() for lane in held)
+
+    def release_hpb_early():
+        # 混在実行で HPB・MEO 分が終わったら、Uber 分の実行中に HPB レーンを空ける
+        if LANE_HPB in held:
+            held.discard(LANE_HPB)
+            release_measurement(LANE_HPB)
 
     def generate_stream():
         try:
             with app.app_context():
                 # run_scheduled_check と同様のロジックだが、進捗をyieldで返す
                 try:
-                    for message in run_scheduled_check(task_ids_to_run=task_ids, stream_progress=True, save_screenshot=save_screenshot):
-                        if measurement_cancel_event.is_set():
+                    for message in run_scheduled_check(task_ids_to_run=task_ids, stream_progress=True, save_screenshot=save_screenshot, on_hpb_done=release_hpb_early):
+                        if cancelled():
                             yield sse_format({"cancelled": True, "status": "計測を中断しました。"})
                             return
                         yield message
                 except TypeError as e:
                     if "unexpected keyword argument 'save_screenshot'" in str(e):
                         app.logger.warning("run_scheduled_checkはsave_screenshot引数をサポートしていません。引数なしで実行します。")
-                        for message in run_scheduled_check(task_ids_to_run=task_ids, stream_progress=True):
-                            if measurement_cancel_event.is_set():
+                        for message in run_scheduled_check(task_ids_to_run=task_ids, stream_progress=True, on_hpb_done=release_hpb_early):
+                            if cancelled():
                                 yield sse_format({"cancelled": True, "status": "計測を中断しました。"})
                                 return
                             yield message
@@ -462,27 +549,43 @@ def run_tasks_manually():
             app.logger.error(f"run_tasks_manually error: {e}\n{traceback.format_exc()}")
             yield sse_format({"error": f"システムエラーが発生しました: {str(e)}"})
         finally:
-            measurement_lock.release() # ストリームが終了したら必ずロックを解放
+            for lane in list(held):
+                release_measurement(lane) # ストリームが終了したら必ずロックを解放
 
-    return app.response_class(generate_stream(), mimetype='text/event-stream')
+    return app.response_class(with_app_context(generate_stream), mimetype='text/event-stream')
+
+
+def lanes_for_task_ids(task_ids):
+    """実行対象タスクの種類から、必要なレーンの集合を返す（task_ids が空＝全タスク）。"""
+    all_tasks = load_json_file(config.TASKS_FILE)
+    if task_ids:
+        wanted = set(task_ids)
+        all_tasks = [t for t in all_tasks if t.get('id') in wanted]
+    lanes = {lane_of_task_type(t.get('type', 'normal')) for t in all_tasks}
+    return lanes or {LANE_HPB}
+
+
 @app.route('/api/run-auto-check-now', methods=['POST'])
 def run_auto_check_now_api():
     """【旧API・互換性のため残置】手動で自動計測ジョブをトリガーするAPI"""
     data = request.get_json()
     task_ids = data.get('task_ids') if data else None
 
-    # --- ロックの取得を試みる ---
-    if not measurement_lock.acquire(blocking=False):
-        return jsonify({"error": "現在、他の計測タスクが実行中です。しばらく待ってから再度お試しください。"}), 429
+    # --- 必要なレーンのロックを全部取る ---
+    lanes = lanes_for_task_ids(task_ids)
+    busy_lane = acquire_measurement_lanes(lanes)
+    if busy_lane:
+        return jsonify({"error": busy_message(busy_lane), "busy": True, "lane": busy_lane}), 429
 
     try:
         app.logger.info("手動での自動計測ジョブを開始します。")
         # run_scheduled_checkはジェネレータなので、ループで回して実行させる
         for _ in run_scheduled_check(task_ids_to_run=task_ids):
             pass
-        return jsonify({"message": f"{len(task_ids)}件のタスクを実行しました。ページをリロードして結果を確認してください。"}), 200
+        return jsonify({"message": f"{len(task_ids or [])}件のタスクを実行しました。ページをリロードして結果を確認してください。"}), 200
     finally:
-        measurement_lock.release()
+        for lane in lanes:
+            release_measurement(lane)
 
 @app.route('/download_excel', methods=['POST'])
 def download_excel():
@@ -544,7 +647,7 @@ def post_blog_api():
         return jsonify({"status": "error", "message": "必須項目（店舗ID, タイトル, 本文, カテゴリ）が不足しています。"}), 400
 
     # 順位チェック実行中の警告ログ
-    if measurement_lock.locked():
+    if any_measurement_running():
         app.logger.warning("現在、順位チェック等の計測タスクが実行中です。PCの負荷が高まり、ブログ投稿処理が遅延またはタイムアウトする可能性があります。")
 
     # 画像ファイルがある場合、一時ファイルとして保存
@@ -596,16 +699,23 @@ scheduler = BackgroundScheduler(daemon=True)
 
 def scheduled_job_wrapper():
     """スケジューラから呼び出されるラッパー関数"""
-    if not measurement_lock.acquire(blocking=False):
-        current_app.logger.warning("自動計測ジョブを開始しようとしましたが、既に別の計測が実行中のためスキップします。")
+    # レーンごとに取れた分だけ実行する（Uber手動計測中でも HPB・MEO の定時計測は走らせる）。
+    lanes = set()
+    for lane in (LANE_HPB, LANE_UBEREATS):
+        if measurement_locks[lane].acquire(blocking=False):
+            lanes.add(lane)
+        else:
+            app.logger.warning(f"自動計測ジョブ：{LANE_LABELS[lane]}の計測が実行中のため、{LANE_LABELS[lane]}分はスキップします。")
+    if not lanes:
         return
     with app.app_context():
         try:
             # run_scheduled_checkはジェネレータなので、ループで回して実行させる
-            for _ in run_scheduled_check():
+            for _ in run_scheduled_check(lanes=lanes):
                 pass
         finally:
-            measurement_lock.release()
+            for lane in lanes:
+                release_measurement(lane)
 
 def load_scheduler_config():
     """スケジューラ設定を読み込む。なければデフォルト値を返す"""
