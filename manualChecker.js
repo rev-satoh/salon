@@ -4,11 +4,12 @@
 import * as dom from './dom.js';
 import { areas } from './config.js';
 import { saveManualHistoryAPI } from './api.js';
-import { setMeasuringState, laneOfType, getLaneResultArea, LANES } from './ui.js';
+import { setMeasuringState, laneOfType, getLaneResultArea } from './ui.js';
 import { fetchAndDisplayAutoHistory } from './history.js';
 
 // 実行中の EventSource はレーンごと（別レーンの計測を並行で走らせられるように）
-const activeManualEventSources = Object.fromEntries(Object.keys(LANES).map(lane => [lane, null]));
+// 🔴 ui.js と循環importのため、読み込み時に ui.js の値（LANES 等）を参照しない＝空で始めて使う時にキーを作る
+const activeManualEventSources = {};
 let activeManualAbortController = null;
 const UBER_EATS_MANUAL_WAIT_MS = 3000;
 
