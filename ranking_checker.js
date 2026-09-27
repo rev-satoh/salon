@@ -1,12 +1,12 @@
-import { initializeUI, updateUIForSearchType, renderAutoTasks } from './ui.js';
+import { initializeUI, updateUIForSearchType, renderAutoTasks, laneFlags } from './ui.js';
 import { fetchAutoTasks, fetchAndDisplayAutoHistory } from './history.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     // 状態管理オブジェクト
     const state = {
         isMeasuring: false,                          // どちらかのレーンが計測中
-        measuring: { hpb: false, ubereats: false },  // レーン別の計測中（Uber Eats と HPB・MEO は並行可）
-        cancelRequested: { hpb: false, ubereats: false },
+        measuring: laneFlags(),        // レーン別の計測中（レーンは ui.js の LANES。別レーンは並行可）
+        cancelRequested: laneFlags(),
         autoTasks: []
     };
 

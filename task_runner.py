@@ -297,31 +297,49 @@ def _run_ubereats_tasks(driver, tasks, history, history_filename, today, stream_
             time.sleep(max(config.UBER_EATS_TASK_WAIT_SECONDS, random.uniform(config.TASK_WAIT_TIME_MIN, config.TASK_WAIT_TIME_MAX)))
     return job_counter
 
-def _save_hpb_results(all_tasks, history_normal, history_special, history_meo):
-    """HPB通常・特集・MEO の履歴と、タスク定義（特集ページ名の更新を含む）を保存する。"""
+# --- 計測レーンの表（正本・1か所） -------------------------------------------
+# レーン＝同時に走らせてよい計測の単位。app.py はこの表からロック・中断フラグを作り、
+# 画面（ui.js の LANE_OF_TYPE）も同じ区分で計測中の状態・結果欄を分ける。
+#   types        … このレーンで計測するタスク種別（auto_tasks.json の type）
+#   history_keys … このレーンが書き戻す履歴ファイル（config.HISTORY_FILES のキー）
+#   saves_tasks  … auto_tasks.json を書き戻すか（HPB通常の areaName 補完・特集ページ名の更新があるため hpb だけ）
+# 表に無い種別（seo 等）は DEFAULT_LANE で扱う（従来どおり HPB通常の経路で計測される）。
+LANES = {
+    'hpb': {'label': 'HPB（通常・特集）', 'types': ('normal', 'special'), 'history_keys': ('normal', 'special'), 'saves_tasks': True},
+    'meo': {'label': 'MEO', 'types': ('google',), 'history_keys': ('google',), 'saves_tasks': False},
+    'ubereats': {'label': 'Uber Eats', 'types': ('ubereats',), 'history_keys': ('ubereats',), 'saves_tasks': False},
+}
+DEFAULT_LANE = 'hpb'
+_LANE_BY_TYPE = {task_type: lane for lane, spec in LANES.items() for task_type in spec['types']}
+
+
+def lane_of_task_type(task_type):
+    return _LANE_BY_TYPE.get(task_type or 'normal', DEFAULT_LANE)
+
+
+def _save_lane_results(lane, all_tasks, histories):
+    """レーンが担当する履歴ファイル（とタスク定義）だけを、tasks.jsonの順序に並び替えて保存する。"""
     task_id_order = {task['id']: i for i, task in enumerate(all_tasks)}
-    for history in (history_normal, history_special, history_meo):
-        history.sort(key=lambda x: task_id_order.get(x['id'], float('inf')))
-    current_app.logger.info("HPB・MEO履歴をタスク定義ファイルの順序に並び替えて保存します。")
-    save_json_file(config.HISTORY_FILES['normal'], history_normal)
-    save_json_file(config.HISTORY_FILES['special'], history_special)
-    save_json_file(config.HISTORY_FILES['google'], history_meo)
-    save_json_file(config.TASKS_FILE, all_tasks)
+    for key in LANES[lane]['history_keys']:
+        histories[key].sort(key=lambda x: task_id_order.get(x['id'], float('inf')))
+        save_json_file(config.HISTORY_FILES[key], histories[key])
+    if LANES[lane]['saves_tasks']:
+        save_json_file(config.TASKS_FILE, all_tasks)
+    current_app.logger.info(f"{LANES[lane]['label']}の履歴を保存しました。")
 
 
-def run_scheduled_check(task_ids_to_run=None, stream_progress=False, save_screenshot=True, lanes=None, on_hpb_done=None):
+def run_scheduled_check(task_ids_to_run=None, stream_progress=False, save_screenshot=True, lanes=None, on_lane_done=None):
     """
     指定されたタスク、またはすべてのタスクを実行し、結果を履歴ファイルに保存する
     :param task_ids_to_run: 実行するタスクIDのリスト。Noneの場合は全タスクを実行。
-    :param lanes: 実行するレーンの集合（'hpb'＝HPB通常・特集・MEO／'ubereats'）。Noneなら両方。
-                  呼び出し側が取れたロックのレーンだけを渡す（app.py の2レーンロック）。
-    :param on_hpb_done: HPB・MEO 分が終わった時に呼ぶ関数（混在実行でHPBレーンのロックを先に返すため）。
+    :param lanes: 実行するレーンの集合（LANES のキー）。Noneなら全レーン。
+                  呼び出し側が取れたロックのレーンだけを渡す（app.py のレーン別ロック）。
+    :param on_lane_done: レーン1本分が終わるたびに lane を渡して呼ぶ関数（混在実行でロックを先に返すため）。
     🔴 履歴・タスク定義の保存は「このジョブで実行したレーンのファイルだけ」。
-       もう一方のレーンは並行して計測・保存している可能性があり、ここで読み込み時点の
+       他のレーンは並行して計測・保存している可能性があり、ここで読み込み時点の
        古い内容を書き戻すとその結果を消してしまうため。
     """
-    run_hpb = lanes is None or 'hpb' in lanes
-    run_ubereats = lanes is None or 'ubereats' in lanes
+    lanes_to_run = set(LANES) if lanes is None else set(lanes)
     current_app.logger.info("--- 自動計測ジョブを開始します ---")
     all_tasks = load_json_file(config.TASKS_FILE)
 
@@ -340,10 +358,7 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False, save_screen
         current_app.logger.info("スケジュールされた全タスクを実行します。")
         tasks_to_run = all_tasks
 
-    history_normal = load_json_file(config.HISTORY_FILES['normal'])
-    history_special = load_json_file(config.HISTORY_FILES['special'])
-    history_meo = load_json_file(config.HISTORY_FILES['google'])
-    history_ubereats = load_json_file(config.HISTORY_FILES['ubereats'])
+    histories = {key: load_json_file(filename) for key, filename in config.HISTORY_FILES.items()}
     today = datetime.date.today().strftime('%Y/%m/%d')
 
     normal_tasks = []
@@ -351,76 +366,66 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False, save_screen
     meo_tasks_grouped = {} # MEOタスクをグループ化するための辞書
     ubereats_tasks = []
     for task in tasks_to_run:
+        if lane_of_task_type(task.get('type', 'normal')) not in lanes_to_run:
+            continue
         task_type = task.get('type', 'normal')
         if task_type == 'special':
-            url = task['featurePageUrl']
-            if url not in special_tasks_grouped_by_url:
-                special_tasks_grouped_by_url[url] = []
-            special_tasks_grouped_by_url[url].append(task)
+            special_tasks_grouped_by_url.setdefault(task['featurePageUrl'], []).append(task)
         elif task_type == 'google':
-            group_key = (task.get('searchLocation'), task.get('keyword'))
-            if group_key not in meo_tasks_grouped:
-                meo_tasks_grouped[group_key] = []
-            meo_tasks_grouped[group_key].append(task)
+            meo_tasks_grouped.setdefault((task.get('searchLocation'), task.get('keyword')), []).append(task)
         elif task_type == 'ubereats':
             ubereats_tasks.append(task)
         else:
             normal_tasks.append(task)
 
-    if not run_hpb:
-        normal_tasks, special_tasks_grouped_by_url, meo_tasks_grouped = [], {}, {}
-    if not run_ubereats:
-        ubereats_tasks = []
-    ran_hpb = bool(normal_tasks or special_tasks_grouped_by_url or meo_tasks_grouped)
-    ran_ubereats = bool(ubereats_tasks)
+    jobs_by_lane = {
+        'hpb': len(normal_tasks) + len(special_tasks_grouped_by_url),
+        'meo': len(meo_tasks_grouped),
+        'ubereats': len(ubereats_tasks),
+    }
+    total_job_count = sum(jobs_by_lane.values())
+    progress = {'done': 0}
 
-    total_job_count = len(normal_tasks) + len(special_tasks_grouped_by_url) + len(meo_tasks_grouped) + len(ubereats_tasks)
-    job_counter = 0
+    def run_hpb():
+        with get_webdriver(is_seo=False) as driver:
+            yield from _run_normal_tasks(driver, normal_tasks, histories['normal'], config.HISTORY_FILES['normal'], today, stream_progress, progress['done'], total_job_count, save_screenshot=save_screenshot)
+            yield from _run_special_tasks(driver, special_tasks_grouped_by_url, histories['special'], config.HISTORY_FILES['special'], all_tasks, today, stream_progress, progress['done'] + len(normal_tasks), total_job_count, save_screenshot=save_screenshot)
+
+    def run_meo():
+        with get_webdriver(is_seo=False) as driver:
+            yield from _run_meo_tasks(driver, meo_tasks_grouped, histories['google'], config.HISTORY_FILES['google'], today, stream_progress, progress['done'], total_job_count, save_screenshot=save_screenshot)
+
+    def run_ubereats():
+        with get_attached_chrome(
+            port=config.UBER_EATS_REMOTE_DEBUGGING_PORT,
+            user_data_dir=config.UBER_EATS_CHROME_PROFILE_DIR,
+        ) as uber_driver:
+            yield from _run_ubereats_tasks(uber_driver, ubereats_tasks, histories['ubereats'], config.HISTORY_FILES['ubereats'], today, stream_progress, progress['done'], total_job_count, save_screenshot=save_screenshot)
+
+    runners = {'hpb': run_hpb, 'meo': run_meo, 'ubereats': run_ubereats}
+    unsaved = set()  # 実行を始めたが、まだ保存していないレーン（途中の例外に備える）
 
     try:
-        # --- HPB通常, 特集, MEOタスクの処理 ---
-        if normal_tasks or special_tasks_grouped_by_url or meo_tasks_grouped:
-            with get_webdriver(is_seo=False) as driver:
-                # HPB通常タスク
-                yield from _run_normal_tasks(driver, normal_tasks, history_normal, config.HISTORY_FILES['normal'], today, stream_progress, job_counter, total_job_count, save_screenshot=save_screenshot)
-                job_counter = len(normal_tasks)
-
-                # HPB特集タスク
-                yield from _run_special_tasks(driver, special_tasks_grouped_by_url, history_special, config.HISTORY_FILES['special'], all_tasks, today, stream_progress, job_counter, total_job_count, save_screenshot=save_screenshot)
-                job_counter += len(special_tasks_grouped_by_url)
-
-                # MEOタスク
-                yield from _run_meo_tasks(driver, meo_tasks_grouped, history_meo, config.HISTORY_FILES['google'], today, stream_progress, job_counter, total_job_count, save_screenshot=save_screenshot)
-                job_counter += len(meo_tasks_grouped)
-
-            # HPB・MEO 分の履歴とタスク定義（特集名の更新あり）をここで確定し、HPBレーンを空ける
-            _save_hpb_results(all_tasks, history_normal, history_special, history_meo)
-            ran_hpb = False
-        if on_hpb_done:
-            on_hpb_done()
-
-        # Uber Eatsタスク
-        if ubereats_tasks:
-            with get_attached_chrome(
-                port=config.UBER_EATS_REMOTE_DEBUGGING_PORT,
-                user_data_dir=config.UBER_EATS_CHROME_PROFILE_DIR,
-            ) as uber_driver:
-                yield from _run_ubereats_tasks(uber_driver, ubereats_tasks, history_ubereats, config.HISTORY_FILES['ubereats'], today, stream_progress, job_counter, total_job_count, save_screenshot=save_screenshot)
-                job_counter += len(ubereats_tasks)
+        for lane in LANES:
+            if lane not in lanes_to_run:
+                continue
+            if jobs_by_lane[lane]:
+                unsaved.add(lane)
+                yield from runners[lane]()
+                progress['done'] += jobs_by_lane[lane]
+                _save_lane_results(lane, all_tasks, histories)
+                unsaved.discard(lane)
+            if on_lane_done:
+                on_lane_done(lane)
 
     except Exception as e:
         current_app.logger.exception("自動計測ジョブ全体で予期せぬエラーが発生しました。")
         if stream_progress:
             yield sse_format({"error": f"計測ジョブ全体で予期せぬエラーが発生しました: {e}"})
     finally:
-        # 実行したレーンのファイルだけを、tasks.jsonの順序に並び替えて保存する
-        if ran_hpb:  # HPB・MEO 分が途中の例外で抜けた場合
-            _save_hpb_results(all_tasks, history_normal, history_special, history_meo)
-        if ran_ubereats:
-            task_id_order = {task['id']: i for i, task in enumerate(all_tasks)}
-            history_ubereats.sort(key=lambda x: task_id_order.get(x['id'], float('inf')))
-            current_app.logger.info("Uber Eats履歴をタスク定義ファイルの順序に並び替えて保存します。")
-            save_json_file(config.HISTORY_FILES['ubereats'], history_ubereats)
+        # 途中で抜けたレーンの分も、そのレーンのファイルだけを保存する
+        for lane in list(unsaved):
+            _save_lane_results(lane, all_tasks, histories)
 
         if stream_progress:
             yield sse_format({"final_status": f"すべての計測が完了しました。（{total_job_count}件）"})

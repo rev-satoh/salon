@@ -32,7 +32,7 @@
 ## データフロー & アーキテクチャ
 1.  **API通信**:
     - 通常のREST API (`/api/*`) と、長時間処理用の SSE ストリーミング (`/check-ranking` 等) を併用。
-    - 排他制御: 計測レーンごとの `threading.Lock`（Uber Eats／HPB・MEO の2本）。同じレーンの同時実行は429（`busy: true`・`lane`）で弾く。詳細は下記「並行計測のルール」。
+    - 排他制御: 計測レーンごとの `threading.Lock`（HPB（通常・特集）／MEO／Uber Eats の3本）。同じレーンの同時実行は429（`busy: true`・`lane`）で弾く。詳細は下記「並行計測のルール」。
     - **タスク実行**: 計測ロジックはジェネレータ関数として実装され、SSEで進捗を逐次返却する設計。バックグラウンド実行時もこのジェネレータをループで回して処理を進める必要がある。
     - **計測の最適化 (早期終了ロジック)**:
         - 各計測モード（HPB通常、HPB特集、MEO）において、対象のサロンが発見された時点で、次ページ以降の遷移や解析を即座に中断（break）するように実装されている。
@@ -60,7 +60,7 @@
 ## 重要な制約・前提
 - **実行環境**: ローカルサーバー（またはGUIを持つサーバー）での実行が前提。Selenium/Playwright がブラウザを起動するため。
 - **認証情報**: サロンボードのパスワード等は平文またはJSON内で管理されている（セキュリティ上の注意点）。
-- **排他制御**: 計測は2レーン。**Uber Eats と HPB（通常・特集）・MEO は並行して計測できる**。同じレーンの中は一度に1つ（下記「並行計測のルール」）。
+- **排他制御**: 計測は3レーン。**HPB（通常・特集）・MEO・Uber Eats は互いに並行して計測できる**。同じレーンの中は一度に1つ（下記「並行計測のルール」）。
 - **ヘッドレスモード**: `config.py` の `HEADLESS_MODE` で制御。デバッグ時は `False` でブラウザを表示可能。
 
 ## Uber Eats画面の観測点の表示名（2026-09-27〜）
@@ -72,17 +72,18 @@
 
 ## 並行計測のルール（2026-09-27〜）
 
-- **レーンは2本**：`ubereats`（Uber Eats）と `hpb`（HPB通常・HPB特集・MEO）。ブラウザが別（Uber＝専用Chrome 9225 にアタッチ／HPB・MEO＝都度起動のヘッドレスChrome）なので衝突しない。
-- ロックは `app.py` の `measurement_locks`（`measurement_lock`＝hpb／`ubereats_measurement_lock`＝ubereats）。取得・解放は `acquire_measurement_lanes()`／`release_measurement(lane)` を通す（解放時に最終計測時刻を記録する）。
+- **レーンは3本**：`hpb`（HPB通常＋HPB特集＝同じホットペッパー）／`meo`（MEO）／`ubereats`（Uber Eats）。レーンが違えば並行して計測できる。ブラウザはレーンごとに別（HPB・MEO＝計測ごとに起動するヘッドレスChrome／Uber＝専用Chrome 9225 にアタッチ）。
+- **レーンの定義は表1か所**：サーバ＝`task_runner.py` の `LANES`（種別・書き戻す履歴ファイル・`auto_tasks.json` を書き戻すか）／画面＝`ui.js` の `LANES`（同じ区分）。表に無い種別（seo 等）は `hpb` で扱う。レーンを増減する時は2つの表だけを直し、`if` 分岐を足さない。
+- ロック・中断フラグは `app.py` が `LANES` から作る（`measurement_locks`／`cancel_events`）。単発エンドポイントの入口は `start_lane(lane)`、解放は `release_measurement(lane)`（最終計測時刻を記録）、複数レーンは `acquire_measurement_lanes()`。
 - **同じレーンの中は1本ずつ**。取れなければ即 busy（HTTP 429 または SSE の `{"busy": true, "lane": ...}`）。待ち行列は作らない。
-- **自動タスク（選択実行・旧API）**：選んだタスクの種類から必要なレーンを全部取る（混在なら両方）。1本でも使用中なら何もせず busy。混在実行では HPB・MEO 分が終わった時点で hpb レーンを先に返す。
+- **自動タスク（選択実行・旧API）**：選んだタスクの種類から必要なレーンを全部取る（混在なら複数）。1本でも使用中なら何もせず busy。混在実行ではレーン1本分が終わるたびにそのロックを先に返す（`on_lane_done`）。
 - **定時の自動計測**：レーンごとに取れた分だけ実行し、使用中のレーンの分はスキップしてログに残す。
-- 🔴 **保存は実行したレーンのファイルだけ**：`run_scheduled_check` は hpb レーンなら `history_normal/special/meo.json`＋`auto_tasks.json`、ubereats レーンなら `history_ubereats.json` だけを書き戻す。もう一方のレーンが並行して保存しているため、読み込み時点の古い内容で上書きしない。
-- **中断はレーン別**：`POST /api/cancel-measurement` に `{"lane": "hpb"|"ubereats"}`。lane 無しは両方（旧画面互換）。
+- 🔴 **保存は実行したレーンのファイルだけ**：`hpb`＝`history_normal/special.json`＋`auto_tasks.json`／`meo`＝`history_meo.json`／`ubereats`＝`history_ubereats.json`。他のレーンが並行して保存しているため、読み込み時点の古い内容で上書きしない。
+- **中断はレーン別**：`POST /api/cancel-measurement` に `{"lane": "hpb"|"meo"|"ubereats"}`。lane 無しは全レーン（旧画面互換）。
 - **計測ストリームはアプリコンテキスト内で回す**：`app.response_class(with_app_context(generate_stream), ...)`。ストリームはリクエスト処理の後に回るため、素のままだとスクレイパーの `current_app.logger` が落ちる。
-- **使用中の判定**：`/api/measured-today` の `measuring`＝どちらかのレーンが使用中（`measuring_lanes` にレーン別）。
-- **live_reload の入れ替え**：どちらかのレーンが使用中、または**最後の計測終了から60秒以内**（`MEASUREMENT_IDLE_GRACE_SECONDS`）は入れ替えない。手動計測はキーワード1件ごとに別リクエスト（間に数秒の待ち）で、その隙間にロックが空くため。
-- **画面**：計測中の状態・中断ボタン・結果欄はレーン別（`state.measuring`／`state.cancelRequested`／`#resultArea-hpb`・`#resultArea-ubereats`）。計測タイプの切り替えは計測中でも止めない。ボタンは表示中タイプのレーンの状態で有効/無効を決める。タスク追加・一括コピーは hpb レーン計測中だけ止める（hpb レーンの終了時に `auto_tasks.json` を書き戻すため）。Uber Eatsの履歴パネルは `#uberPanelArea` に描き、Uber Eats タイプ表示中だけ見せる。
+- **使用中の判定**：`/api/measured-today` の `measuring`＝どれかのレーンが使用中（`measuring_lanes` にレーン別）。
+- **live_reload の入れ替え**：どれかのレーンが使用中、または**最後の計測終了から60秒以内**（`MEASUREMENT_IDLE_GRACE_SECONDS`）は入れ替えない。手動計測はキーワード1件ごとに別リクエスト（間に数秒の待ち）で、その隙間にロックが空くため。
+- **画面**：計測中の状態・中断ボタン・結果欄はレーン別（`state.measuring`／`state.cancelRequested`／`#resultArea-<lane>`）。計測タイプの切り替えは計測中でも止めない。ボタンは表示中タイプのレーンの状態で有効/無効を決める。タスク追加・一括コピーは `hpb` レーン計測中だけ止める（`hpb` レーンの終了時に `auto_tasks.json` を書き戻すため）。Uber Eatsの履歴パネルは `#uberPanelArea` に描き、Uber Eats タイプ表示中だけ見せる。
 
 ## 変更すると壊れやすい箇所
 1.  **スクレイピングロジック**: HPBやGoogleのDOM構造変更に極めて脆弱。`*_scraper.py` のセレクタ修正が頻繁に必要になる可能性。

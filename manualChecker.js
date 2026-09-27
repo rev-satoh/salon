@@ -4,11 +4,11 @@
 import * as dom from './dom.js';
 import { areas } from './config.js';
 import { saveManualHistoryAPI } from './api.js';
-import { setMeasuringState, laneOfType, getLaneResultArea } from './ui.js';
+import { setMeasuringState, laneOfType, getLaneResultArea, LANES } from './ui.js';
 import { fetchAndDisplayAutoHistory } from './history.js';
 
-// 実行中の EventSource はレーンごと（Uber計測中にHPB・MEOを並行で走らせられるように）
-const activeManualEventSources = { hpb: null, ubereats: null };
+// 実行中の EventSource はレーンごと（別レーンの計測を並行で走らせられるように）
+const activeManualEventSources = Object.fromEntries(Object.keys(LANES).map(lane => [lane, null]));
 let activeManualAbortController = null;
 const UBER_EATS_MANUAL_WAIT_MS = 3000;
 

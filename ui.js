@@ -8,15 +8,28 @@ import { buildUberModel, uberPointName, uberSeries, uberLatest, uberSummary, ube
 import { checkRank } from './manualChecker.js'; // この行を追加
 import { fetchAndDisplayAutoHistory } from './history.js';
 
-// 計測は2レーン（サーバの2本のロックに対応）：Uber Eats と それ以外（HPB通常・特集・MEO）。
+// 計測レーン（サーバの task_runner.LANES と同じ区分・画面側の正本はこの表1か所）。
 // レーンが違えば同時に計測できる。同じレーンの中は1本ずつ。
+export const LANES = {
+    hpb: { label: 'HPB（通常・特集）', types: ['normal', 'special'] },
+    meo: { label: 'MEO', types: ['google'] },
+    ubereats: { label: 'Uber Eats', types: ['ubereats'] },
+};
 export const LANE_HPB = 'hpb';
-export const LANE_UBEREATS = 'ubereats';
-const activeTaskStreamAbortControllers = { [LANE_HPB]: null, [LANE_UBEREATS]: null };
+const DEFAULT_LANE = LANE_HPB;
+const LANE_OF_TYPE = Object.fromEntries(
+    Object.entries(LANES).flatMap(([lane, spec]) => spec.types.map(type => [type, lane]))
+);
+const activeTaskStreamAbortControllers = Object.fromEntries(Object.keys(LANES).map(lane => [lane, null]));
 
 /** 計測タイプ（normal/special/google/ubereats）からレーンを返す */
 export function laneOfType(type) {
-    return type === 'ubereats' ? LANE_UBEREATS : LANE_HPB;
+    return LANE_OF_TYPE[type || 'normal'] || DEFAULT_LANE;
+}
+
+/** レーン別の状態オブジェクト（全レーン false で初期化） */
+export function laneFlags() {
+    return Object.fromEntries(Object.keys(LANES).map(lane => [lane, false]));
 }
 
 /** いま選ばれている計測タイプ */
@@ -32,7 +45,7 @@ function ensureResultLayout() {
     let panel = document.getElementById('uberPanelArea');
     if (panel) return;
     document.getElementById('initialResultMessage')?.remove();
-    for (const lane of [LANE_HPB, LANE_UBEREATS]) {
+    for (const lane of Object.keys(LANES)) {
         const area = document.createElement('div');
         area.id = `resultArea-${lane}`;
         area.className = 'lane-result-area';
@@ -246,10 +259,10 @@ dom.manualTriggerButton.addEventListener('click', async () => {
     const lanes = Array.from(new Set(Array.from(selectedTaskIds).map(id => laneOfType(typeById.get(id) || 'normal'))));
     const busyLane = lanes.find(lane => state.measuring[lane]);
     if (busyLane) {
-        alert(busyLane === LANE_UBEREATS ? 'Uber Eatsの計測が実行中です。終わってから実行してください。' : 'HPB・MEOの計測が実行中です。終わってから実行してください。');
+        alert(`${LANES[busyLane].label}の計測が実行中です。終わってから実行してください。`);
         return;
     }
-    const displayLane = lanes.length === 1 ? lanes[0] : LANE_HPB;
+    const displayLane = lanes[0];
     const area = getLaneResultArea(displayLane);
 
     lanes.forEach(lane => setMeasuringState(lane, true, state)); // 計測状態を開始に設定
@@ -914,7 +927,7 @@ export function applyMeasuringUI(state) {
     dom.stopMeasurementButton.style.display = measuring ? 'inline-block' : 'none';
     dom.stopMeasurementButton.disabled = !measuring || cancelling;
     dom.stopMeasurementButton.textContent = cancelling ? '中断中...' : '中断';
-    // タスク定義の保存は HPB・MEO の計測終了時にも書き戻されるため、HPB・MEO計測中だけ止める
+    // タスク定義（auto_tasks.json）は HPB（通常・特集）の計測終了時にも書き戻されるため、その計測中だけ止める
     const hpbMeasuring = state.measuring[LANE_HPB];
     dom.addAutoTaskButton.disabled = hpbMeasuring;
     document.getElementById('executeCopyButton').disabled = hpbMeasuring;
