@@ -4,7 +4,7 @@
 import { areas } from './config.js';
 import * as dom from './dom.js';
 import { saveAutoTasksAPI, saveScheduleAPI, fetchScheduleAPI, fetchHistoryAPI } from './api.js';
-import { buildUberModel, uberSeries, uberLatest, uberSummary, uberStatusLabel, uberRawStatusLabel, formatUberDate, UBER_BASE_LABEL } from './uberData.js';
+import { buildUberModel, uberPointName, uberSeries, uberLatest, uberSummary, uberStatusLabel, uberRawStatusLabel, formatUberDate, UBER_BASE_LABEL } from './uberData.js';
 import { checkRank } from './manualChecker.js'; // この行を追加
 import { fetchAndDisplayAutoHistory } from './history.js';
 
@@ -650,11 +650,11 @@ function drawUberEatsPanel(model, selectedKeyword, selectedRankMode = 'raw') {
                             <span style="font-size: 12px; color: #6c6c70;">${keyword}の最新順位</span>
                         </div>
                         <div style="display: grid; grid-template-columns: repeat(${columns}, minmax(0, 1fr)); gap: 8px;">
-                            ${model.points.map(point => uberPointTile(point.label, latestLabels[point.label], uberRankColor(latestLabels[point.label]), uberFoodLabel(latestNormalized[point.label]))).join('')}
+                            ${model.points.map(point => uberPointTile(point.name, latestLabels[point.label], uberRankColor(latestLabels[point.label]), uberFoodLabel(latestNormalized[point.label]))).join('')}
                         </div>
                     </div>
                     <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;">
-                        ${uberMetric('最良地点', summary.best ? summary.best.label : '-', summary.best ? `${keyword} ${summary.best.value}位` : '順位取得なし', '#007aff')}
+                        ${uberMetric('最良地点', summary.best ? uberPointName(model, summary.best.label) : '-', summary.best ? `${keyword} ${summary.best.value}位` : '順位取得なし', '#007aff')}
                         ${uberMetric('圏外の観測点', `${summary.outCount}件`, `計測できた${summary.measuredCount}件中`, '#ff3b30')}
                         ${uberMetric('観測住所', `${model.labels.length}件`, `キーワード${model.keywords.length}語`, '#111')}
                         ${uberMetric('観測タスク', `${model.taskCount}件`, `計測日 ${model.dates.length}日分`, '#111')}
@@ -664,7 +664,7 @@ function drawUberEatsPanel(model, selectedKeyword, selectedRankMode = 'raw') {
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 10px;">
                         <div>
                             <strong style="font-size: 15px;">順位推移（${keyword}）</strong>
-                            <div style="font-size: 12px; color: #6c6c70; margin-top: 3px;">薄線=観測点別 / 太線=${UBER_BASE_LABEL}。上に行くほど上位。</div>
+                            <div style="font-size: 12px; color: #6c6c70; margin-top: 3px;">薄線=観測点別 / 太線=${uberPointName(model, UBER_BASE_LABEL)}（${UBER_BASE_LABEL}）。上に行くほど上位。</div>
                         </div>
                         <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
                             <div style="display: inline-flex; border: 1px solid #d7d7dc; border-radius: 8px; overflow: hidden; background: #fff;">
@@ -675,7 +675,7 @@ function drawUberEatsPanel(model, selectedKeyword, selectedRankMode = 'raw') {
                                 ${model.keywords.map(item => uberKeywordButton(item, item === keyword)).join('')}
                             </div>
                             <div style="display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; max-width: 390px;">
-                                ${model.points.map(point => uberLegend(point.label, point.color, point.opacity)).join('')}
+                                ${model.points.map(point => uberLegend(point.name, point.color, point.opacity)).join('')}
                             </div>
                         </div>
                     </div>
@@ -694,7 +694,7 @@ function drawUberEatsPanel(model, selectedKeyword, selectedRankMode = 'raw') {
                             </tr>
                         </thead>
                         <tbody>
-                            ${model.labels.map(label => uberHeatRow(label, model.keywords.map(item => uberLatest(model, item, label)))).join('')}
+                            ${model.labels.map(label => uberHeatRow(uberPointName(model, label), model.keywords.map(item => uberLatest(model, item, label)))).join('')}
                         </tbody>
                     </table>
                 </div>
@@ -702,15 +702,13 @@ function drawUberEatsPanel(model, selectedKeyword, selectedRankMode = 'raw') {
                     <thead>
                         <tr>
                             <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">観測点</th>
-                            <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">配達先住所</th>
                             <th style="text-align: center; padding: 8px; border-bottom: 1px solid #ddd;">${keyword}</th>
                             <th style="text-align: center; padding: 8px; border-bottom: 1px solid #ddd;">全キーワード順位</th>
                         </tr>
                     </thead>
                     <tbody>
                         ${model.points.map(point => uberPointRow(
-                            point.label,
-                            point.address,
+                            point.name,
                             uberStatusLabel(latestNormalized[point.label]),
                             model.keywords.map(item => uberStatusLabel(uberLatest(model, item, point.label))).join(' / ')
                         )).join('')}
@@ -880,11 +878,10 @@ function uberRankColor(rank) {
     return '#ff3b30';
 }
 
-function uberPointRow(point, address, selectedRank, allRanks) {
+function uberPointRow(point, selectedRank, allRanks) {
     return `
         <tr>
             <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: 600;">${point}</td>
-            <td style="padding: 8px; border-bottom: 1px solid #eee; color: #6c6c70;">${address || '-'}</td>
             <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: center; font-weight: 700;">${selectedRank}</td>
             <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: center; color: #6c6c70;">${allRanks}</td>
         </tr>

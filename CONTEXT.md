@@ -63,6 +63,13 @@
 - **排他制御**: 計測は2レーン。**Uber Eats と HPB（通常・特集）・MEO は並行して計測できる**。同じレーンの中は一度に1つ（下記「並行計測のルール」）。
 - **ヘッドレスモード**: `config.py` の `HEADLESS_MODE` で制御。デバッグ時は `False` でブラウザを表示可能。
 
+## Uber Eats画面の観測点の表示名（2026-09-27〜）
+
+- 画面に出す観測点の名前＝`task.address`（例「岡山駅」「岡山市役所」）。上の自動計測履歴グラフの見出し（`history.js` `groupHistory`＝`address - storeName`）と同じ出どころ。
+- `task.addressLabel`（「中心部A」「北区南側」等）は並び順・基準点（`店と同じ住所`）判定・集計のキーとしてだけ使い、画面には出さない。変換は `uberData.js` の `nameByLabel`／`uberPointName()` の1か所（個別の変換表を作らない）。
+- 対象＝観測点タイル・最良地点・凡例・ヒートマップ行・最下段の表（地点名と住所が同じになるため「配達先住所」列は置かない）。太線の説明は「地点名（店と同じ住所）」。
+- `address` が無い記録だけ `addressLabel` のまま出す（2026-09-27時点の履歴40件は全件 address あり・addressLabel と address は1対1）。
+
 ## 並行計測のルール（2026-09-27〜）
 
 - **レーンは2本**：`ubereats`（Uber Eats）と `hpb`（HPB通常・HPB特集・MEO）。ブラウザが別（Uber＝専用Chrome 9225 にアタッチ／HPB・MEO＝都度起動のヘッドレスChrome）なので衝突しない。

@@ -104,8 +104,12 @@ export function buildUberModel(history) {
         ...labels.filter(label => label !== UBER_BASE_LABEL),
     ];
     const sortedDates = [...dates].sort();
+    // 🔴 画面に出す地点名＝task.address（上の自動計測履歴グラフの見出しと同じ出どころ・history.js groupHistory）。
+    //    addressLabel（「中心部A」等）は並び順・基準点判定・集計のキーとしてだけ使い、画面には出さない。
+    const nameByLabel = Object.fromEntries(orderedLabels.map(label => [label, addressByLabel[label] || label]));
     const points = orderedLabels.map((label, index) => ({
         label,
+        name: nameByLabel[label],
         address: addressByLabel[label] || '',
         color: UBER_POINT_COLORS[index % UBER_POINT_COLORS.length],
         width: label === UBER_BASE_LABEL ? 4 : 2,
@@ -116,6 +120,7 @@ export function buildUberModel(history) {
         storeName: entries[0].task.storeName || '',
         points,
         labels: orderedLabels,
+        nameByLabel,
         keywords,
         dates: sortedDates,
         latestDate: sortedDates.at(-1) || null,
@@ -128,6 +133,11 @@ export function buildUberModel(history) {
  * 指定キーワード・観測点の、日付順に並べた順位系列を返します（欠測はnull）。
  * @returns {Array<{value:number|null,status:string}|null>}
  */
+/** 観測点（addressLabel）の画面表示名＝地点名（task.address）。住所が無い記録だけ addressLabel のまま。 */
+export function uberPointName(model, label) {
+    return model?.nameByLabel?.[label] || label;
+}
+
 export function uberSeries(model, keyword, label) {
     const byDate = model.ranks?.[keyword]?.[label] || {};
     return model.dates.map(date => byDate[date] || null);
