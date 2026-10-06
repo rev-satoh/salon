@@ -3459,86 +3459,170 @@
   },
   {
     "id": "[google]-YOGI-岡山駅-グリークヨーグルト",
-    "type": "google",
+    "keyword": "グリークヨーグルト",
     "salonName": "YOGI",
     "searchLocation": "岡山駅",
-    "keyword": "グリークヨーグルト"
+    "type": "google"
   },
   {
     "id": "[google]-YOGI-岡山駅-アサイーボウル",
-    "type": "google",
+    "keyword": "アサイーボウル",
     "salonName": "YOGI",
     "searchLocation": "岡山駅",
-    "keyword": "アサイーボウル"
+    "type": "google"
   },
   {
     "id": "[google]-YOGI-岡山駅-ベーグル",
-    "type": "google",
+    "keyword": "ベーグル",
     "salonName": "YOGI",
     "searchLocation": "岡山駅",
-    "keyword": "ベーグル"
+    "type": "google"
   },
   {
     "id": "[google]-YOGI-岡山駅-カフェ",
-    "type": "google",
+    "keyword": "カフェ",
     "salonName": "YOGI",
     "searchLocation": "岡山駅",
-    "keyword": "カフェ"
+    "type": "google"
   },
   {
     "id": "[google]-YOGI-倉敷駅-グリークヨーグルト",
-    "type": "google",
+    "keyword": "グリークヨーグルト",
     "salonName": "YOGI",
     "searchLocation": "倉敷駅",
-    "keyword": "グリークヨーグルト"
+    "type": "google"
   },
   {
     "id": "[google]-YOGI-倉敷駅-アサイーボウル",
-    "type": "google",
+    "keyword": "アサイーボウル",
     "salonName": "YOGI",
     "searchLocation": "倉敷駅",
-    "keyword": "アサイーボウル"
+    "type": "google"
   },
   {
     "id": "[google]-YOGI-倉敷駅-ベーグル",
-    "type": "google",
+    "keyword": "ベーグル",
     "salonName": "YOGI",
     "searchLocation": "倉敷駅",
-    "keyword": "ベーグル"
+    "type": "google"
   },
   {
     "id": "[google]-YOGI-倉敷駅-カフェ",
-    "type": "google",
+    "keyword": "カフェ",
     "salonName": "YOGI",
     "searchLocation": "倉敷駅",
-    "keyword": "カフェ"
+    "type": "google"
   },
   {
     "id": "[google]-YOGI-問屋町-グリークヨーグルト",
-    "type": "google",
+    "keyword": "グリークヨーグルト",
     "salonName": "YOGI",
     "searchLocation": "問屋町",
-    "keyword": "グリークヨーグルト"
+    "type": "google"
   },
   {
     "id": "[google]-YOGI-問屋町-アサイーボウル",
-    "type": "google",
+    "keyword": "アサイーボウル",
     "salonName": "YOGI",
     "searchLocation": "問屋町",
-    "keyword": "アサイーボウル"
+    "type": "google"
   },
   {
     "id": "[google]-YOGI-問屋町-ベーグル",
-    "type": "google",
+    "keyword": "ベーグル",
     "salonName": "YOGI",
     "searchLocation": "問屋町",
-    "keyword": "ベーグル"
+    "type": "google"
   },
   {
     "id": "[google]-YOGI-問屋町-カフェ",
+    "keyword": "カフェ",
+    "salonName": "YOGI",
+    "searchLocation": "問屋町",
+    "type": "google"
+  },
+  {
+    "id": "[google]-YOGI-岡山駅-岡山　グリークヨーグルト",
+    "type": "google",
+    "salonName": "YOGI",
+    "searchLocation": "岡山駅",
+    "keyword": "岡山　グリークヨーグルト"
+  },
+  {
+    "id": "[google]-YOGI-岡山駅-岡山　アサイーボウル",
+    "type": "google",
+    "salonName": "YOGI",
+    "searchLocation": "岡山駅",
+    "keyword": "岡山　アサイーボウル"
+  },
+  {
+    "id": "[google]-YOGI-岡山駅-岡山　ベーグル",
+    "type": "google",
+    "salonName": "YOGI",
+    "searchLocation": "岡山駅",
+    "keyword": "岡山　ベーグル"
+  },
+  {
+    "id": "[google]-YOGI-岡山駅-岡山　カフェ",
+    "type": "google",
+    "salonName": "YOGI",
+    "searchLocation": "岡山駅",
+    "keyword": "岡山　カフェ"
+  },
+  {
+    "id": "[google]-YOGI-倉敷駅-岡山　グリークヨーグルト",
+    "type": "google",
+    "salonName": "YOGI",
+    "searchLocation": "倉敷駅",
+    "keyword": "岡山　グリークヨーグルト"
+  },
+  {
+    "id": "[google]-YOGI-倉敷駅-岡山　アサイーボウル",
+    "type": "google",
+    "salonName": "YOGI",
+    "searchLocation": "倉敷駅",
+    "keyword": "岡山　アサイーボウル"
+  },
+  {
+    "id": "[google]-YOGI-倉敷駅-岡山　ベーグル",
+    "type": "google",
+    "salonName": "YOGI",
+    "searchLocation": "倉敷駅",
+    "keyword": "岡山　ベーグル"
+  },
+  {
+    "id": "[google]-YOGI-倉敷駅-岡山　カフェ",
+    "type": "google",
+    "salonName": "YOGI",
+    "searchLocation": "倉敷駅",
+    "keyword": "岡山　カフェ"
+  },
+  {
+    "id": "[google]-YOGI-問屋町-岡山　グリークヨーグルト",
     "type": "google",
     "salonName": "YOGI",
     "searchLocation": "問屋町",
-    "keyword": "カフェ"
+    "keyword": "岡山　グリークヨーグルト"
+  },
+  {
+    "id": "[google]-YOGI-問屋町-岡山　アサイーボウル",
+    "type": "google",
+    "salonName": "YOGI",
+    "searchLocation": "問屋町",
+    "keyword": "岡山　アサイーボウル"
+  },
+  {
+    "id": "[google]-YOGI-問屋町-岡山　ベーグル",
+    "type": "google",
+    "salonName": "YOGI",
+    "searchLocation": "問屋町",
+    "keyword": "岡山　ベーグル"
+  },
+  {
+    "id": "[google]-YOGI-問屋町-岡山　カフェ",
+    "type": "google",
+    "salonName": "YOGI",
+    "searchLocation": "問屋町",
+    "keyword": "岡山　カフェ"
   }
 ]

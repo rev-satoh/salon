@@ -19,11 +19,17 @@ export function splitMeoList(raw) {
         .filter(s => s && !seen.has(s) && seen.add(s));
 }
 
-/** キーワードの先頭に地点名（「駅」「市」を除いた部分）が付いていたら外す（従来の登録時の処理） */
+/**
+ * キーワードの先頭に地点名（「駅」「市」を除いた部分）が付いていたら外す（従来の登録時の処理）。
+ * ただし地名の直後に空白（半角/全角）がある＝「岡山　カフェ」のように意図して地名を付けた検索語は外さない
+ * （検索語はそのままGoogleマップに渡るため、地名の有無で別の計測になる・2026-10-06）。
+ */
 export function cleanMeoKeyword(searchLocation, keyword) {
     const locationBaseName = searchLocation.replace(/駅|市$/, '').trim();
     if (locationBaseName && keyword.startsWith(locationBaseName)) {
-        return keyword.substring(locationBaseName.length).trim();
+        const rest = keyword.substring(locationBaseName.length);
+        if (/^[\s\u3000]/.test(rest)) return keyword;
+        return rest.trim();
     }
     return keyword;
 }
