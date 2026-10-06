@@ -3458,10 +3458,87 @@
     "type": "ubereats"
   },
   {
-    "id": "[google]-YOGI-岡山駅,倉敷駅,問屋町-グリークヨーグルト,アサイーボウル,ベーグル,カフェ",
+    "id": "[google]-YOGI-岡山駅-グリークヨーグルト",
     "type": "google",
     "salonName": "YOGI",
-    "searchLocation": "岡山駅,倉敷駅,問屋町",
-    "keyword": "グリークヨーグルト,アサイーボウル,ベーグル,カフェ"
+    "searchLocation": "岡山駅",
+    "keyword": "グリークヨーグルト"
+  },
+  {
+    "id": "[google]-YOGI-岡山駅-アサイーボウル",
+    "type": "google",
+    "salonName": "YOGI",
+    "searchLocation": "岡山駅",
+    "keyword": "アサイーボウル"
+  },
+  {
+    "id": "[google]-YOGI-岡山駅-ベーグル",
+    "type": "google",
+    "salonName": "YOGI",
+    "searchLocation": "岡山駅",
+    "keyword": "ベーグル"
+  },
+  {
+    "id": "[google]-YOGI-岡山駅-カフェ",
+    "type": "google",
+    "salonName": "YOGI",
+    "searchLocation": "岡山駅",
+    "keyword": "カフェ"
+  },
+  {
+    "id": "[google]-YOGI-倉敷駅-グリークヨーグルト",
+    "type": "google",
+    "salonName": "YOGI",
+    "searchLocation": "倉敷駅",
+    "keyword": "グリークヨーグルト"
+  },
+  {
+    "id": "[google]-YOGI-倉敷駅-アサイーボウル",
+    "type": "google",
+    "salonName": "YOGI",
+    "searchLocation": "倉敷駅",
+    "keyword": "アサイーボウル"
+  },
+  {
+    "id": "[google]-YOGI-倉敷駅-ベーグル",
+    "type": "google",
+    "salonName": "YOGI",
+    "searchLocation": "倉敷駅",
+    "keyword": "ベーグル"
+  },
+  {
+    "id": "[google]-YOGI-倉敷駅-カフェ",
+    "type": "google",
+    "salonName": "YOGI",
+    "searchLocation": "倉敷駅",
+    "keyword": "カフェ"
+  },
+  {
+    "id": "[google]-YOGI-問屋町-グリークヨーグルト",
+    "type": "google",
+    "salonName": "YOGI",
+    "searchLocation": "問屋町",
+    "keyword": "グリークヨーグルト"
+  },
+  {
+    "id": "[google]-YOGI-問屋町-アサイーボウル",
+    "type": "google",
+    "salonName": "YOGI",
+    "searchLocation": "問屋町",
+    "keyword": "アサイーボウル"
+  },
+  {
+    "id": "[google]-YOGI-問屋町-ベーグル",
+    "type": "google",
+    "salonName": "YOGI",
+    "searchLocation": "問屋町",
+    "keyword": "ベーグル"
+  },
+  {
+    "id": "[google]-YOGI-問屋町-カフェ",
+    "type": "google",
+    "salonName": "YOGI",
+    "searchLocation": "問屋町",
+    "keyword": "カフェ"
   }
 ]

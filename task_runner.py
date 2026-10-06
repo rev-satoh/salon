@@ -6,7 +6,7 @@ import random
 from flask import current_app, jsonify
 
 import config
-from utils import sse_format
+from utils import sse_format, expand_meo_task
 from driver_manager import get_attached_chrome, get_webdriver
 from hpb_scraper import check_hotpepper_ranking
 from feature_page_scraper import check_feature_page_ranking
@@ -372,7 +372,9 @@ def run_scheduled_check(task_ids_to_run=None, stream_progress=False, save_screen
         if task_type == 'special':
             special_tasks_grouped_by_url.setdefault(task['featurePageUrl'], []).append(task)
         elif task_type == 'google':
-            meo_tasks_grouped.setdefault((task.get('searchLocation'), task.get('keyword')), []).append(task)
+            # カンマ区切りの地点・キーワードが残っていても、組合せごとの個別タスクとして計測・記録する
+            for sub_task in expand_meo_task(task):
+                meo_tasks_grouped.setdefault((sub_task.get('searchLocation'), sub_task.get('keyword')), []).append(sub_task)
         elif task_type == 'ubereats':
             ubereats_tasks.append(task)
         else:

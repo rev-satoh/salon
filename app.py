@@ -23,7 +23,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from dotenv import load_dotenv
 from feature_page_scraper import check_feature_page_ranking # 新しいスクレイパーをインポート
 import threading # ロック機能のためにインポート
-from utils import sse_format, get_lat_lng_from_address # 共通関数をインポート
+from utils import sse_format, get_lat_lng_from_address, expand_meo_tasks # 共通関数をインポート
 from hpb_scraper import check_hotpepper_ranking
 from meo_scraper import check_meo_ranking
 from ubereats_scraper import check_ubereats_ranking
@@ -378,6 +378,9 @@ def handle_auto_tasks():
         return jsonify(tasks)
     if request.method == 'POST':
         tasks = request.get_json()
+        # Googleマップのカンマ区切り（地点・キーワード）は組合せごとの個別タスクへ展開して保存する
+        if isinstance(tasks, list):
+            tasks = expand_meo_tasks(tasks)
         save_json_file(config.TASKS_FILE, tasks)
         return jsonify({"message": "設定を保存しました"}), 200
 

@@ -6,6 +6,7 @@ import * as dom from './dom.js';
 import { saveAutoTasksAPI, saveScheduleAPI, fetchScheduleAPI, fetchHistoryAPI } from './api.js';
 import { buildUberModel, uberPointName, uberSeries, uberLatest, uberSummary, uberStatusLabel, uberRawStatusLabel, formatUberDate, UBER_BASE_LABEL } from './uberData.js';
 import { checkRank } from './manualChecker.js'; // この行を追加
+import { expandMeoPairs, meoTaskId } from './meoTasks.js';
 import { fetchAndDisplayAutoHistory } from './history.js';
 
 // 計測レーン（サーバの task_runner.LANES と同じ区分・画面側の正本はこの表1か所）。
@@ -1252,17 +1253,15 @@ function addAutoTask(state) {
         const googleKeyword = document.getElementById('googleKeywordInput').value.trim();
         if (!searchLocation || !googleKeyword) { alert('検索地点と検索キーワードを入力してください。'); return; }
         
-        const locationBaseName = searchLocation.replace(/駅|市$/, '').trim();
-        let cleanedKeyword = googleKeyword;
-        if (locationBaseName && cleanedKeyword.startsWith(locationBaseName)) {
-            cleanedKeyword = googleKeyword.substring(locationBaseName.length).trim();
-        }
-        const taskId = `[google]-${salonName}-${searchLocation}-${cleanedKeyword}`;
-        if (state.autoTasks.some(t => t.id === taskId)) existingTasks.push(`[${searchLocation}] ${cleanedKeyword}`);
-        else {
-            state.autoTasks.push({ id: taskId, type: 'google', salonName, searchLocation, keyword: cleanedKeyword });
-            addedTasks.push(`[${searchLocation}] ${cleanedKeyword}`);
-        }
+        // 地点・キーワードがカンマ（, 、 ，）区切りなら「1地点×1語＝1タスク」に展開する（空白では区切らない）
+        expandMeoPairs(searchLocation, googleKeyword, { cleanKeyword: true }).forEach(({ searchLocation: loc, keyword }) => {
+            const taskId = meoTaskId(salonName, loc, keyword);
+            if (state.autoTasks.some(t => t.id === taskId)) existingTasks.push(`[${loc}] ${keyword}`);
+            else {
+                state.autoTasks.push({ id: taskId, type: 'google', salonName, searchLocation: loc, keyword });
+                addedTasks.push(`[${loc}] ${keyword}`);
+            }
+        });
     } else if (activeSearchType === 'ubereats') {
         const storeName = dom.uberStoreNameInput.value.trim();
         const addresses = parseUberAddressSet(dom.uberAddressInput.value);

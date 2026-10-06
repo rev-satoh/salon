@@ -6,6 +6,7 @@ import { areas } from './config.js';
 import { saveManualHistoryAPI } from './api.js';
 import { setMeasuringState, laneOfType, getLaneResultArea } from './ui.js';
 import { fetchAndDisplayAutoHistory } from './history.js';
+import { expandMeoPairs, meoTaskId } from './meoTasks.js';
 
 // 実行中の EventSource はレーンごと（別レーンの計測を並行で走らせられるように）
 // 🔴 ui.js と循環importのため、読み込み時に ui.js の値（LANES 等）を参照しない＝空で始めて使う時にキーを作る
@@ -62,13 +63,14 @@ export async function checkRank(state) {
         }
         serviceKeywords.push(featureUrl);
     } else if (activeSearchType === 'google') {
-        const googleKeyword = document.getElementById('googleKeywordInput').value.trim();
-        const searchLocation = document.getElementById('searchLocationInput').value.trim();
+        const googleKeyword = googleKeywordAtStart;
+        const searchLocation = googleSearchLocation;
         if (!salonName || !googleKeyword || !searchLocation) {
             alert('MEO検索では、自店のサロン名、検索地点、検索キーワードを入力してください。');
             return;
         }
-        serviceKeywords.push(googleKeyword);
+        // カンマ（, 、 ，）区切りは「1地点×1語」の組合せごとに1回ずつ検索する（空白では区切らない）
+        serviceKeywords = expandMeoPairs(searchLocation, googleKeyword);
     } else if (activeSearchType === 'ubereats') {
         uberStoreName = dom.uberStoreNameInput.value.trim();
         const addresses = parseUberAddressSet(dom.uberAddressInput.value);
@@ -131,10 +133,10 @@ export async function checkRank(state) {
                 serviceKeyword, salonName, areaCodes: JSON.stringify(areaCodes)
             });
         } else if (activeSearchType === 'google') {
-            const searchLocation = googleSearchLocation;
-            fullKeyword = `[${searchLocation}] ${serviceKeyword}`;
+            const searchLocation = serviceKeyword.searchLocation;
+            fullKeyword = `[${searchLocation}] ${serviceKeyword.keyword}`;
             eventSourceUrl = `/check-meo-ranking?` + new URLSearchParams({
-                keyword: serviceKeyword,
+                keyword: serviceKeyword.keyword,
                 location: searchLocation,
                 salonName: salonName,
             });
@@ -212,11 +214,11 @@ export async function checkRank(state) {
 
                             const mySalonRankItem = result.results.find(item => salonName && item.foundSalonName.toLowerCase().includes(salonName.toLowerCase()));
                             const finalRank = mySalonRankItem ? mySalonRankItem.rank : '圏外';
-                            const searchLocation = googleSearchLocation;
-                            const googleKeyword = googleKeywordAtStart;
+                            const searchLocation = serviceKeyword.searchLocation;
+                            const googleKeyword = serviceKeyword.keyword;
                             if (result.rank === "エリア不一致") resultMessageHtml = `<p style="color: #ff9500;">検索地点と結果が一致しませんでした (エリア不一致)</p>`;
                             
-                            const taskId = `[google]-${salonName}-${searchLocation}-${googleKeyword}`; 
+                            const taskId = meoTaskId(salonName, searchLocation, googleKeyword);
                             const taskPayload = { id: taskId, type: 'google', salonName, searchLocation, keyword: googleKeyword };
                             saveManualHistoryAPI({ task: taskPayload, result: { rank: finalRank, screenshot_path: result.screenshot_path } });
 
