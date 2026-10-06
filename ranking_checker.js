@@ -63,6 +63,25 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    // YOGI選択チェックボックスのイベントリスナー
+    const selectYogiCheckbox = document.getElementById('selectYogi');
+    if (selectYogiCheckbox) {
+        selectYogiCheckbox.addEventListener('change', function(e) {
+            const isChecked = e.target.checked;
+            // 現在表示されているタスクリストのチェックボックスを取得
+            const taskCheckboxes = document.querySelectorAll('#autoTaskList input[type="checkbox"]');
+
+            taskCheckboxes.forEach(checkbox => {
+                const taskId = checkbox.value;
+                const task = state.autoTasks.find(t => t.id === taskId);
+
+                if (task && isYogi(task)) {
+                    checkbox.checked = isChecked;
+                }
+            });
+        });
+    }
+
     // スクショ保存設定の読み込みと保存（手動計測）
     const manualScreenshotCheckbox = document.getElementById('manualScreenshotCheckbox');
     if (manualScreenshotCheckbox) {
@@ -123,4 +142,14 @@ function isOtherStore(task) {
     // 自店（広島・福山）以外はすべて「他店」とみなす
     // これには競合店および、広島・福山以外の自社グループ店が含まれる
     return !isMyStore(task);
+}
+
+/**
+ * タスクが「YOGI」かどうかを判定する関数
+ * Googleマップ＝salonName、Uber Eats＝storeName が「YOGI」
+ * @param {Object} task - タスクオブジェクト
+ * @returns {boolean}
+ */
+function isYogi(task) {
+    return task.salonName === 'YOGI' || task.storeName === 'YOGI';
 }

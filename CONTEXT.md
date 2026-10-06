@@ -397,3 +397,11 @@ Uber Eatsモードの「検索キーワード」欄が常に「グリークヨ�
 - Node：`expandMeoPairs` で YOGI入力→12組・id 一致、「まつげパーマ 福山」は分割されない、全角「、」「，」で分割される。
 - Python：`expand_meo_tasks` で保存時の展開・重複除去を確認。`run_scheduled_check(lanes={'meo'})` を偽のスクレイパ（ブラウザ起動なし）・一時のタスク/履歴ファイルで実行＝カンマ入り1本が12回の検索（地点×語）に分かれて呼ばれることを確認。
 - 画面（Chrome）での確認は未実施。
+
+## 追加: 自動計測タスク一覧の一括選択に「YOGI」（2026-10-06・社長指示）
+
+- 社長の言葉＝「これにYOGIを全部選べるチェックボックスもほしい」。
+- ranking_checker.html の一括選択（すべて選択／自店／他店）の右に `selectYogi` を追加。オンで表示中タスクのうちYOGIを全部チェック、オフで外す（自店・他店と同じ動き）。
+- 判定＝ranking_checker.js `isYogi(task)`：Googleマップは `salonName === 'YOGI'`、Uber Eats は `storeName === 'YOGI'`（auto_tasks.json の実データで確認）。
+- 既存の「自店」「他店」の判定は変更なし（YOGIは引き続き「他店」にも含まれる）。
+- 検証（実データ当て・画面起動なし）＝auto_tasks.json 414件中 YOGI該当 64件（Googleマップ12・Uber Eats 52）。他店269・自店145は変更前と同じ。
