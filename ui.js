@@ -959,7 +959,8 @@ function showModeHelp() {
  */
 function updateScheduleControlsState(enabled) {
     dom.scheduleHourSelect.disabled = !enabled;
-    dom.saveScheduleButton.disabled = !enabled;
+    // 保存ボタンはOFFでも押せる（OFFを保存できるようにするため）
+    dom.saveScheduleButton.disabled = false;
     const labels = dom.saveScheduleButton.parentElement.querySelectorAll('label[for="scheduleHourSelect"]');
     labels.forEach(label => {
         label.style.opacity = enabled ? '1' : '0.5';
@@ -972,10 +973,11 @@ function updateScheduleControlsState(enabled) {
 async function fetchSchedule() {
     try {
         const data = await fetchScheduleAPI();
-        dom.isAutoScheduleEnabled.checked = data.enabled;
+        const enabled = data.enabled === true;
+        dom.isAutoScheduleEnabled.checked = enabled;
         dom.scheduleHourSelect.value = data.hour;
-        updateScheduleControlsState(data.enabled);
-        const statusText = data.enabled
+        updateScheduleControlsState(enabled);
+        const statusText = enabled
             ? `現在の設定: 毎日 ${String(data.hour).padStart(2, '0')}:${String(data.minute).padStart(2, '0')} に実行されます。`
             : '現在の設定: 自動計測はOFFです。';
         resetScheduleButton();

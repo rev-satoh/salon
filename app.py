@@ -427,19 +427,27 @@ def get_auto_history():
 @app.route('/api/schedule', methods=['GET', 'POST'])
 def handle_schedule():
     if request.method == 'GET':
-        config = load_scheduler_config()
-        return jsonify(config)
-    
+        return jsonify(load_scheduler_config())
+
     if request.method == 'POST':
-        data = request.get_json()
+        data = request.get_json(silent=True) or {}
         hour = data.get('hour')
         minute = data.get('minute')
+        enabled = data.get('enabled')
 
         if not (isinstance(hour, int) and 0 <= hour <= 23 and isinstance(minute, int) and 0 <= minute <= 59):
             return "無効な時間です", 400
+        if not isinstance(enabled, bool):
+            return "enabled（自動計測ON/OFF）を true/false で指定してください", 400
 
-        save_json_file(config.SCHEDULER_CONFIG_FILE, {"hour": hour, "minute": minute})
-        return jsonify({"message": "実行時間を保存しました。変更を有効にするには、アプリケーションの再起動が必要です。"}), 200
+        save_json_file(config.SCHEDULER_CONFIG_FILE, {"hour": hour, "minute": minute, "enabled": enabled})
+        # 時刻の変更は再起動なしで反映する（ON/OFFは実行時に設定ファイルを読み直して判定）
+        scheduler.reschedule_job(SCHEDULED_JOB_ID, trigger='cron', hour=hour, minute=minute)
+        if enabled:
+            message = f"保存しました。毎日 {hour:02d}:{minute:02d} に自動計測を実行します。"
+        else:
+            message = "保存しました。自動計測はOFFです（定時の計測は実行しません）。"
+        return jsonify({"message": message}), 200
 
 @app.route('/api/measured-today', methods=['POST'])
 def measured_today_api():
@@ -704,6 +712,10 @@ scheduler = BackgroundScheduler(daemon=True)
 
 def scheduled_job_wrapper():
     """スケジューラから呼び出されるラッパー関数"""
+    # ON/OFFは実行のたびに設定ファイルを読み直して判定する（再起動なしで効かせるため）
+    if not load_scheduler_config().get('enabled'):
+        app.logger.info("自動計測ジョブ：自動計測がOFFのため、定時の計測をスキップします。")
+        return
     # レーンごとに取れた分だけ実行する（どれかのレーンが手動計測中でも、他のレーンの定時計測は走らせる）。
     lanes = set()
     for lane in LANES:
@@ -722,14 +734,20 @@ def scheduled_job_wrapper():
             for lane in lanes:
                 release_measurement(lane)
 
+SCHEDULED_JOB_ID = 'daily_auto_measure'
+
 def load_scheduler_config():
-    """スケジューラ設定を読み込む。なければデフォルト値を返す"""
-    if not os.path.exists(config.SCHEDULER_CONFIG_FILE):
-        return {"hour": 9, "minute": 0}
-    try:
-        return load_json_file(config.SCHEDULER_CONFIG_FILE)
-    except Exception:
-        return {"hour": 9, "minute": 0}
+    """スケジューラ設定を読み込む。設定ファイルが無い・壊れている・enabled が無い場合は OFF 扱い。"""
+    result = {"hour": 9, "minute": 0, "enabled": False}
+    if os.path.exists(config.SCHEDULER_CONFIG_FILE):
+        try:
+            saved = load_json_file(config.SCHEDULER_CONFIG_FILE)
+            if isinstance(saved, dict):
+                result.update({k: saved[k] for k in ("hour", "minute", "enabled") if k in saved})
+        except Exception:
+            pass
+    result["enabled"] = result.get("enabled") is True
+    return result
 
 # 設定ファイルから実行時間を読み込む
 scheduler_setting = load_scheduler_config() # 修正: 汎用関数を呼び出す
@@ -740,6 +758,7 @@ run_minute = scheduler_setting.get('minute', 0)
 scheduler.add_job(
     scheduled_job_wrapper,
     'cron',
+    id=SCHEDULED_JOB_ID,
     hour=run_hour,
     minute=run_minute,
     misfire_grace_time=3600  # 実行予定時刻から1時間以内なら、遅れても実行する
@@ -780,7 +799,7 @@ def migrate_meo_history_ids():
 migrate_meo_history_ids()
 
 scheduler.start()
-app.logger.info(f"スケジューラを起動しました。毎日{run_hour:02d}:{run_minute:02d}に自動計測を実行します。(猶予時間: 1時間)")
+app.logger.info(f"スケジューラを起動しました。毎日{run_hour:02d}:{run_minute:02d}に定時ジョブを起動します（自動計測{'ON' if scheduler_setting.get('enabled') else 'OFF＝実行時にスキップ'}・猶予時間: 1時間）。")
 
 if __name__ == '__main__':
     # Flaskアプリを起動

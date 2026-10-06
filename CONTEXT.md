@@ -78,6 +78,7 @@
 - **同じレーンの中は1本ずつ**。取れなければ即 busy（HTTP 429 または SSE の `{"busy": true, "lane": ...}`）。待ち行列は作らない。
 - **自動タスク（選択実行・旧API）**：選んだタスクの種類から必要なレーンを全部取る（混在なら複数）。1本でも使用中なら何もせず busy。混在実行ではレーン1本分が終わるたびにそのロックを先に返す（`on_lane_done`）。
 - **定時の自動計測**：レーンごとに取れた分だけ実行し、使用中のレーンの分はスキップしてログに残す。
+- **自動計測ON/OFF（2026-10-06〜）**：`scheduler_config.json`＝`{hour, minute, enabled}`。`enabled` が true の時だけ定時計測を実行する。**設定ファイルが無い・`enabled` が無い場合はOFF**。定時ジョブ（`scheduled_job_wrapper`）は実行のたびに設定ファイルを読み直して判定する＝ON/OFFは再起動なしで効く。時刻変更も `POST /api/schedule` で `reschedule_job`（ジョブID `daily_auto_measure`）＝再起動不要。`GET /api/schedule` は `enabled` を返し、画面のチェック・「現在の設定」文言はこれだけで決める。保存ボタンはOFFでも押せる（OFFを保存するため）。経緯＝画面は「OFF」と表示するのに毎朝9:00に全計測が走っていた（enabled を保存も参照もしていなかった）。
 - 🔴 **保存は実行したレーンのファイルだけ**：`hpb`＝`history_normal/special.json`＋`auto_tasks.json`／`meo`＝`history_meo.json`／`ubereats`＝`history_ubereats.json`。他のレーンが並行して保存しているため、読み込み時点の古い内容で上書きしない。
 - **中断はレーン別**：`POST /api/cancel-measurement` に `{"lane": "hpb"|"meo"|"ubereats"}`。lane 無しは全レーン（旧画面互換）。
 - **計測ストリームはアプリコンテキスト内で回す**：`app.response_class(with_app_context(generate_stream), ...)`。ストリームはリクエスト処理の後に回るため、素のままだとスクレイパーの `current_app.logger` が落ちる。
