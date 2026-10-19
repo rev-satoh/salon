@@ -106,10 +106,9 @@ def check_meo_ranking(driver, keyword, location_name, target_salon_name=None, sa
         found_salons = []
         processed_aria_labels = set()
         
-        # 最大5回（約100位）までスクロールを試みる
-        max_scrolls = 5
-        for i in range(max_scrolls):
-            yield sse_format({"status": f"検索結果を解析中... ({i+1}/{config.MEO_SCROLL_COUNT})"})
+        # MEO_MAX_RESULTS（50位）まで読んだら打ち切る。スクロールは最大MEO_MAX_SCROLLS回まで
+        for i in range(config.MEO_MAX_SCROLLS):
+            yield sse_format({"status": f"検索結果を解析中... ({len(found_salons)}/{config.MEO_MAX_RESULTS}件)"})
             html = driver.page_source
             soup = BeautifulSoup(html, 'lxml')
             
@@ -120,6 +119,8 @@ def check_meo_ranking(driver, keyword, location_name, target_salon_name=None, sa
                 if item_block.find('span', string=re.compile(r'広告')):
                     continue
                 
+                if len(found_salons) >= config.MEO_MAX_RESULTS:
+                    break
                 name_element = item_block.find('a', {'aria-label': True})
                 if name_element and name_element['aria-label'] not in processed_aria_labels:
                     salon_name = name_element['aria-label'].strip()
@@ -132,6 +133,9 @@ def check_meo_ranking(driver, keyword, location_name, target_salon_name=None, sa
             
             if target_salon_name and any(target_salon_name.lower() in s['foundSalonName'].lower() for s in found_salons):
                 yield sse_format({"status": f"自店「{target_salon_name}」が見つかったため、解析を終了します。"})
+                break
+            if len(found_salons) >= config.MEO_MAX_RESULTS:
+                yield sse_format({"status": f"{config.MEO_MAX_RESULTS}位まで読み込んだため、解析を終了します。"})
                 break
                 
             # 次の読み込みのためにスクロール

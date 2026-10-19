@@ -41,8 +41,10 @@ HPB_MAX_PAGES = 5
 HPB_SPECIAL_TITLE_MAX_LENGTH = 30
 
 # --- Google MEO/SEO 関連設定 ---
-# MEO計測時のスクロール回数（1回あたり約20件読み込む）
-MEO_SCROLL_COUNT = 3
+# MEO（Googleマップ）で読み込む最大店舗数。これより下に自店が無ければ「圏外」（グラフも50位の次が圏外）
+MEO_MAX_RESULTS = 50
+# MEO計測時のスクロール回数の上限（1回あたり約20件読み込む。MEO_MAX_RESULTSに達したらその時点で打ち切る）
+MEO_MAX_SCROLLS = 5
 # SEO計測で1ページに表示する検索結果の数
 SEO_RESULTS_PER_PAGE = 100
 

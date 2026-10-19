@@ -267,9 +267,12 @@ function prepareChartData(groupData, activeSearchType) {
     return { labels: sortedLabels, datasets };
 }
 
-// 縦軸の目盛り（y値→表示）。Uber Eatsは50位までしか読まない（config.py UBER_EATS_MAX_RESULTS=50）ため100位の目盛りを持たず、50位の次が圏外。
+// 50位までしか読まない計測種別（config.py UBER_EATS_MAX_RESULTS=50 / MEO_MAX_RESULTS=50）。100位の目盛りを持たず、50位の次が圏外。
+const RANK_LIMIT_50_TYPES = ['ubereats', 'google'];
+
+// 縦軸の目盛り（y値→表示）。
 function getRankAxis(activeSearchType) {
-    if (activeSearchType === 'ubereats') {
+    if (RANK_LIMIT_50_TYPES.includes(activeSearchType)) {
         return { min: 1.9, outY: 2, labels: { 6: '1位', 5: '5位', 4: '20位', 3: '50位', 2: '圏外' } };
     }
     return { min: 1.4, outY: 1.5, labels: { 6: '1位', 5: '5位', 4: '20位', 3: '50位', 2: '100位', 1.5: '圏外' } };
@@ -412,8 +415,8 @@ function convertRankToY(rank, activeSearchType) {
     if (!isFinite(rankNum)) {
         return rank === '圏外' ? outY : NaN;
     }
-    // Uber Eatsは50位が最下段。50位より下の数値（上限変更前の旧データ等）は圏外の位置に置く。
-    const points = activeSearchType === 'ubereats'
+    // Uber Eats・MEOは50位が最下段。50位より下の数値（上限変更前の旧データ等）は圏外の位置に置く。
+    const points = RANK_LIMIT_50_TYPES.includes(activeSearchType)
         ? [{ rank: 1, y: 6 }, { rank: 5, y: 5 }, { rank: 20, y: 4 }, { rank: 50, y: 3 }]
         : [{ rank: 1, y: 6 }, { rank: 5, y: 5 }, { rank: 20, y: 4 }, { rank: 50, y: 3 }, { rank: 100, y: 2 }];
     for (let i = 0; i < points.length - 1; i++) {
