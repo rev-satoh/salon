@@ -48,7 +48,7 @@ SEO_RESULTS_PER_PAGE = 100
 
 # --- Uber Eats 関連設定 ---
 # Uber Eats検索で読み込む最大店舗数の目安
-UBER_EATS_MAX_RESULTS = 80
+UBER_EATS_MAX_RESULTS = 50
 # Uber Eatsは自動セキュリティ確認が出ることがあるため、専用プロファイルを使って表示ブラウザで計測する
 UBER_EATS_CHROME_PROFILE_DIR = os.path.expanduser("~/Library/Application Support/salon-ranking-checker/ubereats-chrome-profile-v2")
 UBER_EATS_CHALLENGE_WAIT_SECONDS = 180

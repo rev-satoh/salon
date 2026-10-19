@@ -414,3 +414,10 @@ Uber Eatsモードの「検索キーワード」欄が常に「グリークヨ�
 - Python側（utils.py `expand_meo_task`）には地名削りの処理が無い（カンマ展開のみ）＝変更不要・サーバ再起動不要。
 - 検証（画面起動・計測なし）＝Node で `cleanMeoKeyword`：「岡山　グリークヨーグルト」「岡山 カフェ」「福山　まつげパーマ」は不変、「岡山カフェ」→「カフェ」、地名なしは不変。`expandMeoPairs(3地点, 岡山　〜)` で地名付きのまま組合せ化。登録後 auto_tasks.json 426件・YOGI該当76件（Googleマップ24・Uber Eats 52）＝一括選択「YOGI」で新12本も選ばれる（判定は salonName）。配信中の /meoTasks.js に修正が出ることを curl で確認。
 - GBPデータ推移（company `gbp-insights`）の順位タブは系列キー＝（地点, 語句）・表示名＝「岡山　グリークヨーグルト（岡山駅から）」となり地名なしと別系列で並ぶ＝改修不要。
+
+## 変更: Uber Eatsの読み込み上限 80位→50位（2026-10-19・社長承認）
+
+- config.py `UBER_EATS_MAX_RESULTS` を 80→50。ubereats_scraper.py の候補収集（2箇所）がこの件数で打ち切る。
+- 理由＝history_ubereats.json 779件の最大順位は41位・51位以下は0件。50位で打ち切っても結果は変わらず、スクロールが減って計測が速くなる。
+- 画面側（uberData.js・ui.js・history.js）に80位を前提にした圏外判定・文言・グラフ軸は無し＝変更なし（圏外は「見つからなかった」で判定）。
+- 反映には起動中の app.py の再起動が必要（config はプロセス起動時に1回だけ読み込まれる）。
