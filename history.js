@@ -182,7 +182,7 @@ function renderGroup(groupKey, groupData, activeSearchType, hiddenTablesState) {
     document.getElementById('autoHistoryGraphs').appendChild(graphWrapper);
 
     const { labels, datasets } = prepareChartData(groupData, activeSearchType);
-    createChart(canvas, labels, datasets);
+    createChart(canvas, labels, datasets, activeSearchType);
 
     if (['normal', 'special', 'google'].includes(activeSearchType)) {
         const tableContainer = createHistoryTable(groupData, labels, activeSearchType, hiddenTablesState[groupKey]);
@@ -243,7 +243,7 @@ function prepareChartData(groupData, activeSearchType) {
         const dataMap = new Map(taskData.log.map(entry => [entry.date, { rank: entry.rank, screenshot: entry.screenshot }]));
         const dataForChart = sortedLabels.map(date => {
             const entry = dataMap.get(date);
-            return entry ? { x: date, y: convertRankToY(entry.rank), originalRank: entry.rank, screenshot: entry.screenshot } : { x: date, y: NaN };
+            return entry ? { x: date, y: convertRankToY(entry.rank, activeSearchType), originalRank: entry.rank, screenshot: entry.screenshot } : { x: date, y: NaN };
         });
 
         let labelText = taskData.task.salonName;
@@ -267,7 +267,17 @@ function prepareChartData(groupData, activeSearchType) {
     return { labels: sortedLabels, datasets };
 }
 
-function createChart(canvas, labels, datasets) {
+// 縦軸の目盛り（y値→表示）。Uber Eatsは50位までしか読まない（config.py UBER_EATS_MAX_RESULTS=50）ため100位の目盛りを持たず、50位の次が圏外。
+function getRankAxis(activeSearchType) {
+    if (activeSearchType === 'ubereats') {
+        return { min: 1.9, outY: 2, labels: { 6: '1位', 5: '5位', 4: '20位', 3: '50位', 2: '圏外' } };
+    }
+    return { min: 1.4, outY: 1.5, labels: { 6: '1位', 5: '5位', 4: '20位', 3: '50位', 2: '100位', 1.5: '圏外' } };
+}
+
+function createChart(canvas, labels, datasets, activeSearchType) {
+    const axis = getRankAxis(activeSearchType);
+    const tickValues = Object.keys(axis.labels).map(Number).sort((a, b) => b - a);
     new Chart(canvas, {
         type: 'line',
         data: { labels, datasets },
@@ -278,10 +288,10 @@ function createChart(canvas, labels, datasets) {
             scales: {
                 x: { ticks: { callback: (value) => { const d = new Date(labels[value]); return `${d.getMonth() + 1}/${d.getDate()}`; } } },
                 y: {
-                    type: 'linear', reverse: false, min: 1.4, max: 6.1,
-                    ticks: { callback: (value) => ({ 6: '1位', 5: '5位', 4: '20位', 3: '50位', 2: '100位', 1.5: '圏外' }[value] || null) },
-                    afterBuildTicks: (axis) => { axis.ticks = [{ value: 6 }, { value: 5 }, { value: 4 }, { value: 3 }, { value: 2 }, { value: 1.5 }]; },
-                    grid: { drawBorder: false, color: (context) => context.tick.value === 1.5 ? 'transparent' : Chart.defaults.borderColor }
+                    type: 'linear', reverse: false, min: axis.min, max: 6.1,
+                    ticks: { callback: (value) => axis.labels[value] || null },
+                    afterBuildTicks: (scale) => { scale.ticks = tickValues.map(value => ({ value })); },
+                    grid: { drawBorder: false, color: (context) => context.tick.value === axis.outY ? 'transparent' : Chart.defaults.borderColor }
                 }
             },
             plugins: {
@@ -396,18 +406,22 @@ function getRankChangeStyle(diff) {
     return { color: '#ff3b30', fontWeight: 'bold', arrow: '↓' };
 }
 
-function convertRankToY(rank) {
+function convertRankToY(rank, activeSearchType) {
+    const outY = getRankAxis(activeSearchType).outY;
     const rankNum = Number(rank);
     if (!isFinite(rankNum)) {
-        return rank === '圏外' ? 1.5 : NaN;
+        return rank === '圏外' ? outY : NaN;
     }
-    const points = [{ rank: 1, y: 6 }, { rank: 5, y: 5 }, { rank: 20, y: 4 }, { rank: 50, y: 3 }, { rank: 100, y: 2 }];
+    // Uber Eatsは50位が最下段。50位より下の数値（上限変更前の旧データ等）は圏外の位置に置く。
+    const points = activeSearchType === 'ubereats'
+        ? [{ rank: 1, y: 6 }, { rank: 5, y: 5 }, { rank: 20, y: 4 }, { rank: 50, y: 3 }]
+        : [{ rank: 1, y: 6 }, { rank: 5, y: 5 }, { rank: 20, y: 4 }, { rank: 50, y: 3 }, { rank: 100, y: 2 }];
     for (let i = 0; i < points.length - 1; i++) {
         if (rankNum >= points[i].rank && rankNum <= points[i + 1].rank) {
             return points[i].y - ((rankNum - points[i].rank) / (points[i + 1].rank - points[i].rank || 1)) * (points[i].y - points[i + 1].y);
         }
     }
-    return (rankNum < 1) ? 6 : 1.5;
+    return (rankNum < 1) ? 6 : outY;
 }
 
 async function exportToExcel(button, groupKey, groupData, activeSearchType) {
